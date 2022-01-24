@@ -11,6 +11,11 @@ public class PlayerController : MonoBehaviour
     public struct Collision
 	{
         public bool top, bottom, right, left;
+
+        public void Reset()
+		{
+            top = bottom = left = right = false;
+		}
 	}
 
     private Vector2 displacement;
@@ -42,6 +47,8 @@ public class PlayerController : MonoBehaviour
     public void Move(Vector2 requestedDisplacement)
     {
         displacement = requestedDisplacement;
+        UpdateRaycastOrigins();
+        collision.Reset();
 
         HandleCollisions();
 
@@ -49,7 +56,6 @@ public class PlayerController : MonoBehaviour
 
         Physics2D.SyncTransforms();
 
-        UpdateRaycastOrigins();
     }
 
     private void HandleCollisions()
@@ -59,7 +65,10 @@ public class PlayerController : MonoBehaviour
             HandleCollisionsX();
 		}
 
+        if (displacement.y != 0)
+		{
             HandleCollisionsY();
+		}
     }
 
     private void HandleCollisionsX()
@@ -76,10 +85,17 @@ public class PlayerController : MonoBehaviour
                 rayOrigin, displacement, displacement.magnitude, surfaceMask
             );
 
-            Debug.DrawRay(rayOrigin, displacement, Color.magenta);
+            Debug.DrawRay(rayOrigin, 10 * displacement, Color.magenta);
 
             if (hit)
             {
+                if (hit.normal == Vector2.left || hit.normal == Vector2.right)
+				{
+                    displacement.x = directionX * hit.distance;
+
+                    collision.right = directionX == 1;
+                    collision.left = directionX == -1;
+				}
             }
         }
     }
@@ -98,14 +114,17 @@ public class PlayerController : MonoBehaviour
                 rayOrigin, displacement, displacement.magnitude, surfaceMask
             );
 
-            Debug.DrawRay(rayOrigin, displacement, Color.magenta);
+            Debug.DrawRay(rayOrigin, 10 * displacement, Color.magenta);
 
             if (hit)
             {
-                displacement.y = directionY * hit.distance;
+                if (hit.normal == Vector2.up || hit.normal == Vector2.down)
+				{
+                    displacement.y = directionY * hit.distance;
 
-                collision.top = directionY == 1;
-                collision.bottom = directionY == -1;
+                    collision.top = directionY == 1;
+                    collision.bottom = directionY == -1;
+				}
             }
         }
     }
@@ -124,8 +143,8 @@ public class PlayerController : MonoBehaviour
 	{
         Bounds bounds = boxCollider2D.bounds;
 
-        rayCountX = Mathf.RoundToInt(bounds.size.x / RayDistance);
-        rayCountY = Mathf.RoundToInt(bounds.size.y / RayDistance);
+        rayCountX = Mathf.RoundToInt(bounds.size.y / RayDistance);
+        rayCountY = Mathf.RoundToInt(bounds.size.x / RayDistance);
 
         raySpacingX = bounds.size.y / (rayCountX - 1);
         raySpacingY = bounds.size.x / (rayCountY - 1);
