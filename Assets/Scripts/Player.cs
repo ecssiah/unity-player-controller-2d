@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 	{
         playerController = GetComponent<PlayerController>();
 
-        gravity = -0.0f;
+        gravity = -9.8f;
         terminalVelocity = -53f;
 
         velocity = Vector2.zero;
@@ -26,5 +26,10 @@ public class Player : MonoBehaviour
         velocity.y = Mathf.Max(velocity.y, terminalVelocity);
 
         playerController.Move(velocity * Time.deltaTime);
+
+        if (playerController.collision.top || playerController.collision.bottom)
+		{
+            velocity.y = 0;
+		}
     }
 }

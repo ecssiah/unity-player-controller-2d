@@ -8,6 +8,11 @@ public class PlayerController : MonoBehaviour
         public Vector2 topLeft, topRight, bottomLeft, bottomRight;
 	}
 
+    public struct Collision
+	{
+        public bool top, bottom, right, left;
+	}
+
     private Vector2 displacement;
 
     private const float RayDistance = 0.1f;
@@ -19,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private float raySpacingY;
 
     private RaycastOrigins raycastOrigins;
+    public Collision collision;
 
     private LayerMask surfaceMask;
 
@@ -96,6 +102,10 @@ public class PlayerController : MonoBehaviour
 
             if (hit)
             {
+                displacement.y = directionY * hit.distance;
+
+                collision.top = directionY == 1;
+                collision.bottom = directionY == -1;
             }
         }
     }
