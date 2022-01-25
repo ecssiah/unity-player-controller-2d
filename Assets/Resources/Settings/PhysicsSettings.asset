@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: PhysicsSettings
   m_EditorClassIdentifier: 
-  Gravity: {x: 0, y: -9.8}
+  Gravity: {x: 0, y: -16}
   TerminalVelocity: -53
