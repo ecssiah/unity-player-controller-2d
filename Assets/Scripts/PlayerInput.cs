@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,12 +29,6 @@ public class PlayerInput : MonoBehaviour
 	{
 		runAction.Enable();
 		jumpAction.Enable();
-	}
-
-	void Update()
-	{
-		float runInput = runAction.ReadValue<float>();
-		float jumpInput = jumpAction.ReadValue<float>();
 	}
 
 	void OnDisable()

@@ -1,48 +1,48 @@
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInput))]
-[RequireComponent(typeof(PlayerController))]
 public class Player : MonoBehaviour
 {
-    private PlayerController playerController;
+	private float speed;
+    private float jumpForce;
 
-    private float gravity;
-    private float terminalVelocity;
+	private Vector2 velocity;
+    public Vector2 Velocity => velocity;
 
-    private Vector2 jumpVelocity;
+    private BoxCollider2D boxCollider2D;
+    public Polygon Polygon;
 
-    private float speed;
-    private Vector2 velocity;
-
-    void Awake()
+	void Awake()
 	{
-        playerController = GetComponent<PlayerController>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
+        Polygon = new Polygon(boxCollider2D);
 
-        gravity = -9.8f;
-        terminalVelocity = -53f;
+        speed = 3.5f;
+        jumpForce = 6f;
 
-        jumpVelocity = new Vector2(0, 8);
-
-        speed = 1;
         velocity = Vector2.zero;
 	}
 
-    void Update()
-    {
-        velocity.y += gravity * Time.deltaTime;
-        velocity.y = Mathf.Max(velocity.y, terminalVelocity);
-
-        playerController.Move(velocity * Time.deltaTime);
-
-        if (playerController.collision.top || playerController.collision.bottom)
-		{
-            velocity.y = 0;
-		}
+    public void Move(Vector3 displacement)
+	{
+        transform.position += displacement;
+        Polygon.Move(displacement);
     }
+
+    public void SetVelocity(float vx, float vy)
+	{
+        velocity.x = vx;
+        velocity.y = vy;
+	}
+
+    public void SetVelocity(Vector2 newVelocity)
+	{
+        SetVelocity(newVelocity.x, newVelocity.y);
+	}
 
     public void Jump()
 	{
-        velocity += jumpVelocity;
+        velocity.y += jumpForce;
 	}
 
     public void SetRunInput(float runInput)
