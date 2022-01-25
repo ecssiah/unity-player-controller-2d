@@ -3,8 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
-    private int facing;
-
 	private float speed;
     private float jumpForce;
 
@@ -24,8 +22,6 @@ public class Player : MonoBehaviour
 
         boxCollider2D = GetComponent<BoxCollider2D>();
         Polygon = new Polygon(boxCollider2D);
-
-        facing = 1;
 
         speed = 3.5f;
         jumpForce = 6f;

@@ -14,36 +14,17 @@ public struct Polygon
 	{
 		Center = boxCollider2D.transform.position;
 
+		float minX = boxCollider2D.offset.x - boxCollider2D.size.x / 2;
+		float minY = boxCollider2D.offset.y - boxCollider2D.size.y / 2;
+		float maxX = boxCollider2D.offset.x + boxCollider2D.size.x / 2;
+		float maxY = boxCollider2D.offset.y + boxCollider2D.size.y / 2;
+
 		vertices = new List<Vector2>
 		{
-			boxCollider2D.transform.TransformPoint(
-				new Vector3(
-					boxCollider2D.offset.x - boxCollider2D.size.x / 2,
-					boxCollider2D.offset.y - boxCollider2D.size.y / 2,
-					0
-				)
-			),
-			boxCollider2D.transform.TransformPoint(
-				new Vector3(
-					boxCollider2D.offset.x - boxCollider2D.size.x / 2,
-					boxCollider2D.offset.y + boxCollider2D.size.y / 2,
-					0
-				)
-			),
-			boxCollider2D.transform.TransformPoint(
-				new Vector3(
-					boxCollider2D.offset.x + boxCollider2D.size.x / 2,
-					boxCollider2D.offset.y + boxCollider2D.size.y / 2,
-					0
-				)
-			),
-			boxCollider2D.transform.TransformPoint(
-				new Vector3(
-					boxCollider2D.offset.x + boxCollider2D.size.x / 2,
-					boxCollider2D.offset.y - boxCollider2D.size.y / 2,
-					0
-				)
-			),
+			boxCollider2D.transform.TransformPoint(minX, minY, 0),
+			boxCollider2D.transform.TransformPoint(minX, maxY, 0),
+			boxCollider2D.transform.TransformPoint(maxX, maxY, 0),
+			boxCollider2D.transform.TransformPoint(maxX, minY, 0),
 		};
 
 		Edges = new List<Vector2>();
