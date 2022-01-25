@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
+    private int facing;
+
 	private float speed;
     private float jumpForce;
 
@@ -12,10 +14,18 @@ public class Player : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     public Polygon Polygon;
 
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
+
 	void Awake()
 	{
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
         boxCollider2D = GetComponent<BoxCollider2D>();
         Polygon = new Polygon(boxCollider2D);
+
+        facing = 1;
 
         speed = 3.5f;
         jumpForce = 6f;
@@ -49,4 +59,30 @@ public class Player : MonoBehaviour
 	{
         velocity.x = speed * runInput;
 	}
+
+    public void UpdateAnimation()
+	{
+        if (velocity.x > 0)
+		{
+            spriteRenderer.flipX = false;
+
+		}
+        else if (velocity.x < 0)
+		{
+            spriteRenderer.flipX = true;
+		}
+
+        if (velocity.y != 0)
+        {
+            animator.Play("Base Layer.Player-Jump");
+        }
+        else if (velocity.x != 0)
+		{
+            animator.Play("Base Layer.Player-Run");
+		}
+        else
+        {
+            animator.Play("Base Layer.Player-Idle");
+        }
+    }
 }

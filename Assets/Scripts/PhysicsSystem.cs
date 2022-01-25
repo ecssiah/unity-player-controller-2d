@@ -32,6 +32,8 @@ public class PhysicsSystem : MonoBehaviour
 		ResolveCollisions();
 
 		Physics2D.SyncTransforms();
+
+		player.UpdateAnimation();
 	}
 
 	private void ApplyGravity()
@@ -55,6 +57,7 @@ public class PhysicsSystem : MonoBehaviour
 			if (resolutionVector != Vector2.zero)
 			{
 				player.Move(resolutionVector);
+
 				player.SetVelocity(player.Velocity.x, 0);
 			}
 		}
