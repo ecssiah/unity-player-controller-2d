@@ -50,7 +50,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = Collide(surface.Polygon, player.Polygon);
+			Vector2 resolutionVector = CheckCollision(player.Polygon, surface.Polygon);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -63,15 +63,15 @@ public class PhysicsSystem : MonoBehaviour
 		Physics2D.SyncTransforms();
 	}
 
-	private Vector2 Collide(Polygon polygon1, Polygon polygon2)
+	private Vector2 CheckCollision(Polygon polygonToResolve, Polygon polygonToCollide)
 	{
 		List<Vector2> resolutionVectors = new List<Vector2>();
 		
-		List<Vector2> combinedNormals = polygon1.Normals.Concat(polygon2.Normals).ToList();
+		List<Vector2> combinedNormals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
 
 		foreach (Vector2 normal in combinedNormals)
 		{
-			Vector2 resolutionVector = FindSeparatingAxis(normal, polygon1, polygon2);
+			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
 
 			if (resolutionVector == Vector2.zero)
 			{
@@ -96,9 +96,9 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		Vector2 centerDisplacement = polygon1.Center - polygon2.Center;
+		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
 
-		if (Vector2.Dot(centerDisplacement, mininumResolutionVector) > 0)
+		if (Vector2.Dot(centerDisplacement, mininumResolutionVector) < 0)
 		{
 			mininumResolutionVector *= -1;
 		}
