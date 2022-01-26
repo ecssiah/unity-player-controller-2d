@@ -3,28 +3,44 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
+    private int facing;
+
 	private float speed;
     private float jumpForce;
+
+    private bool isHanging;
 
 	private Vector2 velocity;
     public Vector2 Velocity => velocity;
 
-    private BoxCollider2D boxCollider2D;
-    public Polygon Polygon;
+    private BoxCollider2D bodyBoxCollider2D;
+    private BoxCollider2D groundBoxCollider2D;
+    private BoxCollider2D handBoxCollider2D;
 
-    private SpriteRenderer spriteRenderer;
+    public Polygon BodyPolygon;
+    public Polygon GroundPolygon;
+    public Polygon HandPolygon;
+
     private Animator animator;
 
 	void Awake()
 	{
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        bodyBoxCollider2D = GetComponent<BoxCollider2D>();
+        groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
+        handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
+
+        BodyPolygon = new Polygon(bodyBoxCollider2D);
+        GroundPolygon = new Polygon(groundBoxCollider2D);
+        HandPolygon = new Polygon(handBoxCollider2D);
+
         animator = GetComponent<Animator>();
 
-        boxCollider2D = GetComponent<BoxCollider2D>();
-        Polygon = new Polygon(boxCollider2D);
+        facing = 1;
 
         speed = 3.5f;
         jumpForce = 6f;
+
+        isHanging = false;
 
         velocity = Vector2.zero;
 	}
@@ -32,7 +48,10 @@ public class Player : MonoBehaviour
     public void Move(Vector3 displacement)
 	{
         transform.position += displacement;
-        Polygon.Move(displacement);
+
+        BodyPolygon.Move(displacement);
+        GroundPolygon.Move(displacement);
+        HandPolygon.Move(displacement);
     }
 
     public void SetVelocity(float vx, float vy)
@@ -53,22 +72,35 @@ public class Player : MonoBehaviour
 
     public void SetRunInput(float runInput)
 	{
-        velocity.x = speed * runInput;
+        if (!isHanging)
+		{
+            velocity.x = speed * runInput;
+		}
 	}
 
     public void UpdateAnimation()
 	{
-        if (velocity.x > 0)
+        if (velocity.x > 0 && !(facing == 1))
 		{
+            facing = 1;
+
             Vector3 scale = transform.localScale;
             scale.x = 1;
             transform.localScale = scale;
+
+            float handDisplacementX = BodyPolygon.Center.x - HandPolygon.Center.x;
+            HandPolygon.Move(new Vector2(2 * handDisplacementX, 0));
 		}
-        else if (velocity.x < 0)
+        else if (velocity.x < 0 && !(facing == -1))
 		{
+            facing = -1;
+
             Vector3 scale = transform.localScale;
             scale.x = -1;
             transform.localScale = scale;
+
+            float handDisplacementX = BodyPolygon.Center.x - HandPolygon.Center.x;
+            HandPolygon.Move(new Vector2(2 * handDisplacementX, 0));
         }
 
         if (velocity.y != 0)
@@ -84,4 +116,13 @@ public class Player : MonoBehaviour
             animator.Play("Base Layer.Player-Idle");
         }
     }
+
+	void OnDrawGizmos()
+	{
+        Gizmos.color = new Color(1, 0, 1, 0.1f);
+
+        Gizmos.DrawCube(BodyPolygon.Center, BodyPolygon.Size);
+        Gizmos.DrawCube(GroundPolygon.Center, GroundPolygon.Size);
+        Gizmos.DrawCube(HandPolygon.Center, HandPolygon.Size);
+	}
 }

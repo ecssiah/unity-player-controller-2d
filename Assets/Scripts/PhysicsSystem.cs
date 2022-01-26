@@ -15,7 +15,7 @@ public class PhysicsSystem : MonoBehaviour
 		physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
 
 		player = GameObject.Find("Player").GetComponent<Player>();
-		surfaces = new List<Surface>(GameObject.Find("Surfaces").GetComponentsInChildren<Surface>());
+		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 	}
 
 	void FixedUpdate()
@@ -30,6 +30,7 @@ public class PhysicsSystem : MonoBehaviour
 		player.Move(Time.fixedDeltaTime * player.Velocity);
 
 		ResolveCollisions();
+		ResolveLedgeCollisions();
 
 		player.UpdateAnimation();
 	}
@@ -50,7 +51,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = CheckForCollisionResolution(player.Polygon, surface.Polygon);
+			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyPolygon, surface.Polygon);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -61,6 +62,11 @@ public class PhysicsSystem : MonoBehaviour
 		}
 
 		Physics2D.SyncTransforms();
+	}
+
+	private void ResolveLedgeCollisions()
+	{
+
 	}
 
 	private Vector2 CheckForCollisionResolution(Polygon polygonToResolve, Polygon polygonToCollide)

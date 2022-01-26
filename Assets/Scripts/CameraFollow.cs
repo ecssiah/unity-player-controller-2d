@@ -4,7 +4,7 @@ public class CameraFollow : MonoBehaviour
 {
 	private struct FocusArea
 	{
-		public Vector2 center;
+		public Vector2 Center;
 
 		float top, bottom;
 		float left, right;
@@ -16,7 +16,7 @@ public class CameraFollow : MonoBehaviour
 			bottom = targetBounds.min.y;
 			top = targetBounds.min.y + size.y;
 
-			center = new Vector2((left + right) / 2, (top + bottom) / 2);
+			Center = new Vector2((left + right) / 2, (top + bottom) / 2);
 		}
 
 		public void Update(Bounds targetBounds)
@@ -49,9 +49,11 @@ public class CameraFollow : MonoBehaviour
 			top += shiftY;
 			bottom += shiftY;
 
-			center = new Vector2((left + right) / 2, (top + bottom) / 2);
+			Center = new Vector2((left + right) / 2, (top + bottom) / 2);
 		}
 	}
+
+	public bool DebugDraw;
 
 	private BoxCollider2D targetCollider;
 
@@ -62,6 +64,8 @@ public class CameraFollow : MonoBehaviour
 
 	void Awake()
 	{
+		DebugDraw = false;
+
 		focusAreaSize = new Vector2(3, 5);
 
 		targetCollider = GameObject.Find("Player").GetComponent<BoxCollider2D>();
@@ -73,15 +77,18 @@ public class CameraFollow : MonoBehaviour
     {
 		focusArea.Update(targetCollider.bounds);
 
-		Vector2 focusPosition = focusArea.center + verticalOffset * Vector2.up; 
+		Vector2 focusPosition = focusArea.Center + verticalOffset * Vector2.up; 
 
 		transform.position = (Vector3)focusPosition + Vector3.forward * -10;
 	}
 
 	void OnDrawGizmos()
 	{
-		Gizmos.color = new Color(1, 0, 1, 0.1f);
+		if (DebugDraw)
+		{
+			Gizmos.color = new Color(1, 0, 1, 0.1f);
 
-		Gizmos.DrawCube(focusArea.center, focusAreaSize);
+			Gizmos.DrawCube(focusArea.Center, focusAreaSize);
+		}
 	}
 }

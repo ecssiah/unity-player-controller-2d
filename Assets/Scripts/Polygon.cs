@@ -4,6 +4,7 @@ using UnityEngine;
 public struct Polygon
 {
 	public Vector2 Center { get; private set; }
+	public Vector2 Size { get; }
 
 	private readonly List<Vector2> vertices;
 	public List<Vector2> Vertices { get => vertices; }
@@ -12,7 +13,8 @@ public struct Polygon
 
 	public Polygon(BoxCollider2D boxCollider2D)
 	{
-		Center = boxCollider2D.transform.position;
+		Center = boxCollider2D.transform.TransformPoint(boxCollider2D.offset);
+		Size = boxCollider2D.size;
 
 		float minX = boxCollider2D.offset.x - boxCollider2D.size.x / 2;
 		float minY = boxCollider2D.offset.y - boxCollider2D.size.y / 2;
