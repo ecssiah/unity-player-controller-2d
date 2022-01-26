@@ -5,7 +5,7 @@ public struct Polygon
 {
 	public Vector2 Center { get; private set; }
 
-	private List<Vector2> vertices;
+	private readonly List<Vector2> vertices;
 	public List<Vector2> Vertices { get => vertices; }
 	public List<Vector2> Edges { get; private set; }
 	public List<Vector2> Normals { get; private set; }
@@ -39,7 +39,8 @@ public struct Polygon
 
 		foreach (Vector2 edge in Edges)
 		{
-			Normals.Add(new Vector2(-edge.y, edge.x));
+			Vector2 normal = new Vector2(-edge.y, edge.x);
+			Normals.Add(normal);
 		}
 	}
 

@@ -67,9 +67,9 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		List<Vector2> resolutionVectors = new List<Vector2>();
 		
-		List<Vector2> combinedNormals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
+		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
 
-		foreach (Vector2 normal in combinedNormals)
+		foreach (Vector2 normal in normals)
 		{
 			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
 
@@ -83,27 +83,35 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		Vector2 mininumResolutionVector = Vector2.positiveInfinity;
-
-		foreach (Vector2 resolutionVector in resolutionVectors)
-		{
-			float resolutionMagnitudeSquared = Vector2.Dot(resolutionVector, resolutionVector);
-			float minimumMagnitudeSquared = Vector2.Dot(mininumResolutionVector, mininumResolutionVector);
-
-			if (resolutionMagnitudeSquared < minimumMagnitudeSquared) 
-			{
-				mininumResolutionVector = resolutionVector;
-			}
-		}
+		Vector2 minResolutionVector = CalculateMinResolutionVector(resolutionVectors);
 
 		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
 
-		if (Vector2.Dot(centerDisplacement, mininumResolutionVector) < 0)
+		if (Vector2.Dot(centerDisplacement, minResolutionVector) < 0)
 		{
-			mininumResolutionVector *= -1;
+			minResolutionVector *= -1;
 		}
 
-		return mininumResolutionVector;
+		return minResolutionVector;
+	}
+
+	private Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
+	{
+		Vector2 minResolutionVector = Vector2.positiveInfinity;
+		float minMagnitudeSquared = float.PositiveInfinity;
+
+		foreach (Vector2 resolutionVector in resolutionVectors)
+		{
+			float resolutionMagnitudeSquared = resolutionVector.sqrMagnitude;
+
+			if (resolutionMagnitudeSquared < minMagnitudeSquared)
+			{
+				minResolutionVector = resolutionVector;
+				minMagnitudeSquared = resolutionMagnitudeSquared;
+			}
+		}
+
+		return minResolutionVector;
 	}
 
 	private Vector2 FindSeparatingAxis(Vector2 normal, Polygon polygon1, Polygon polygon2)
@@ -134,7 +142,7 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			float overlap = Mathf.Min(max2 - min1, max1 - min2);
 
-			float resolutionMagnitude = overlap / Vector2.Dot(normal, normal) + 1E-10f;
+			float resolutionMagnitude = overlap / normal.sqrMagnitude + 1E-10f;
 
 			Vector2 resolutionVector = resolutionMagnitude * normal;
 			
