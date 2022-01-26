@@ -31,8 +31,6 @@ public class PhysicsSystem : MonoBehaviour
 
 		ResolveCollisions();
 
-		Physics2D.SyncTransforms();
-
 		player.UpdateAnimation();
 	}
 
@@ -61,13 +59,15 @@ public class PhysicsSystem : MonoBehaviour
 				player.SetVelocity(player.Velocity.x, 0);
 			}
 		}
+
+		Physics2D.SyncTransforms();
 	}
 
 	private Vector2 Collide(Polygon polygon1, Polygon polygon2)
 	{
-		List<Vector2> combinedNormals = polygon1.Normals.Concat(polygon2.Normals).ToList();
-
 		List<Vector2> resolutionVectors = new List<Vector2>();
+		
+		List<Vector2> combinedNormals = polygon1.Normals.Concat(polygon2.Normals).ToList();
 
 		foreach (Vector2 normal in combinedNormals)
 		{
