@@ -51,7 +51,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyPolygon, surface.Polygon);
+			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyPolygon, surface.BodyPolygon);
 
 			if (resolutionVector != Vector2.zero)
 			{

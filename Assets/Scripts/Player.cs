@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
+    public bool DebugDraw;
+
     private int facing;
 
 	private float speed;
@@ -25,6 +27,8 @@ public class Player : MonoBehaviour
 
 	void Awake()
 	{
+        DebugDraw = false;
+
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
         groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
         handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
@@ -119,10 +123,13 @@ public class Player : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-        Gizmos.color = new Color(1, 0, 1, 0.1f);
+        if (DebugDraw)
+        {
+            Gizmos.color = new Color(1, 0.8f, 1, 0.1f);
 
-        Gizmos.DrawCube(BodyPolygon.Center, BodyPolygon.Size);
-        Gizmos.DrawCube(GroundPolygon.Center, GroundPolygon.Size);
-        Gizmos.DrawCube(HandPolygon.Center, HandPolygon.Size);
-	}
+            Gizmos.DrawCube(BodyPolygon.Center, BodyPolygon.Size);
+            Gizmos.DrawCube(GroundPolygon.Center, GroundPolygon.Size);
+            Gizmos.DrawCube(HandPolygon.Center, HandPolygon.Size);
+        }
+    }
 }
