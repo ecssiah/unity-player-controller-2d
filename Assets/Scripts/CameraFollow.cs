@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -7,7 +5,6 @@ public class CameraFollow : MonoBehaviour
 	private struct FocusArea
 	{
 		public Vector2 center;
-		public Vector2 velocity;
 
 		float top, bottom;
 		float left, right;
@@ -18,8 +15,6 @@ public class CameraFollow : MonoBehaviour
 			right = targetBounds.center.x + size.x / 2;
 			bottom = targetBounds.min.y;
 			top = targetBounds.min.y + size.y;
-
-			velocity = Vector2.zero;
 
 			center = new Vector2((left + right) / 2, (top + bottom) / 2);
 		}
@@ -55,16 +50,14 @@ public class CameraFollow : MonoBehaviour
 			bottom += shiftY;
 
 			center = new Vector2((left + right) / 2, (top + bottom) / 2);
-
-			velocity = new Vector2(shiftX, shiftY);
 		}
 	}
 
 	private BoxCollider2D targetCollider;
 
-	public Vector2 focusAreaSize;
 	private FocusArea focusArea;
 
+	public Vector2 focusAreaSize;
 	public float verticalOffset;
 
 	void Awake()
@@ -80,14 +73,14 @@ public class CameraFollow : MonoBehaviour
     {
 		focusArea.Update(targetCollider.bounds);
 
-		Vector2 focusPosition = focusArea.center + Vector2.up * verticalOffset;
+		Vector2 focusPosition = focusArea.center + verticalOffset * Vector2.up; 
 
 		transform.position = (Vector3)focusPosition + Vector3.forward * -10;
 	}
 
 	void OnDrawGizmos()
 	{
-		Gizmos.color = new Color(1, 0, 1, 0.3f);
+		Gizmos.color = new Color(1, 0, 1, 0.1f);
 
 		Gizmos.DrawCube(focusArea.center, focusAreaSize);
 	}
