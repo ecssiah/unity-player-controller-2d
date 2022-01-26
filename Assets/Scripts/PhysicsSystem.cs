@@ -50,7 +50,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = CheckCollision(player.Polygon, surface.Polygon);
+			Vector2 resolutionVector = CheckForCollisionResolution(player.Polygon, surface.Polygon);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -63,7 +63,7 @@ public class PhysicsSystem : MonoBehaviour
 		Physics2D.SyncTransforms();
 	}
 
-	private Vector2 CheckCollision(Polygon polygonToResolve, Polygon polygonToCollide)
+	private Vector2 CheckForCollisionResolution(Polygon polygonToResolve, Polygon polygonToCollide)
 	{
 		List<Vector2> resolutionVectors = new List<Vector2>();
 		

@@ -60,13 +60,16 @@ public class Player : MonoBehaviour
 	{
         if (velocity.x > 0)
 		{
-            spriteRenderer.flipX = false;
-
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
+            transform.localScale = scale;
 		}
         else if (velocity.x < 0)
 		{
-            spriteRenderer.flipX = true;
-		}
+            Vector3 scale = transform.localScale;
+            scale.x = -1;
+            transform.localScale = scale;
+        }
 
         if (velocity.y != 0)
         {
