@@ -25,7 +25,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void MovePlayer()
 	{
-		if (!player.IsHanging)
+		if (!player.Hanging)
 		{
 			ApplyGravity();
 		}
@@ -34,6 +34,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		ResolveCollisions();
 		ResolveLedgeCollisions();
+		GroundCheck();
 		
 		Physics2D.SyncTransforms();
 
@@ -77,6 +78,20 @@ public class PhysicsSystem : MonoBehaviour
 				//	return;
 				//}
 		}
+	}
+
+	private void GroundCheck()
+	{
+		foreach (Surface surface in surfaces)
+		{
+			if (CheckForCollision(player.GroundBox, surface.BodyBox))
+			{
+				player.Grounded = true;
+				return;
+			}
+		}
+
+		player.Grounded = false;
 	}
 
 	private bool CheckForCollision(BoxShape polygon1, BoxShape polygon2)

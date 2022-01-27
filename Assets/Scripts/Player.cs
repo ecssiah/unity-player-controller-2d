@@ -11,8 +11,17 @@ public class Player : MonoBehaviour
 	private float speed;
     private float jumpForce;
 
-    private bool isHanging;
-    public bool IsHanging => isHanging;
+    [SerializeField]
+    private bool grounded;
+	public bool Grounded { get => grounded; set => grounded = value; }
+
+    private bool hanging;
+    public bool Hanging => hanging;
+
+    private bool wallSliding;
+	public bool WallSliding { get => wallSliding; set => wallSliding = value; }
+
+    private float wallSlidingVelocity;
 
 	private Vector2 velocity;
     public Vector2 Velocity => velocity;
@@ -42,7 +51,11 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
 
         facing = 1;
-        isHanging = false;
+        hanging = false;
+        grounded = false;
+
+        wallSliding = false;
+        wallSlidingVelocity = 4f;
 
         speed = 3.5f;
         jumpForce = 6f;
@@ -81,13 +94,16 @@ public class Player : MonoBehaviour
 
     public void Jump()
 	{
-        isHanging = false;
-        velocity.y += jumpForce;
-	}
+        if (grounded)
+        {
+            hanging = false;
+            velocity.y += jumpForce;
+        }
+    }
 
     public void HangOn(BoxShape ledgePolygon)
 	{
-        isHanging = true;
+        hanging = true;
         velocity = Vector2.zero;
 
         SetPosition(ledgePolygon.Center + new Vector2(0, -BodyBox.Size.y));
@@ -95,7 +111,7 @@ public class Player : MonoBehaviour
 
     public void SetRunInput(float runInput)
 	{
-        if (!isHanging)
+        if (!hanging)
 		{
             velocity.x = speed * runInput;
 		}
@@ -134,7 +150,7 @@ public class Player : MonoBehaviour
 		{
             animator.Play("Base Layer.Player-Run");
 		}
-        else if (isHanging)
+        else if (hanging)
         {
             animator.Play("Base Layer.Player-Hang");
         }

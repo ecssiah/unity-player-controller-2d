@@ -13,7 +13,7 @@ public class Surface : MonoBehaviour
         DebugDraw = true;
 
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
-        
-        BodyBox = new BoxShape(bodyBoxCollider2D);
+
+		BodyBox = new BoxShape(bodyBoxCollider2D);
     }
 }
