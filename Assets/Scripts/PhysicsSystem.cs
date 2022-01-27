@@ -43,7 +43,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyGravity()
 	{
-		Vector2 newVelocity = player.Velocity + Time.fixedDeltaTime * physicsSettings.Gravity;
+		Vector2 newVelocity = player.Velocity + Time.fixedDeltaTime * player.Mass * physicsSettings.Gravity;
 
 		if (newVelocity.y < physicsSettings.TerminalVelocity)
 		{

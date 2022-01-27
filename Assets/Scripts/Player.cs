@@ -9,8 +9,11 @@ public class Player : MonoBehaviour
     private int facing;
     public int Facing => facing;
 
+    private float mass;
+    public float Mass => mass;
 	private float speed;
     private float jumpForce;
+    private Vector2 wallJumpForce;
 
     [SerializeField]
     private bool grounded;
@@ -54,6 +57,7 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
+        mass = 2;
         facing = 1;
         hanging = false;
         grounded = false;
@@ -61,8 +65,9 @@ public class Player : MonoBehaviour
         wallSliding = false;
         wallSlidingVelocity = 2.4f;
 
-        speed = 3.5f;
-        jumpForce = 6f;
+        speed = 5f;
+        jumpForce = 14f;
+        wallJumpForce = new Vector2(9, 9);
 
         velocity = Vector2.zero;
 	}
@@ -74,15 +79,20 @@ public class Player : MonoBehaviour
         BodyBox.Move(displacement);
         GroundBox.Move(displacement);
         HandBox.Move(displacement);
+
+        if (transform.position.y < -30)
+		{
+            SetPosition(new Vector2(0, 3));
+		}
     }
 
     public void SetPosition(Vector2 position)
 	{
         transform.position = position;
 
-        BodyBox.SetPosition(position);
-        GroundBox.SetPosition(position);
-        HandBox.SetPosition(position);
+        BodyBox.ResetPosition();
+        GroundBox.ResetPosition();
+        HandBox.ResetPosition();
     }
 
     public void SetVelocity(float vx, float vy)
@@ -105,7 +115,8 @@ public class Player : MonoBehaviour
         else if (wallSliding)
 		{
             wallSliding = false;
-            velocity = new Vector2(-facing * 7, 6);
+            velocity.x = -facing * wallJumpForce.x;
+            velocity.y = wallJumpForce.y;
 		}
     }
 
