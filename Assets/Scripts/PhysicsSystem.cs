@@ -25,12 +25,17 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void MovePlayer()
 	{
-		ApplyGravity();
+		if (!player.IsHanging)
+		{
+			ApplyGravity();
+		}
 
 		player.Move(Time.fixedDeltaTime * player.Velocity);
 
 		ResolveCollisions();
 		ResolveLedgeCollisions();
+		
+		Physics2D.SyncTransforms();
 
 		player.UpdateAnimation();
 	}
@@ -51,7 +56,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyPolygon, surface.BodyPolygon);
+			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyBox, surface.BodyBox);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -60,19 +65,106 @@ public class PhysicsSystem : MonoBehaviour
 				player.SetVelocity(player.Velocity.x, 0);
 			}
 		}
-
-		Physics2D.SyncTransforms();
 	}
 
 	private void ResolveLedgeCollisions()
 	{
-
+		foreach (Surface surface in surfaces)
+		{
+				//if (CheckForCollision(player.HandBox, surface.LeftLedgeBox))
+				//{
+				//	player.HangOn(surface.LeftLedgeBox);
+				//	return;
+				//}
+		}
 	}
 
-	private Vector2 CheckForCollisionResolution(Polygon polygonToResolve, Polygon polygonToCollide)
+	private bool CheckForCollision(BoxShape polygon1, BoxShape polygon2)
+	{
+		List<Vector2> normals = polygon1.Normals.Concat(polygon2.Normals).ToList();
+
+		foreach (Vector2 normal in normals)
+		{
+			if (IsSeparatingAxis(normal, polygon1, polygon2))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
+	private bool IsSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	{
+		float min1 = float.PositiveInfinity;
+		float max1 = float.NegativeInfinity;
+
+		float min2 = float.PositiveInfinity;
+		float max2 = float.NegativeInfinity;
+
+		foreach (Vector2 vertex in polygon1.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min1 = Mathf.Min(min1, projection);
+			max1 = Mathf.Max(max1, projection);
+		}
+
+		foreach (Vector2 vertex in polygon2.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min2 = Mathf.Min(min2, projection);
+			max2 = Mathf.Max(max2, projection);
+		}
+		
+		return !(max1 >= min2 && max2 >= min1);
+	}
+
+	private Vector2 FindSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	{
+		float min1 = float.PositiveInfinity; 
+		float max1 = float.NegativeInfinity;
+
+		float min2 = float.PositiveInfinity;
+		float max2 = float.NegativeInfinity;
+
+		foreach (Vector2 vertex in polygon1.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min1 = Mathf.Min(min1, projection);
+			max1 = Mathf.Max(max1, projection);
+		}
+
+		foreach (Vector2 vertex in polygon2.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min2 = Mathf.Min(min2, projection);
+			max2 = Mathf.Max(max2, projection);
+		}
+
+		if (max1 >= min2 && max2 >= min1)
+		{
+			float overlap = Mathf.Min(max2 - min1, max1 - min2);
+
+			float resolutionMagnitude = overlap / normal.sqrMagnitude + 1E-10f;
+
+			Vector2 resolutionVector = resolutionMagnitude * normal;
+			
+			return resolutionVector;
+		}
+		else
+		{
+			return Vector2.zero;
+		}
+	}
+
+	private Vector2 CheckForCollisionResolution(BoxShape polygonToResolve, BoxShape polygonToCollide)
 	{
 		List<Vector2> resolutionVectors = new List<Vector2>();
-		
+
 		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
 
 		foreach (Vector2 normal in normals)
@@ -118,45 +210,5 @@ public class PhysicsSystem : MonoBehaviour
 		}
 
 		return minResolutionVector;
-	}
-
-	private Vector2 FindSeparatingAxis(Vector2 normal, Polygon polygon1, Polygon polygon2)
-	{
-		float min1 = float.PositiveInfinity; 
-		float max1 = float.NegativeInfinity;
-
-		float min2 = float.PositiveInfinity;
-		float max2 = float.NegativeInfinity;
-
-		foreach (Vector2 vertex in polygon1.Vertices)
-		{
-			float projection = Vector2.Dot(vertex, normal);
-
-			min1 = Mathf.Min(min1, projection);
-			max1 = Mathf.Max(max1, projection);
-		}
-
-		foreach (Vector2 vertex in polygon2.Vertices)
-		{
-			float projection = Vector2.Dot(vertex, normal);
-
-			min2 = Mathf.Min(min2, projection);
-			max2 = Mathf.Max(max2, projection);
-		}
-
-		if (max1 >= min2 && max2 >= min1)
-		{
-			float overlap = Mathf.Min(max2 - min1, max1 - min2);
-
-			float resolutionMagnitude = overlap / normal.sqrMagnitude + 1E-10f;
-
-			Vector2 resolutionVector = resolutionMagnitude * normal;
-			
-			return resolutionVector;
-		}
-		else
-		{
-			return Vector2.zero;
-		}
 	}
 }
