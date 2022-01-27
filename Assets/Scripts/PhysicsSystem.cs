@@ -50,11 +50,18 @@ public class PhysicsSystem : MonoBehaviour
 			newVelocity.y = physicsSettings.TerminalVelocity;
 		}
 
+		if (player.WallSliding && newVelocity.y < -player.WallSlidingVelocity)
+		{
+			newVelocity.y = -player.WallSlidingVelocity;
+		}
+
 		player.SetVelocity(newVelocity);
 	}
 
 	private void ResolveCollisions()
 	{
+		player.WallSliding = false;
+
 		foreach (Surface surface in surfaces)
 		{
 			Vector2 resolutionVector = CheckForCollisionResolution(player.BodyBox, surface.BodyBox);
@@ -63,7 +70,14 @@ public class PhysicsSystem : MonoBehaviour
 			{
 				player.Move(resolutionVector);
 
-				player.SetVelocity(player.Velocity.x, 0);
+				if (resolutionVector.y == 0)
+				{
+					player.WallSliding = true;
+				}
+				else
+				{
+					player.SetVelocity(player.Velocity.x, 0);
+				}
 			}
 		}
 	}

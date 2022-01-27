@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     public bool DebugDraw;
 
+    [SerializeField]
     private int facing;
     public int Facing => facing;
 
@@ -18,11 +19,14 @@ public class Player : MonoBehaviour
     private bool hanging;
     public bool Hanging => hanging;
 
+    [SerializeField]
     private bool wallSliding;
 	public bool WallSliding { get => wallSliding; set => wallSliding = value; }
 
     private float wallSlidingVelocity;
+    public float WallSlidingVelocity => wallSlidingVelocity;
 
+    [SerializeField]
 	private Vector2 velocity;
     public Vector2 Velocity => velocity;
 
@@ -55,7 +59,7 @@ public class Player : MonoBehaviour
         grounded = false;
 
         wallSliding = false;
-        wallSlidingVelocity = 4f;
+        wallSlidingVelocity = 2.4f;
 
         speed = 3.5f;
         jumpForce = 6f;
@@ -96,9 +100,13 @@ public class Player : MonoBehaviour
 	{
         if (grounded)
         {
-            hanging = false;
             velocity.y += jumpForce;
         }
+        else if (wallSliding)
+		{
+            wallSliding = false;
+            velocity = new Vector2(-facing * 7, 6);
+		}
     }
 
     public void HangOn(BoxShape ledgePolygon)
@@ -142,7 +150,11 @@ public class Player : MonoBehaviour
             HandBox.Move(new Vector2(2 * handDisplacementX, 0));
         }
 
-        if (velocity.y != 0)
+        if (wallSliding)
+		{
+            animator.Play("Base Layer.Player-Slide");
+		}
+        else if (velocity.y != 0)
         {
             animator.Play("Base Layer.Player-Jump");
         }
