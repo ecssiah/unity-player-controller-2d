@@ -7,6 +7,8 @@ public class PhysicsSystem : MonoBehaviour
 	private PhysicsSettings physicsSettings;
 
 	private Player player;
+	private float playerVelocityDamped;
+	private float playerSmoothTime;
 
 	private List<Surface> surfaces;
 
@@ -15,25 +17,20 @@ public class PhysicsSystem : MonoBehaviour
 		physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
 
 		player = GameObject.Find("Player").GetComponent<Player>();
+		playerSmoothTime = 0.1f;
+
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 	}
 
-	void FixedUpdate()
+	void LateUpdate()
 	{
 		MovePlayer();
 	}
 
 	private void MovePlayer()
 	{
-		if (!player.Hanging)
-		{
-			ApplyGravity();
-		}
-
-		player.Move(Time.fixedDeltaTime * player.Velocity);
-
+		ApplyForces();
 		ResolveCollisions();
-		ResolveLedgeCollisions();
 		GroundCheck();
 		
 		Physics2D.SyncTransforms();
@@ -41,9 +38,21 @@ public class PhysicsSystem : MonoBehaviour
 		player.UpdateAnimation();
 	}
 
-	private void ApplyGravity()
+	private void ApplyForces()
 	{
-		Vector2 newVelocity = player.Velocity + Time.fixedDeltaTime * player.Mass * physicsSettings.Gravity;
+		Vector2 newVelocity = player.Velocity + Time.deltaTime * player.Mass * physicsSettings.Gravity;
+
+		newVelocity.x = Mathf.SmoothDamp(
+			player.Velocity.x,
+			player.TargetVelocity.x,
+			ref playerVelocityDamped,
+			playerSmoothTime
+		);
+
+		if (Mathf.Abs(newVelocity.x) < 0.1f)
+		{
+			newVelocity.x = 0;
+		}
 
 		if (newVelocity.y < physicsSettings.TerminalVelocity)
 		{
@@ -56,6 +65,8 @@ public class PhysicsSystem : MonoBehaviour
 		}
 
 		player.SetVelocity(newVelocity);
+
+		player.Move(Time.deltaTime * player.Velocity);
 	}
 
 	private void ResolveCollisions()
@@ -73,24 +84,13 @@ public class PhysicsSystem : MonoBehaviour
 				if (resolutionVector.y == 0)
 				{
 					player.WallSliding = true;
+					player.SetVelocity(0, player.Velocity.y);
 				}
 				else
 				{
 					player.SetVelocity(player.Velocity.x, 0);
 				}
 			}
-		}
-	}
-
-	private void ResolveLedgeCollisions()
-	{
-		foreach (Surface surface in surfaces)
-		{
-				//if (CheckForCollision(player.HandBox, surface.LeftLedgeBox))
-				//{
-				//	player.HangOn(surface.LeftLedgeBox);
-				//	return;
-				//}
 		}
 	}
 

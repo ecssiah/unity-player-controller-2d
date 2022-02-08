@@ -19,9 +19,6 @@ public class Player : MonoBehaviour
     private bool grounded;
 	public bool Grounded { get => grounded; set => grounded = value; }
 
-    private bool hanging;
-    public bool Hanging => hanging;
-
     [SerializeField]
     private bool wallSliding;
 	public bool WallSliding { get => wallSliding; set => wallSliding = value; }
@@ -32,6 +29,10 @@ public class Player : MonoBehaviour
     [SerializeField]
 	private Vector2 velocity;
     public Vector2 Velocity => velocity;
+
+    [SerializeField]
+    private Vector2 targetVelocity;
+    public Vector2 TargetVelocity => targetVelocity;
 
 	private BoxCollider2D bodyBoxCollider2D;
     private BoxCollider2D groundBoxCollider2D;
@@ -57,19 +58,18 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        mass = 2;
+        mass = 4;
         facing = 1;
-        hanging = false;
         grounded = false;
 
         wallSliding = false;
         wallSlidingVelocity = 2.4f;
 
-        speed = 5f;
-        jumpForce = 14f;
-        wallJumpForce = new Vector2(9, 9);
+        speed = 7f;
+        jumpForce = 21f;
+        wallJumpForce = new Vector2(14, 16);
 
-        velocity = Vector2.zero;
+        targetVelocity = Vector2.zero;
 	}
 
     public void Move(Vector3 displacement)
@@ -106,7 +106,18 @@ public class Player : MonoBehaviour
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
 
-    public void Jump()
+    public void SetTargetVelocity(float vx, float vy)
+	{
+        targetVelocity.x = vx;
+        targetVelocity.y = vy;
+	}
+
+    public void SetTargetVelocity(Vector2 newTargetVelocity)
+	{
+        SetTargetVelocity(newTargetVelocity.x, newTargetVelocity.y);
+	}
+
+    public void SetJumpInput(int jumpInput)
 	{
         if (grounded)
         {
@@ -115,25 +126,14 @@ public class Player : MonoBehaviour
         else if (wallSliding)
 		{
             wallSliding = false;
-            velocity.x = -facing * wallJumpForce.x;
+            targetVelocity.x = -facing * wallJumpForce.x;
             velocity.y = wallJumpForce.y;
 		}
     }
 
-    public void HangOn(BoxShape ledgePolygon)
-	{
-        hanging = true;
-        velocity = Vector2.zero;
-
-        SetPosition(ledgePolygon.Center + new Vector2(0, -BodyBox.Size.y));
-    }
-
     public void SetRunInput(float runInput)
 	{
-        if (!hanging)
-		{
-            velocity.x = speed * runInput;
-		}
+        targetVelocity.x = speed * runInput;
 	}
 
     public void UpdateAnimation()
@@ -173,25 +173,9 @@ public class Player : MonoBehaviour
 		{
             animator.Play("Base Layer.Player-Run");
 		}
-        else if (hanging)
-        {
-            animator.Play("Base Layer.Player-Hang");
-        }
         else
 		{
             animator.Play("Base Layer.Player-Idle");
 		}
-    }
-
-	void OnDrawGizmos()
-	{
-        if (DebugDraw)
-        {
-            Gizmos.color = new Color(1, 0.8f, 1, 0.1f);
-
-            Gizmos.DrawCube(BodyBox.Center, BodyBox.Size);
-            Gizmos.DrawCube(GroundBox.Center, GroundBox.Size);
-            Gizmos.DrawCube(HandBox.Center, HandBox.Size);
-        }
     }
 }

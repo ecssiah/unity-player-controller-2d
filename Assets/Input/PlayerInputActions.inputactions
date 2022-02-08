@@ -26,7 +26,7 @@
             ],
             "bindings": [
                 {
-                    "name": "AD",
+                    "name": "AD Keyboard",
                     "id": "de50ae81-fd4f-43fc-965a-fecdd8d36dea",
                     "path": "1DAxis",
                     "interactions": "",
@@ -59,9 +59,53 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "AD Joypad",
+                    "id": "078899f6-8947-4a9f-83ad-fec57a54c796",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "c7ceede4-b40a-4b2e-911c-b5e9c6ab4749",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "9602b1f2-4ad3-45d7-a200-e7ed3b861408",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "8a4601d9-e3a1-4cc4-a474-1885a3af9b69",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be2e8ab4-5165-4dab-b62d-c051771ffb93",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

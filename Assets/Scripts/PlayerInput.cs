@@ -19,10 +19,11 @@ public class PlayerInput : MonoBehaviour
 		runAction = playerInputActions.Player.Run;
 		jumpAction = playerInputActions.Player.Jump;
 
-		runAction.started += OnStartRun;
-		runAction.canceled += OnCancelRun;
+		runAction.started += OnRunStart;
+		runAction.canceled += OnRunCancel;
 
-		jumpAction.performed += OnJump;
+		jumpAction.started += OnJumpStart;
+		jumpAction.canceled += OnJumpCancel;
 	}
 
 	void OnEnable()
@@ -36,17 +37,21 @@ public class PlayerInput : MonoBehaviour
 		runAction.Disable();
 		jumpAction.Disable();
 	}
-	private void OnJump(InputAction.CallbackContext context)
+	private void OnJumpStart(InputAction.CallbackContext context)
 	{
-		player.Jump();
+		player.SetJumpInput(1);
 	}
 
-	private void OnStartRun(InputAction.CallbackContext context)
+	private void OnJumpCancel(InputAction.CallbackContext context)
+	{
+	}
+
+	private void OnRunStart(InputAction.CallbackContext context)
 	{
 		player.SetRunInput(context.ReadValue<float>());
 	}
 
-	private void OnCancelRun(InputAction.CallbackContext context)
+	private void OnRunCancel(InputAction.CallbackContext context)
 	{
 		player.SetRunInput(0);
 	}
