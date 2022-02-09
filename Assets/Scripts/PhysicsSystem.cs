@@ -11,9 +11,6 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityXDamped;
 	private float playerVelocityXSmoothTime;
 
-	private float playerVelocityYDamped;
-	private float playerVelocityYSmoothTime;
-
 	private float wallSlideTimer;
 
 	private List<Surface> surfaces;
@@ -26,7 +23,6 @@ public class PhysicsSystem : MonoBehaviour
 		player = GameObject.Find("Player").GetComponent<Player>();
 
 		playerVelocityXSmoothTime = 0.1f;
-		playerVelocityYSmoothTime = 0.1f;
 
 		wallSlideTimer = 0.0f;
 
@@ -73,13 +69,6 @@ public class PhysicsSystem : MonoBehaviour
 			ref playerVelocityXDamped,
 			playerVelocityXSmoothTime
 		);
-
-		//newVelocity.y = Mathf.SmoothDamp(
-		//	player.Velocity.y,
-		//	player.Climbing ? player.PlayerInputInfo.Direction.y * player.ClimbSpeed : newVelocity.y,
-		//	ref playerVelocityYDamped,
-		//	playerVelocityYSmoothTime
-		//);
 
 		if (Mathf.Abs(newVelocity.x) < 0.1f)
 		{

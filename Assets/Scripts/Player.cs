@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
 
         wallSliding = 0;
 
-        ClimbSpeed = 2.4f;
+        ClimbSpeed = 3.2f;
 
         climbing = false;
 
