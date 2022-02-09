@@ -144,10 +144,12 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			player.Climbing = false;
 		} 
-		else if (player.PlayerInputInfo.Direction.y != 0)
+		else if (!player.Climbing && player.PlayerInputInfo.Direction.y != 0)
 		{
 			player.Climbing = true;
 			player.WallSliding = 0;
+
+			player.SetVelocity(0, player.Velocity.y);
 		}
 	}
 

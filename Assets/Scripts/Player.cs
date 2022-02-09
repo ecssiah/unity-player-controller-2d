@@ -32,9 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int wallSliding;
 	public int WallSliding { get => wallSliding; set => wallSliding = value; }
-
+    
     public float ClimbSpeed { get; set; }
-
+    
     [SerializeField]
     private bool climbing;
     public bool Climbing { get => climbing; set => climbing = value; }
