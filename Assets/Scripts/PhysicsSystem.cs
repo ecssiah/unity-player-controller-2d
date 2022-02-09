@@ -34,7 +34,10 @@ public class PhysicsSystem : MonoBehaviour
 	private void MovePlayer()
 	{
 		ApplyForces();
+		
 		ResolveCollisions();
+
+		WallSlideCheck();
 		GroundCheck();
 
 		Physics2D.SyncTransforms();
@@ -75,20 +78,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ResolveCollisions()
 	{
-		if (player.WallSliding != 0)
-		{
-			wallSlideTimer += Time.deltaTime;
-
-			if (wallSlideTimer >= player.WallSlideStickTime)
-			{
-				wallSlideTimer = 0;
-				player.WallSliding = 0;
-			}
-		}
-
 		player.CollisionInfo.Reset();
-
-		bool collisionOccured = false;
 
 		foreach (Surface surface in surfaces)
 		{
@@ -101,22 +91,12 @@ public class PhysicsSystem : MonoBehaviour
 				if (resolutionVector.x > 0)
 				{
 					player.CollisionInfo.Left = true;
-
-					if (!player.Grounded && player.PlayerInputInfo.Direction.x < 0)
-					{
-						wallSlideTimer = 0;
-						player.WallSliding = -1;
-					}
+					player.SetVelocity(0, player.Velocity.y);
 				}
 				else if (resolutionVector.x < 0)
 				{
 					player.CollisionInfo.Right = true;
-
-					if (!player.Grounded && player.PlayerInputInfo.Direction.x > 0)
-					{
-						wallSlideTimer = 0;
-						player.WallSliding = 1;
-					}
+					player.SetVelocity(0, player.Velocity.y);
 				}
 
 				if (resolutionVector.y > 0)
@@ -129,14 +109,56 @@ public class PhysicsSystem : MonoBehaviour
 					player.CollisionInfo.Top = true;
 					player.SetVelocity(player.Velocity.x, 0);
 				}
-
-				collisionOccured = true;
 			}
 		}
+	}
 
-		if (collisionOccured == false)
+	private void WallSlideCheck()
+	{
+		if (!player.Grounded)
 		{
-			print("No collision");
+			bool wallContact = false;
+
+			foreach (Surface surface in surfaces)
+			{
+				if (CheckForCollision(player.WallBox, surface.BodyBox))
+				{
+					wallContact = true;
+					break;
+				}
+			}
+
+			if (wallContact)
+			{
+				if (player.CollisionInfo.Left)
+				{
+					wallSlideTimer = 0;
+					player.WallSliding = -1;
+				}
+				else if (player.CollisionInfo.Right)
+				{
+					wallSlideTimer = 0;
+					player.WallSliding = 1;
+				}
+			}
+
+			if (player.WallSliding != 0)
+			{
+				if (!wallContact)
+				{
+					player.WallSliding = 0;
+				}
+				else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
+				{
+					wallSlideTimer += Time.deltaTime;
+
+					if (wallSlideTimer >= player.WallSlideStickTime)
+					{
+						wallSlideTimer = 0;
+						player.WallSliding = 0;
+					}
+				}
+			}
 		}
 	}
 

@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
+    public bool DebugDraw;
+
     [SerializeField]
     private Vector2 facing;
     public Vector2 Facing => facing;
@@ -49,6 +51,8 @@ public class Player : MonoBehaviour
 
 	void Awake()
 	{
+        DebugDraw = false;
+
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
 
@@ -178,10 +182,13 @@ public class Player : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-        Gizmos.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+        if (DebugDraw)
+        {
+            Gizmos.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
 
-        Gizmos.DrawWireCube(HandBox.Center, HandBox.Size);
-        Gizmos.DrawWireCube(WallBox.Center, WallBox.Size);
-        Gizmos.DrawWireCube(GroundBox.Center, GroundBox.Size);
+            Gizmos.DrawWireCube(HandBox.Center, HandBox.Size);
+            Gizmos.DrawWireCube(WallBox.Center, WallBox.Size);
+            Gizmos.DrawWireCube(GroundBox.Center, GroundBox.Size);
+        }
     }
 }

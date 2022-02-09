@@ -68,14 +68,4 @@ public struct BoxShape
 			boxCollider2D.transform.TransformPoint(maxX, minY, 0),
 		};
 	}
-
-	public void Move(Vector2 displacement)
-	{
-		Center += displacement;
-
-		for (int i = 0; i < vertices.Count; i++)
-		{
-			vertices[i] += displacement;
-		}
-	}
 }
