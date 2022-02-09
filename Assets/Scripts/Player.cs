@@ -25,17 +25,19 @@ public class Player : MonoBehaviour
     public PlayerInputInfo PlayerInputInfo;
 
     public CollisionInfo CollisionInfo;
+ 
+    public float WallSlideSpeed { get; set; }
+    public float WallSlideStickTime { get; set; }
 
     [SerializeField]
     private int wallSliding;
 	public int WallSliding { get => wallSliding; set => wallSliding = value; }
 
+    public float ClimbSpeed { get; set; }
+
     [SerializeField]
     private bool climbing;
     public bool Climbing { get => climbing; set => climbing = value; }
-
-    public float WallSlideVelocity { get; set; }
-    public float WallSlideStickTime { get; set; }
 
     [SerializeField]
 	private Vector2 velocity;
@@ -76,11 +78,14 @@ public class Player : MonoBehaviour
         facing = new Vector2(1, 0);
         grounded = false;
 
-        wallSliding = 0;
-        climbing = false;
-
-        WallSlideVelocity = 2.4f;
+        WallSlideSpeed = 2.4f;
         WallSlideStickTime = 0.3f;
+
+        wallSliding = 0;
+
+        ClimbSpeed = 2.4f;
+
+        climbing = false;
 
         speed = 7f;
         jumpForce = 21f;
@@ -123,7 +128,12 @@ public class Player : MonoBehaviour
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
 
-    public void SetClimbInput(int climbInput)
+    public void SetRunInput(float runInput)
+	{
+        PlayerInputInfo.Direction.x = runInput;
+	}
+
+    public void SetClimbInput(float climbInput)
 	{
         PlayerInputInfo.Direction.y = climbInput;
 	}
@@ -141,11 +151,6 @@ public class Player : MonoBehaviour
             velocity.y = wallJumpForce.y;
 		}
     }
-
-    public void SetRunInput(float runInput)
-	{
-        PlayerInputInfo.Direction.x = runInput;
-	}
 
     public void UpdateAnimation()
 	{
@@ -172,7 +177,11 @@ public class Player : MonoBehaviour
 			WallBox.ResetPosition();
         }
 
-        if (wallSliding != 0)
+        if (climbing)
+		{
+            animator.Play("Base Layer.Player-Climb");
+		}
+        else if (wallSliding != 0)
 		{
             animator.Play("Base Layer.Player-Slide");
 		}

@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
 	private PlayerInputActions playerInputActions;
 
 	private InputAction runAction;
+	private InputAction climbAction;
 	private InputAction jumpAction;
 
 	void Awake()
@@ -17,10 +18,14 @@ public class PlayerInput : MonoBehaviour
 		playerInputActions = new PlayerInputActions();
 
 		runAction = playerInputActions.Player.Run;
+		climbAction = playerInputActions.Player.Climb;
 		jumpAction = playerInputActions.Player.Jump;
 
 		runAction.started += OnRunStart;
 		runAction.canceled += OnRunCancel;
+
+		climbAction.started += OnClimbStart;
+		climbAction.canceled += OnClimbCancel;
 
 		jumpAction.started += OnJumpStart;
 		jumpAction.canceled += OnJumpCancel;
@@ -29,23 +34,17 @@ public class PlayerInput : MonoBehaviour
 	void OnEnable()
 	{
 		runAction.Enable();
+		climbAction.Enable();
 		jumpAction.Enable();
 	}
 
 	void OnDisable()
 	{
 		runAction.Disable();
+		climbAction.Disable();
 		jumpAction.Disable();
 	}
-	private void OnJumpStart(InputAction.CallbackContext context)
-	{
-		player.SetJumpInput(1);
-	}
-
-	private void OnJumpCancel(InputAction.CallbackContext context)
-	{
-	}
-
+	
 	private void OnRunStart(InputAction.CallbackContext context)
 	{
 		player.SetRunInput(context.ReadValue<float>());
@@ -54,5 +53,24 @@ public class PlayerInput : MonoBehaviour
 	private void OnRunCancel(InputAction.CallbackContext context)
 	{
 		player.SetRunInput(0);
+	}
+
+	private void OnClimbStart(InputAction.CallbackContext context)
+	{
+		player.SetClimbInput(context.ReadValue<float>());
+	}
+
+	private void OnClimbCancel(InputAction.CallbackContext context)
+	{
+		player.SetClimbInput(0);
+	}
+
+	private void OnJumpStart(InputAction.CallbackContext context)
+	{
+		player.SetJumpInput(1);
+	}
+
+	private void OnJumpCancel(InputAction.CallbackContext context)
+	{
 	}
 }
