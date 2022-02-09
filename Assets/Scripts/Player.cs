@@ -6,18 +6,25 @@ public class Player : MonoBehaviour
     public bool DebugDraw;
 
     [SerializeField]
-    private int facing;
-    public int Facing => facing;
+    private Vector2 facing;
+    public Vector2 Facing => facing;
 
     private float mass;
     public float Mass => mass;
-	private float speed;
+
+    private float speed;
+    public float Speed => speed;
+
     private float jumpForce;
     private Vector2 wallJumpForce;
 
     [SerializeField]
     private bool grounded;
-	public bool Grounded { get => grounded; set => grounded = value; }
+    public bool Grounded { get => grounded; set => grounded = value; }
+
+    public PlayerInputInfo PlayerInputInfo;
+
+    public CollisionInfo CollisionInfo;
 
     [SerializeField]
     private bool wallSliding;
@@ -29,10 +36,6 @@ public class Player : MonoBehaviour
     [SerializeField]
 	private Vector2 velocity;
     public Vector2 Velocity => velocity;
-
-    [SerializeField]
-    private Vector2 targetVelocity;
-    public Vector2 TargetVelocity => targetVelocity;
 
 	private BoxCollider2D bodyBoxCollider2D;
     private BoxCollider2D groundBoxCollider2D;
@@ -48,6 +51,9 @@ public class Player : MonoBehaviour
 	{
         DebugDraw = false;
 
+        PlayerInputInfo = new PlayerInputInfo();
+        CollisionInfo = new CollisionInfo();
+
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
         groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
         handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
@@ -59,7 +65,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
 
         mass = 4;
-        facing = 1;
+        facing = new Vector2(1, 0);
         grounded = false;
 
         wallSliding = false;
@@ -67,9 +73,7 @@ public class Player : MonoBehaviour
 
         speed = 7f;
         jumpForce = 21f;
-        wallJumpForce = new Vector2(14, 16);
-
-        targetVelocity = Vector2.zero;
+        wallJumpForce = new Vector2(24, 20);
 	}
 
     public void Move(Vector3 displacement)
@@ -106,17 +110,6 @@ public class Player : MonoBehaviour
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
 
-    public void SetTargetVelocity(float vx, float vy)
-	{
-        targetVelocity.x = vx;
-        targetVelocity.y = vy;
-	}
-
-    public void SetTargetVelocity(Vector2 newTargetVelocity)
-	{
-        SetTargetVelocity(newTargetVelocity.x, newTargetVelocity.y);
-	}
-
     public void SetJumpInput(int jumpInput)
 	{
         if (grounded)
@@ -126,21 +119,21 @@ public class Player : MonoBehaviour
         else if (wallSliding)
 		{
             wallSliding = false;
-            targetVelocity.x = -facing * wallJumpForce.x;
+            velocity.x = -facing.x * wallJumpForce.x;
             velocity.y = wallJumpForce.y;
 		}
     }
 
     public void SetRunInput(float runInput)
 	{
-        targetVelocity.x = speed * runInput;
+        PlayerInputInfo.Direction.x = runInput;
 	}
 
     public void UpdateAnimation()
 	{
-        if (velocity.x > 0 && !(facing == 1))
+        if (velocity.x > 0 && !(facing.x == 1))
 		{
-            facing = 1;
+            facing.x = 1;
 
             Vector3 scale = transform.localScale;
             scale.x = 1;
@@ -149,9 +142,9 @@ public class Player : MonoBehaviour
             float handDisplacementX = BodyBox.Center.x - HandBox.Center.x;
             HandBox.Move(new Vector2(2 * handDisplacementX, 0));
 		}
-        else if (velocity.x < 0 && !(facing == -1))
+        else if (velocity.x < 0 && !(facing.x == -1))
 		{
-            facing = -1;
+            facing.x = -1;
 
             Vector3 scale = transform.localScale;
             scale.x = -1;

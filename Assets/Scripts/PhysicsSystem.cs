@@ -44,7 +44,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
-			player.TargetVelocity.x,
+			player.PlayerInputInfo.Direction.x * player.Speed,
 			ref playerVelocityDamped,
 			playerSmoothTime
 		);
@@ -72,6 +72,7 @@ public class PhysicsSystem : MonoBehaviour
 	private void ResolveCollisions()
 	{
 		player.WallSliding = false;
+		player.CollisionInfo.Reset();
 
 		foreach (Surface surface in surfaces)
 		{
@@ -81,13 +82,35 @@ public class PhysicsSystem : MonoBehaviour
 			{
 				player.Move(resolutionVector);
 
-				if (resolutionVector.y == 0)
+				if (resolutionVector.x > 0)
 				{
-					player.WallSliding = true;
+					player.CollisionInfo.Left = true;
 					player.SetVelocity(0, player.Velocity.y);
+
+					if (player.PlayerInputInfo.Direction.x < 0)
+					{
+						player.WallSliding = true;
+					}
 				}
-				else
+				else if (resolutionVector.x < 0)
 				{
+					player.CollisionInfo.Right = true;
+					player.SetVelocity(0, player.Velocity.y);
+
+					if (player.PlayerInputInfo.Direction.x > 0)
+					{
+						player.WallSliding = true;
+					}
+				}
+
+				if (resolutionVector.y > 0)
+				{
+					player.CollisionInfo.Bottom = true;
+					player.SetVelocity(player.Velocity.x, 0);
+				}
+				else if (resolutionVector.y < 0)
+				{
+					player.CollisionInfo.Top = true;
 					player.SetVelocity(player.Velocity.x, 0);
 				}
 			}
