@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
     public bool DebugDraw;
 
     [SerializeField]
-    private Vector2 facing;
-    public Vector2 Facing => facing;
+    private int facing;
+    public int Facing => facing;
 
     private float mass;
     public float Mass => mass;
@@ -75,7 +75,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
 
         mass = 4;
-        facing = new Vector2(1, 0);
+        facing = 1;
         grounded = false;
 
         WallSlideSpeed = 2.4f;
@@ -152,16 +152,16 @@ public class Player : MonoBehaviour
         else if (wallSliding != 0)
 		{
             wallSliding = 0;
-            velocity.x = -facing.x * wallJumpForce.x;
+            velocity.x = -facing * wallJumpForce.x;
             velocity.y = wallJumpForce.y;
 		}
     }
 
     public void UpdateAnimation()
 	{
-        if (velocity.x > 0 && !(facing.x == 1))
+        if (velocity.x > 0 && !(facing == 1))
 		{
-            facing.x = 1;
+            facing = 1;
 
 			Vector3 scale = transform.localScale;
 			scale.x = 1;
@@ -170,9 +170,9 @@ public class Player : MonoBehaviour
             HandBox.ResetPosition();
 			WallBox.ResetPosition();
         }
-        else if (velocity.x < 0 && !(facing.x == -1))
+        else if (velocity.x < 0 && !(facing == -1))
 		{
-            facing.x = -1;
+            facing = -1;
 
 			Vector3 scale = transform.localScale;
 			scale.x = -1;

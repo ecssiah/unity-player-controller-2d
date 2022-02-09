@@ -159,14 +159,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugDraw: 0
-  facing: {x: 0, y: 0}
+  facing: 0
   grounded: 0
+  PlayerInputInfo:
+    Direction: {x: 0, y: 0}
   CollisionInfo:
     Top: 0
     Bottom: 0
     Left: 0
     Right: 0
   wallSliding: 0
+  climbing: 0
   velocity: {x: 0, y: 0}
 --- !u!1 &1528953597548372058
 GameObject:
@@ -212,7 +215,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.3742953, y: 1.3760146}
+  m_Offset: {x: 0.18518254, y: 1.1267298}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -223,7 +226,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1314094, y: 0.13101077}
+  m_Size: {x: 0.0675531, y: 0.37415498}
   m_EdgeRadius: 0
 --- !u!1 &1922425727487812938
 GameObject:
