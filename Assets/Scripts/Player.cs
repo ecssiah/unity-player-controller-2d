@@ -144,6 +144,11 @@ public class Player : MonoBehaviour
         {
             velocity.y += jumpForce;
         }
+        else if (climbing)
+		{
+            climbing = false;
+            velocity.y = jumpForce;
+		}
         else if (wallSliding != 0)
 		{
             wallSliding = 0;
