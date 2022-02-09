@@ -182,6 +182,8 @@ public class Player : MonoBehaviour
 			WallBox.ResetPosition();
         }
 
+        animator.speed = 1;
+
         if (climbing)
 		{
             animator.Play("Base Layer.Player-Climb");
@@ -189,10 +191,6 @@ public class Player : MonoBehaviour
             if (velocity.y == 0)
 			{
                 animator.speed = 0;
-			}
-            else
-			{
-                animator.speed = 1;
 			}
 		}
         else if (wallSliding != 0)

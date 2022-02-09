@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PhysicsSettings
   m_EditorClassIdentifier: 
   Gravity: {x: 0, y: -9.8}
-  TerminalVelocity: -53
+  TerminalVelocity: -22
