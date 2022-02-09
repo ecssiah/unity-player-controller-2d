@@ -10,6 +10,8 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityDamped;
 	private float playerSmoothTime;
 
+	private float wallSlideTimer;
+
 	private List<Surface> surfaces;
 
 	void Awake()
@@ -18,6 +20,8 @@ public class PhysicsSystem : MonoBehaviour
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 		playerSmoothTime = 0.1f;
+
+		wallSlideTimer = 0.0f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 	}
@@ -32,7 +36,7 @@ public class PhysicsSystem : MonoBehaviour
 		ApplyForces();
 		ResolveCollisions();
 		GroundCheck();
-		
+
 		Physics2D.SyncTransforms();
 
 		player.UpdateAnimation();
@@ -44,7 +48,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
-			player.PlayerInputInfo.Direction.x * player.Speed,
+			player.WallSliding != 0 ? 0 : player.PlayerInputInfo.Direction.x * player.Speed,
 			ref playerVelocityDamped,
 			playerSmoothTime
 		);
@@ -59,9 +63,9 @@ public class PhysicsSystem : MonoBehaviour
 			newVelocity.y = physicsSettings.TerminalVelocity;
 		}
 
-		if (player.WallSliding && newVelocity.y < -player.WallSlidingVelocity)
+		if (player.WallSliding != 0 && newVelocity.y < -player.WallSlideVelocity)
 		{
-			newVelocity.y = -player.WallSlidingVelocity;
+			newVelocity.y = -player.WallSlideVelocity;
 		}
 
 		player.SetVelocity(newVelocity);
@@ -71,8 +75,20 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ResolveCollisions()
 	{
-		player.WallSliding = false;
+		if (player.WallSliding != 0)
+		{
+			wallSlideTimer += Time.deltaTime;
+
+			if (wallSlideTimer >= player.WallSlideStickTime)
+			{
+				wallSlideTimer = 0;
+				player.WallSliding = 0;
+			}
+		}
+
 		player.CollisionInfo.Reset();
+
+		bool collisionOccured = false;
 
 		foreach (Surface surface in surfaces)
 		{
@@ -85,21 +101,21 @@ public class PhysicsSystem : MonoBehaviour
 				if (resolutionVector.x > 0)
 				{
 					player.CollisionInfo.Left = true;
-					player.SetVelocity(0, player.Velocity.y);
 
-					if (player.PlayerInputInfo.Direction.x < 0)
+					if (!player.Grounded && player.PlayerInputInfo.Direction.x < 0)
 					{
-						player.WallSliding = true;
+						wallSlideTimer = 0;
+						player.WallSliding = -1;
 					}
 				}
 				else if (resolutionVector.x < 0)
 				{
 					player.CollisionInfo.Right = true;
-					player.SetVelocity(0, player.Velocity.y);
 
-					if (player.PlayerInputInfo.Direction.x > 0)
+					if (!player.Grounded && player.PlayerInputInfo.Direction.x > 0)
 					{
-						player.WallSliding = true;
+						wallSlideTimer = 0;
+						player.WallSliding = 1;
 					}
 				}
 
@@ -113,7 +129,14 @@ public class PhysicsSystem : MonoBehaviour
 					player.CollisionInfo.Top = true;
 					player.SetVelocity(player.Velocity.x, 0);
 				}
+
+				collisionOccured = true;
 			}
+		}
+
+		if (collisionOccured == false)
+		{
+			print("No collision");
 		}
 	}
 

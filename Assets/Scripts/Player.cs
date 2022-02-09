@@ -27,11 +27,11 @@ public class Player : MonoBehaviour
     public CollisionInfo CollisionInfo;
 
     [SerializeField]
-    private bool wallSliding;
-	public bool WallSliding { get => wallSliding; set => wallSliding = value; }
+    private int wallSliding;
+	public int WallSliding { get => wallSliding; set => wallSliding = value; }
 
-    private float wallSlidingVelocity;
-    public float WallSlidingVelocity => wallSlidingVelocity;
+    public float WallSlideVelocity { get; set; }
+    public float WallSlideStickTime { get; set; }
 
     [SerializeField]
 	private Vector2 velocity;
@@ -68,8 +68,10 @@ public class Player : MonoBehaviour
         facing = new Vector2(1, 0);
         grounded = false;
 
-        wallSliding = false;
-        wallSlidingVelocity = 2.4f;
+        wallSliding = 0;
+
+        WallSlideVelocity = 2.4f;
+        WallSlideStickTime = 0.4f;
 
         speed = 7f;
         jumpForce = 21f;
@@ -116,9 +118,9 @@ public class Player : MonoBehaviour
         {
             velocity.y += jumpForce;
         }
-        else if (wallSliding)
+        else if (wallSliding != 0)
 		{
-            wallSliding = false;
+            wallSliding = 0;
             velocity.x = -facing.x * wallJumpForce.x;
             velocity.y = wallJumpForce.y;
 		}
@@ -154,7 +156,7 @@ public class Player : MonoBehaviour
             HandBox.Move(new Vector2(2 * handDisplacementX, 0));
         }
 
-        if (wallSliding)
+        if (wallSliding != 0)
 		{
             animator.Play("Base Layer.Player-Slide");
 		}
