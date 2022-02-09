@@ -3,8 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
-    public bool DebugDraw;
-
     [SerializeField]
     private Vector2 facing;
     public Vector2 Facing => facing;
@@ -38,29 +36,31 @@ public class Player : MonoBehaviour
     public Vector2 Velocity => velocity;
 
 	private BoxCollider2D bodyBoxCollider2D;
-    private BoxCollider2D groundBoxCollider2D;
     private BoxCollider2D handBoxCollider2D;
+    private BoxCollider2D wallBoxCollider2D;
+    private BoxCollider2D groundBoxCollider2D;
 
     public BoxShape BodyBox;
-    public BoxShape GroundBox;
     public BoxShape HandBox;
+    public BoxShape WallBox;
+    public BoxShape GroundBox;
 
     private Animator animator;
 
 	void Awake()
 	{
-        DebugDraw = false;
-
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
 
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
-        groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
         handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
+        wallBoxCollider2D = GameObject.Find("Player/WallTrigger").GetComponent<BoxCollider2D>();
+        groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
 
         BodyBox = new BoxShape(bodyBoxCollider2D);
-        GroundBox = new BoxShape(groundBoxCollider2D);
         HandBox = new BoxShape(handBoxCollider2D);
+        WallBox = new BoxShape(wallBoxCollider2D);
+        GroundBox = new BoxShape(groundBoxCollider2D);
 
         animator = GetComponent<Animator>();
 
@@ -82,14 +82,15 @@ public class Player : MonoBehaviour
 	{
         transform.position += displacement;
 
-        BodyBox.Move(displacement);
-        GroundBox.Move(displacement);
-        HandBox.Move(displacement);
-
         if (transform.position.y < -30)
-		{
+        {
             SetPosition(new Vector2(0, 3));
-		}
+        }
+
+        BodyBox.ResetPosition();
+        HandBox.ResetPosition();
+        WallBox.ResetPosition();
+        GroundBox.ResetPosition();
     }
 
     public void SetPosition(Vector2 position)
@@ -97,8 +98,9 @@ public class Player : MonoBehaviour
         transform.position = position;
 
         BodyBox.ResetPosition();
-        GroundBox.ResetPosition();
         HandBox.ResetPosition();
+        WallBox.ResetPosition();
+        GroundBox.ResetPosition();
     }
 
     public void SetVelocity(float vx, float vy)
@@ -137,23 +139,23 @@ public class Player : MonoBehaviour
 		{
             facing.x = 1;
 
-            Vector3 scale = transform.localScale;
-            scale.x = 1;
-            transform.localScale = scale;
+			Vector3 scale = transform.localScale;
+			scale.x = 1;
+			transform.localScale = scale;
 
-            float handDisplacementX = BodyBox.Center.x - HandBox.Center.x;
-            HandBox.Move(new Vector2(2 * handDisplacementX, 0));
-		}
+            HandBox.ResetPosition();
+			WallBox.ResetPosition();
+        }
         else if (velocity.x < 0 && !(facing.x == -1))
 		{
             facing.x = -1;
 
-            Vector3 scale = transform.localScale;
-            scale.x = -1;
-            transform.localScale = scale;
+			Vector3 scale = transform.localScale;
+			scale.x = -1;
+			transform.localScale = scale;
 
-            float handDisplacementX = BodyBox.Center.x - HandBox.Center.x;
-            HandBox.Move(new Vector2(2 * handDisplacementX, 0));
+            HandBox.ResetPosition();
+			WallBox.ResetPosition();
         }
 
         if (wallSliding != 0)
@@ -172,5 +174,14 @@ public class Player : MonoBehaviour
 		{
             animator.Play("Base Layer.Player-Idle");
 		}
+    }
+
+	void OnDrawGizmos()
+	{
+        Gizmos.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+
+        Gizmos.DrawWireCube(HandBox.Center, HandBox.Size);
+        Gizmos.DrawWireCube(WallBox.Center, WallBox.Size);
+        Gizmos.DrawWireCube(GroundBox.Center, GroundBox.Size);
     }
 }

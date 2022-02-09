@@ -3,7 +3,7 @@ using UnityEngine;
 
 public struct BoxShape
 {
-	private BoxCollider2D boxCollider2D;
+	private readonly BoxCollider2D boxCollider2D;
 
 	public Vector2 Center { get; private set; }
 	public Vector2 Size { get; private set; }
