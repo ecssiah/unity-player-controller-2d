@@ -14,6 +14,10 @@ public class PhysicsSystem : MonoBehaviour
 
 	private List<Surface> surfaces;
 
+	private List<Climbable> climbables;
+
+	public 
+
 	void Awake()
 	{
 		physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
@@ -37,6 +41,7 @@ public class PhysicsSystem : MonoBehaviour
 		
 		ResolveCollisions();
 
+		ClimbCheck();
 		WallSlideCheck();
 		GroundCheck();
 
@@ -113,50 +118,66 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
+	private void ClimbCheck()
+	{
+		bool climbableContact = false;
+
+		foreach (Surface surface in surfaces)
+		{
+			if (CheckForCollision(player.WallBox, surface.BodyBox))
+			{
+				climbableContact = true;
+				break;
+			}
+		}
+	}
+
 	private void WallSlideCheck()
 	{
-		if (!player.Grounded)
+		if (player.Grounded || player.Climbing)
 		{
-			bool wallContact = false;
+			return;
+		}
 
-			foreach (Surface surface in surfaces)
+		bool wallContact = false;
+
+		foreach (Surface surface in surfaces)
+		{
+			if (CheckForCollision(player.WallBox, surface.BodyBox))
 			{
-				if (CheckForCollision(player.WallBox, surface.BodyBox))
-				{
-					wallContact = true;
-					break;
-				}
+				wallContact = true;
+				break;
 			}
+		}
 
-			if (wallContact)
+		if (wallContact)
+		{
+			if (player.Facing.x == -1 && player.CollisionInfo.Left)
 			{
-				if (player.CollisionInfo.Left)
+				wallSlideTimer = 0;
+				player.WallSliding = -1;
+			}
+			else if (player.Facing.x == 1 && player.CollisionInfo.Right)
+			{
+				wallSlideTimer = 0;
+				player.WallSliding = 1;
+			}
+		}
+
+		if (player.WallSliding != 0)
+		{
+			if (!wallContact)
+			{
+				player.WallSliding = 0;
+			}
+			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
+			{
+				wallSlideTimer += Time.deltaTime;
+
+				if (wallSlideTimer >= player.WallSlideStickTime)
 				{
 					wallSlideTimer = 0;
-					player.WallSliding = -1;
-				}
-				else if (player.CollisionInfo.Right)
-				{
-					wallSlideTimer = 0;
-					player.WallSliding = 1;
-				}
-			}
-
-			if (player.WallSliding != 0)
-			{
-				if (!wallContact)
-				{
 					player.WallSliding = 0;
-				}
-				else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
-				{
-					wallSlideTimer += Time.deltaTime;
-
-					if (wallSlideTimer >= player.WallSlideStickTime)
-					{
-						wallSlideTimer = 0;
-						player.WallSliding = 0;
-					}
 				}
 			}
 		}

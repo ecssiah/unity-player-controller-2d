@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     private int wallSliding;
 	public int WallSliding { get => wallSliding; set => wallSliding = value; }
 
+    [SerializeField]
+    private bool climbing;
+    public bool Climbing { get => climbing; set => climbing = value; }
+
     public float WallSlideVelocity { get; set; }
     public float WallSlideStickTime { get; set; }
 
@@ -73,9 +77,10 @@ public class Player : MonoBehaviour
         grounded = false;
 
         wallSliding = 0;
+        climbing = false;
 
         WallSlideVelocity = 2.4f;
-        WallSlideStickTime = 0.4f;
+        WallSlideStickTime = 0.3f;
 
         speed = 7f;
         jumpForce = 21f;
@@ -116,6 +121,11 @@ public class Player : MonoBehaviour
     public void SetVelocity(Vector2 newVelocity)
 	{
         SetVelocity(newVelocity.x, newVelocity.y);
+	}
+
+    public void SetClimbInput(int climbInput)
+	{
+        PlayerInputInfo.Direction.y = climbInput;
 	}
 
     public void SetJumpInput(int jumpInput)
@@ -166,10 +176,17 @@ public class Player : MonoBehaviour
 		{
             animator.Play("Base Layer.Player-Slide");
 		}
-        else if (velocity.y != 0)
+        else if (!grounded)
         {
-            animator.Play("Base Layer.Player-Jump");
-        }
+            if (velocity.y >= 0)
+			{
+                animator.Play("Base Layer.Player-Jump");
+			} 
+            else if (velocity.y < 0)
+			{
+                animator.Play("Base Layer.Player-Fall");
+			}
+		}
         else if (velocity.x != 0)
 		{
             animator.Play("Base Layer.Player-Run");
