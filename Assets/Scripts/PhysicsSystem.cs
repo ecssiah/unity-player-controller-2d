@@ -249,14 +249,14 @@ public class PhysicsSystem : MonoBehaviour
 
 		if (wallContact)
 		{
-			if (player.Facing == -1 && player.CollisionInfo.Left)
+			if (player.PlayerInputInfo.Direction.x == -1 && player.CollisionInfo.Left)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = -1;
 
 				player.SetVelocity(0, player.Velocity.y);
 			}
-			else if (player.Facing == 1 && player.CollisionInfo.Right)
+			else if (player.PlayerInputInfo.Direction.x == 1 && player.CollisionInfo.Right)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = 1;
