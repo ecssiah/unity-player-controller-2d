@@ -5,51 +5,29 @@ public class Player : MonoBehaviour
 {
     public bool DebugDraw;
 
-    [SerializeField]
-    private int facing;
-    public int Facing => facing;
+    public float Mass;
+	public Vector2 Velocity;
 
-    private float mass;
-    public float Mass => mass;
+    public float Speed;
+    public float ClimbSpeed;
+    public float WallSlideSpeed;
+    public float WallSlideStickTime;
 
-    private float speed;
-    public float Speed => speed;
+    public int Facing;
+    public int WallSliding;
+
+    public bool Grounded;
+    public bool Hanging;
+    public bool Climbing;
+    public bool ClimbingLedge;
+
+    public PlayerInputInfo PlayerInputInfo;
+    public CollisionInfo CollisionInfo;
 
     private float jumpForce;
     private Vector2 wallJumpForce;
 
-    [SerializeField]
-    private bool grounded;
-    public bool Grounded { get => grounded; set => grounded = value; }
-
-    public PlayerInputInfo PlayerInputInfo;
-
-    public CollisionInfo CollisionInfo;
-
-    [SerializeField]
-    private bool hanging;
-    public bool Hanging { get => hanging; set => hanging = value; }
-
-    public float ClimbSpeed { get; set; }
-    
-    [SerializeField]
-    private bool climbing;
-    public bool Climbing { get => climbing; set => climbing = value; }
-
-    [SerializeField]
-    private bool climbingLedge;
-    public bool ClimbingLedge { get => climbingLedge; set => climbingLedge = value; }
-
-    public float WallSlideSpeed { get; set; }
-    public float WallSlideStickTime { get; set; }
-
-    [SerializeField]
-    private int wallSliding;
-	public int WallSliding { get => wallSliding; set => wallSliding = value; }
-
-    [SerializeField]
-	private Vector2 velocity;
-    public Vector2 Velocity => velocity;
+    private Animator animator;
 
 	private BoxCollider2D bodyBoxCollider2D;
     private BoxCollider2D handBoxCollider2D;
@@ -61,14 +39,33 @@ public class Player : MonoBehaviour
     public BoxShape WallBox;
     public BoxShape GroundBox;
 
-    private Animator animator;
-
 	void Awake()
 	{
         DebugDraw = false;
 
+        Mass = 4;
+        Speed = 7f;
+        Velocity = Vector2.zero;
+
+        Facing = 1;
+        WallSliding = 0;
+
+        Grounded = false;
+        Hanging = false;
+        Climbing = false;
+        ClimbingLedge = false;
+
+        ClimbSpeed = 3.2f;
+        WallSlideSpeed = 2.4f;
+        WallSlideStickTime = 0.3f;
+
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
+
+        jumpForce = 21f;
+        wallJumpForce = new Vector2(24, 20);
+
+        animator = GetComponent<Animator>();
 
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
         handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
@@ -79,28 +76,6 @@ public class Player : MonoBehaviour
         HandBox = new BoxShape(handBoxCollider2D);
         WallBox = new BoxShape(wallBoxCollider2D);
         GroundBox = new BoxShape(groundBoxCollider2D);
-
-        animator = GetComponent<Animator>();
-
-        mass = 4;
-        facing = 1;
-        grounded = false;
-
-        hanging = false;
-
-        ClimbSpeed = 3.2f;
-
-        climbing = false;
-        climbingLedge = false;
-
-        WallSlideSpeed = 2.4f;
-        WallSlideStickTime = 0.3f;
-
-        wallSliding = 0;
-
-        speed = 7f;
-        jumpForce = 21f;
-        wallJumpForce = new Vector2(24, 20);
 	}
 
     public void Move(Vector3 displacement)
@@ -130,8 +105,7 @@ public class Player : MonoBehaviour
 
     public void SetVelocity(float vx, float vy)
 	{
-        velocity.x = vx;
-        velocity.y = vy;
+        Velocity = new Vector2(vx, vy);
 	}
 
     public void SetVelocity(Vector2 newVelocity)
@@ -146,12 +120,12 @@ public class Player : MonoBehaviour
 
     public void SetClimbInput(float climbInput)
 	{
-        if (hanging && climbInput < 0)
+        if (Hanging && climbInput < 0)
 		{
-            hanging = false;
+            Hanging = false;
 		}
 
-        if (!climbingLedge)
+        if (Climbing)
 		{
             if (climbInput == 0)
 		    {
@@ -168,31 +142,25 @@ public class Player : MonoBehaviour
 
     public void SetJumpInput(int jumpInput)
 	{
-        if (grounded)
+        if (Grounded)
         {
-            velocity.y += jumpForce;
+            Velocity.y += jumpForce;
         }
-        else if (hanging)
+        else if (Hanging)
 		{
-            hanging = false;
-            velocity.y += jumpForce;
+            Hanging = false;
+            Velocity.y += jumpForce;
 		}
-        else if (climbingLedge)
+        else if (Climbing)
 		{
-            climbingLedge = false;
-            velocity.y += jumpForce;
+            Climbing = false;
+            Velocity.y = jumpForce;
 		}
-        else if (climbing)
+        else if (WallSliding != 0)
 		{
-            climbing = false;
-            velocity.y = jumpForce;
-		}
-        else if (wallSliding != 0)
-		{
-            wallSliding = 0;
-            velocity.x = -facing * wallJumpForce.x;
-            velocity.y = wallJumpForce.y;
-		}
+            WallSliding = 0;
+            Velocity += new Vector2(-Facing * wallJumpForce.x, wallJumpForce.y);
+        }
     }
 
     public void SetAnimation(string stateName)
@@ -203,9 +171,9 @@ public class Player : MonoBehaviour
 
 	public void UpdateOrientation()
 	{
-        if (velocity.x > 0 && !(facing == 1))
+        if (Velocity.x > 0 && !(Facing == 1))
         {
-            facing = 1;
+            Facing = 1;
 
             Vector3 scale = transform.localScale;
             scale.x = 1;
@@ -214,9 +182,9 @@ public class Player : MonoBehaviour
             HandBox.ResetPosition();
             WallBox.ResetPosition();
         }
-        else if (velocity.x < 0 && !(facing == -1))
+        else if (Velocity.x < 0 && !(Facing == -1))
         {
-            facing = -1;
+            Facing = -1;
 
             Vector3 scale = transform.localScale;
             scale.x = -1;
@@ -231,14 +199,13 @@ public class Player : MonoBehaviour
 	{
         if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1) 
         {
-            climbingLedge = false;
-            SetAnimation("Idle");
+            ClimbingLedge = false;
 
-            if (facing == 1)
+            if (Facing == 1)
 			{
                 Move(new Vector3(0.54f, 1.28f, 0));
 			}
-            else if (facing == -1)
+            else if (Facing == -1)
 			{
                 Move(new Vector3(-0.54f, 1.28f, 0));
 			}

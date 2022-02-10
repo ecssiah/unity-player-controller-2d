@@ -1,0 +1,139 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public struct SeparatingAxisTheorem
+{
+	public static bool CheckForCollision(BoxShape polygon1, BoxShape polygon2)
+	{
+		List<Vector2> normals = polygon1.Normals.Concat(polygon2.Normals).ToList();
+
+		foreach (Vector2 normal in normals)
+		{
+			if (IsSeparatingAxis(normal, polygon1, polygon2))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static bool IsSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	{
+		float min1 = float.PositiveInfinity;
+		float max1 = float.NegativeInfinity;
+
+		float min2 = float.PositiveInfinity;
+		float max2 = float.NegativeInfinity;
+
+		foreach (Vector2 vertex in polygon1.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min1 = Mathf.Min(min1, projection);
+			max1 = Mathf.Max(max1, projection);
+		}
+
+		foreach (Vector2 vertex in polygon2.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min2 = Mathf.Min(min2, projection);
+			max2 = Mathf.Max(max2, projection);
+		}
+
+		return !(max1 >= min2 && max2 >= min1);
+	}
+
+	public static Vector2 FindSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	{
+		float min1 = float.PositiveInfinity;
+		float max1 = float.NegativeInfinity;
+
+		float min2 = float.PositiveInfinity;
+		float max2 = float.NegativeInfinity;
+
+		foreach (Vector2 vertex in polygon1.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min1 = Mathf.Min(min1, projection);
+			max1 = Mathf.Max(max1, projection);
+		}
+
+		foreach (Vector2 vertex in polygon2.Vertices)
+		{
+			float projection = Vector2.Dot(vertex, normal);
+
+			min2 = Mathf.Min(min2, projection);
+			max2 = Mathf.Max(max2, projection);
+		}
+
+		if (max1 >= min2 && max2 >= min1)
+		{
+			float overlap = Mathf.Min(max2 - min1, max1 - min2);
+
+			float resolutionMagnitude = overlap / normal.sqrMagnitude + 1E-10f;
+
+			Vector2 resolutionVector = resolutionMagnitude * normal;
+
+			return resolutionVector;
+		}
+		else
+		{
+			return Vector2.zero;
+		}
+	}
+
+	public static Vector2 CheckForCollisionResolution(BoxShape polygonToResolve, BoxShape polygonToCollide)
+	{
+		List<Vector2> resolutionVectors = new List<Vector2>();
+
+		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
+
+		foreach (Vector2 normal in normals)
+		{
+			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
+
+			if (resolutionVector == Vector2.zero)
+			{
+				return resolutionVector;
+			}
+			else
+			{
+				resolutionVectors.Add(resolutionVector);
+			}
+		}
+
+		Vector2 minResolutionVector = CalculateMinResolutionVector(resolutionVectors);
+
+		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
+
+		if (Vector2.Dot(centerDisplacement, minResolutionVector) < 0)
+		{
+			minResolutionVector *= -1;
+		}
+
+		return minResolutionVector;
+	}
+
+	public static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
+	{
+		Vector2 minResolutionVector = Vector2.positiveInfinity;
+		float minMagnitudeSquared = float.PositiveInfinity;
+
+		foreach (Vector2 resolutionVector in resolutionVectors)
+		{
+			float resolutionMagnitudeSquared = resolutionVector.sqrMagnitude;
+
+			if (resolutionMagnitudeSquared < minMagnitudeSquared)
+			{
+				minResolutionVector = resolutionVector;
+				minMagnitudeSquared = resolutionMagnitudeSquared;
+			}
+		}
+
+		return minResolutionVector;
+	}
+}
