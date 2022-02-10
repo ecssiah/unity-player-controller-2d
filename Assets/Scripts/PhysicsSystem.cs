@@ -183,6 +183,8 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		if (hangTimer <= 0)
 		{
+			hangTimer = 0.4f;
+
 			if (player.Hanging && player.PlayerInputInfo.Direction.y > 0)
 			{
 				player.Hanging = false;
