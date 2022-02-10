@@ -41,6 +41,7 @@ public class PhysicsSystem : MonoBehaviour
 		
 		ResolveCollisions();
 
+		LedgeCheck();
 		ClimbCheck();
 		WallSlideCheck();
 		GroundCheck();
@@ -54,35 +55,46 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		Vector2 newVelocity = player.Velocity;
 
-		if (!player.Climbing)
-		{
-			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
-		}
-		else
-		{
-			newVelocity.y = player.PlayerInputInfo.Direction.y * player.ClimbSpeed;
-		}
-
-		newVelocity.x = Mathf.SmoothDamp(
-			player.Velocity.x,
-			player.WallSliding != 0 ? 0 : player.PlayerInputInfo.Direction.x * player.Speed,
-			ref playerVelocityXDamped,
-			playerVelocityXSmoothTime
-		);
-
-		if (Mathf.Abs(newVelocity.x) < 0.1f)
-		{
-			newVelocity.x = 0;
-		}
-
-		if (newVelocity.y < physicsSettings.TerminalVelocity)
-		{
-			newVelocity.y = physicsSettings.TerminalVelocity;
-		}
-
 		if (player.WallSliding != 0 && newVelocity.y < -player.WallSlideSpeed)
 		{
 			newVelocity.y = -player.WallSlideSpeed;
+		}
+		else if (player.Climbing)
+		{
+			newVelocity.y = player.PlayerInputInfo.Direction.y * player.ClimbSpeed;
+
+			newVelocity.x = Mathf.SmoothDamp(
+				player.Velocity.x,
+				player.PlayerInputInfo.Direction.x * player.Speed,
+				ref playerVelocityXDamped,
+				playerVelocityXSmoothTime
+			);
+
+			if (Mathf.Abs(newVelocity.x) < 0.1f)
+			{
+				newVelocity.x = 0;
+			}
+		}
+		else if (!player.Hanging)
+		{
+			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
+
+			newVelocity.x = Mathf.SmoothDamp(
+				player.Velocity.x,
+				player.PlayerInputInfo.Direction.x * player.Speed,
+				ref playerVelocityXDamped,
+				playerVelocityXSmoothTime
+			);
+
+			if (Mathf.Abs(newVelocity.x) < 0.1f)
+			{
+				newVelocity.x = 0;
+			}
+
+			if (newVelocity.y < physicsSettings.TerminalVelocity)
+			{
+				newVelocity.y = physicsSettings.TerminalVelocity;
+			}
 		}
 
 		player.SetVelocity(newVelocity);
@@ -127,8 +139,54 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
+	private void LedgeCheck()
+	{
+		if (player.Grounded)
+		{
+			return;
+		}
+
+		bool handContact = false;
+
+		foreach (Surface surface in surfaces)
+		{
+			if (CheckForCollision(player.HandBox, surface.BodyBox))
+			{
+				handContact = true;
+				break;
+			}
+		}
+
+		bool wallContact = false;
+		BoxShape wallShape;
+
+		foreach (Surface surface in surfaces)
+		{
+			if (CheckForCollision(player.WallBox, surface.BodyBox))
+			{
+				wallContact = true;
+				wallShape = surface.BodyBox;
+				break;
+			}
+		}
+
+		bool canLedgeClimb = wallContact && !handContact;
+
+		if (canLedgeClimb && player.PlayerInputInfo.Direction.y > 0)
+		{
+			player.Climbing = false;
+			player.Hanging = true;
+			player.SetVelocity(Vector2.zero);
+		}
+	}
+
 	private void ClimbCheck()
 	{
+		if (player.Hanging)
+		{
+			return;
+		}
+
 		bool climbableContact = false;
 
 		foreach (Climbable climbable in climbables)

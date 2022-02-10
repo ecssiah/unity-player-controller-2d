@@ -25,19 +25,26 @@ public class Player : MonoBehaviour
     public PlayerInputInfo PlayerInputInfo;
 
     public CollisionInfo CollisionInfo;
- 
+
+    [SerializeField]
+    private bool hanging;
+    public bool Hanging { get => hanging; set => hanging = value; }
+
+    public float ClimbSpeed { get; set; }
+    
+    [SerializeField]
+    private bool climbing;
+    public bool Climbing { get => climbing; set => climbing = value; }
+
+    private bool climbingLedge;
+    public bool ClimbingLedge { get => climbingLedge; set => climbingLedge = value; }
+
     public float WallSlideSpeed { get; set; }
     public float WallSlideStickTime { get; set; }
 
     [SerializeField]
     private int wallSliding;
 	public int WallSliding { get => wallSliding; set => wallSliding = value; }
-    
-    public float ClimbSpeed { get; set; }
-    
-    [SerializeField]
-    private bool climbing;
-    public bool Climbing { get => climbing; set => climbing = value; }
 
     [SerializeField]
 	private Vector2 velocity;
@@ -78,14 +85,17 @@ public class Player : MonoBehaviour
         facing = 1;
         grounded = false;
 
-        WallSlideSpeed = 2.4f;
-        WallSlideStickTime = 0.3f;
-
-        wallSliding = 0;
+        hanging = false;
 
         ClimbSpeed = 3.2f;
 
         climbing = false;
+        climbingLedge = false;
+
+        WallSlideSpeed = 2.4f;
+        WallSlideStickTime = 0.3f;
+
+        wallSliding = 0;
 
         speed = 7f;
         jumpForce = 21f;
@@ -135,6 +145,11 @@ public class Player : MonoBehaviour
 
     public void SetClimbInput(float climbInput)
 	{
+        if (hanging && climbInput < 0)
+		{
+            hanging = false;
+		}
+
         PlayerInputInfo.Direction.y = climbInput;
 	}
 
@@ -144,6 +159,16 @@ public class Player : MonoBehaviour
         {
             velocity.y += jumpForce;
         }
+        else if (hanging)
+		{
+            hanging = false;
+            velocity.y += jumpForce;
+		}
+        else if (climbingLedge)
+		{
+            climbingLedge = false;
+            velocity.y += jumpForce;
+		}
         else if (climbing)
 		{
             climbing = false;
@@ -184,7 +209,11 @@ public class Player : MonoBehaviour
 
         animator.speed = 1;
 
-        if (climbing)
+        if (hanging)
+		{
+            animator.Play("Base Layer.Player-Hang");
+		}
+        else if (climbing)
 		{
             animator.Play("Base Layer.Player-Climb");
 
@@ -192,6 +221,10 @@ public class Player : MonoBehaviour
 			{
                 animator.speed = 0;
 			}
+		}
+        else if (climbingLedge)
+		{
+            animator.Play("Base Layer.Player-ClimbLedge");
 		}
         else if (wallSliding != 0)
 		{
@@ -222,7 +255,7 @@ public class Player : MonoBehaviour
 	{
         if (DebugDraw)
         {
-            Gizmos.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+            Gizmos.color = new Color(1.0f, 0.0f, 1.0f, 0.2f);
 
             Gizmos.DrawWireCube(HandBox.Center, HandBox.Size);
             Gizmos.DrawWireCube(WallBox.Center, WallBox.Size);
