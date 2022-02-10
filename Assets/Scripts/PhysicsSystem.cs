@@ -172,8 +172,9 @@ public class PhysicsSystem : MonoBehaviour
 
 		if (canLedgeClimb && player.PlayerInputInfo.Direction.y > 0)
 		{
-			player.Climbing = false;
 			player.Hanging = true;
+			player.Climbing = false;
+			player.WallSliding = 0;
 
 			if (player.Facing == 1)
 			{
@@ -221,7 +222,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void WallSlideCheck()
 	{
-		if (player.Grounded || player.Climbing)
+		if (player.Grounded || player.Climbing || player.Hanging)
 		{
 			wallSlideTimer = 0;
 			player.WallSliding = 0;
