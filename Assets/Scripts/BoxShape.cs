@@ -8,6 +8,11 @@ public struct BoxShape
 	public Vector2 Center { get; private set; }
 	public Vector2 Size { get; private set; }
 
+	public Vector2 BottomLeft => vertices[0];
+	public Vector2 TopLeft => vertices[1];
+	public Vector2 TopRight => vertices[2];
+	public Vector2 BottomRight => vertices[3];
+
 	private List<Vector2> vertices;
 	public List<Vector2> Vertices { get => vertices; }
 	public List<Vector2> Edges { get; private set; }

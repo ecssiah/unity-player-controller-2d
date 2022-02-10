@@ -157,25 +157,33 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		bool wallContact = false;
-		BoxShape wallShape;
+		Surface wallSurface = null;
 
 		foreach (Surface surface in surfaces)
 		{
 			if (CheckForCollision(player.WallBox, surface.BodyBox))
 			{
-				wallContact = true;
-				wallShape = surface.BodyBox;
+				wallSurface = surface;
 				break;
 			}
 		}
 
-		bool canLedgeClimb = wallContact && !handContact;
+		bool canLedgeClimb = wallSurface != null && !handContact;
 
 		if (canLedgeClimb && player.PlayerInputInfo.Direction.y > 0)
 		{
 			player.Climbing = false;
 			player.Hanging = true;
+
+			if (player.Facing == 1)
+			{
+				player.SetPosition(wallSurface.BodyBox.TopLeft + physicsSettings.HangOffset);
+			}
+			else if (player.Facing == -1)
+			{
+				player.SetPosition(wallSurface.BodyBox.TopRight + physicsSettings.HangOffset);
+			}
+
 			player.SetVelocity(Vector2.zero);
 		}
 	}
