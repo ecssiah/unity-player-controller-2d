@@ -151,10 +151,17 @@ public class Player : MonoBehaviour
             hanging = false;
 		}
 
-        if (!climbingLedge && climbInput == 0)
+        if (!climbingLedge)
 		{
-            animator.speed = 0;
-		}
+            if (climbInput == 0)
+		    {
+                animator.speed = 0;
+		    }
+            else
+		    {
+                animator.speed = 1;
+		    }
+        }
 
         PlayerInputInfo.Direction.y = climbInput;
 	}
@@ -226,7 +233,14 @@ public class Player : MonoBehaviour
         {
             climbingLedge = false;
 
-            Move(new Vector3(0.6f, 1.4f, 0));
+            if (facing == 1)
+			{
+                Move(new Vector3(0.54f, 1.28f, 0));
+			}
+            else if (facing == -1)
+			{
+                Move(new Vector3(-0.54f, 1.28f, 0));
+			}
         }
     }
 
