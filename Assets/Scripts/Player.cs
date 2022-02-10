@@ -232,6 +232,7 @@ public class Player : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1) 
         {
             climbingLedge = false;
+            SetAnimation("Idle");
 
             if (facing == 1)
 			{

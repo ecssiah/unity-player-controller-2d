@@ -11,13 +11,8 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityXDamped;
 	private float playerVelocityXSmoothTime;
 
-	private float wallSlideTimer;
-
 	private float hangTimer;
-	private float hangCooldown;
-
-	[SerializeField]
-	public float WallSlideTimer;
+	private float wallSlideTimer;
 
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
@@ -30,10 +25,8 @@ public class PhysicsSystem : MonoBehaviour
 
 		playerVelocityXSmoothTime = 0.1f;
 
+		hangTimer = 0.4f;
 		wallSlideTimer = 0.0f;
-
-		hangTimer = 0;
-		hangCooldown = 0.2f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
@@ -46,6 +39,11 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void MovePlayer()
 	{
+		if (player.Hanging)
+		{
+			LedgeClimbCheck();
+		}
+
 		if (player.ClimbingLedge)
 		{
 			player.ClimbLedge();
@@ -56,17 +54,12 @@ public class PhysicsSystem : MonoBehaviour
 		
 			ResolveCollisions();
 
-			if (player.Hanging)
-			{
-				LedgeClimbCheck();
-			}
-
 			LedgeCheck();
 			ClimbCheck();
 			WallSlideCheck();
 			GroundCheck();
 
-			if (!player.Climbing && !player.Hanging && !player.ClimbingLedge && player.WallSliding == 0)
+			if (!player.Climbing && !player.Hanging && player.WallSliding == 0)
 			{
 				if (player.Velocity.y > 0)
 				{
@@ -188,21 +181,18 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void LedgeClimbCheck()
 	{
-		if (hangTimer > hangCooldown)
+		if (hangTimer <= 0)
 		{
 			if (player.Hanging && player.PlayerInputInfo.Direction.y > 0)
 			{
-				hangTimer = 0;
-
 				player.Hanging = false;
 				player.ClimbingLedge = true;
 
 				player.SetAnimation("LedgeClimb");
 			}
-		} 
-		else
+		} else
 		{
-			hangTimer += Time.deltaTime;
+			hangTimer -= Time.deltaTime;
 		}
 	}
 
@@ -235,10 +225,12 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		bool canLedgeClimb = wallSurface != null && !handContact;
+		bool canGrabLedge = wallSurface != null && !handContact;
 
-		if (canLedgeClimb && player.PlayerInputInfo.Direction.y > 0)
+		if (canGrabLedge && player.PlayerInputInfo.Direction.y > 0)
 		{
+			hangTimer = 0.4f;
+
 			player.Hanging = true;
 			player.Climbing = false;
 
@@ -336,8 +328,6 @@ public class PhysicsSystem : MonoBehaviour
 			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
 			{
 				wallSlideTimer += Time.deltaTime;
-
-				WallSlideTimer = wallSlideTimer;
 
 				if (wallSlideTimer >= player.WallSlideStickTime)
 				{
