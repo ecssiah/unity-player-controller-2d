@@ -13,6 +13,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	private float wallSlideTimer;
 
+	[SerializeField]
+	public float WallSlideTimer;
+
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
 
@@ -55,9 +58,15 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		Vector2 newVelocity = player.Velocity;
 
-		if (player.WallSliding != 0 && newVelocity.y < -player.WallSlideSpeed)
+		if (player.WallSliding != 0)
 		{
-			newVelocity.y = -player.WallSlideSpeed;
+			newVelocity.x = 0;
+			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
+
+			if (newVelocity.y < -player.WallSlideSpeed)
+			{
+				newVelocity.y = -player.WallSlideSpeed;
+			}
 		}
 		else if (player.Climbing)
 		{
@@ -174,7 +183,6 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			player.Hanging = true;
 			player.Climbing = false;
-			player.WallSliding = 0;
 
 			if (player.Facing == 1)
 			{
@@ -214,7 +222,6 @@ public class PhysicsSystem : MonoBehaviour
 		else if (!player.Climbing && player.PlayerInputInfo.Direction.y != 0)
 		{
 			player.Climbing = true;
-			player.WallSliding = 0;
 
 			player.SetVelocity(0, player.Velocity.y);
 		}
@@ -246,11 +253,15 @@ public class PhysicsSystem : MonoBehaviour
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = -1;
+
+				player.SetVelocity(0, player.Velocity.y);
 			}
 			else if (player.Facing == 1 && player.CollisionInfo.Right)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = 1;
+
+				player.SetVelocity(0, player.Velocity.y);
 			}
 		}
 
@@ -258,11 +269,14 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			if (!wallContact)
 			{
+				wallSlideTimer = 0;
 				player.WallSliding = 0;
 			}
 			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
 			{
 				wallSlideTimer += Time.deltaTime;
+
+				WallSlideTimer = wallSlideTimer;
 
 				if (wallSlideTimer >= player.WallSlideStickTime)
 				{
