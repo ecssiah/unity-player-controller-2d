@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     private bool climbing;
     public bool Climbing { get => climbing; set => climbing = value; }
 
+    [SerializeField]
     private bool climbingLedge;
     public bool ClimbingLedge { get => climbingLedge; set => climbingLedge = value; }
 
@@ -150,6 +151,11 @@ public class Player : MonoBehaviour
             hanging = false;
 		}
 
+        if (!climbingLedge && climbInput == 0)
+		{
+            animator.speed = 0;
+		}
+
         PlayerInputInfo.Direction.y = climbInput;
 	}
 
@@ -182,73 +188,46 @@ public class Player : MonoBehaviour
 		}
     }
 
-    public void UpdateAnimation()
+    public void SetAnimation(string stateName)
+	{
+        animator.speed = 1;
+        animator.Play($"Base Layer.Player-{stateName}");
+	}
+
+	public void UpdateOrientation()
 	{
         if (velocity.x > 0 && !(facing == 1))
-		{
+        {
             facing = 1;
 
-			Vector3 scale = transform.localScale;
-			scale.x = 1;
-			transform.localScale = scale;
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
+            transform.localScale = scale;
 
             HandBox.ResetPosition();
-			WallBox.ResetPosition();
+            WallBox.ResetPosition();
         }
         else if (velocity.x < 0 && !(facing == -1))
-		{
+        {
             facing = -1;
 
-			Vector3 scale = transform.localScale;
-			scale.x = -1;
-			transform.localScale = scale;
+            Vector3 scale = transform.localScale;
+            scale.x = -1;
+            transform.localScale = scale;
 
             HandBox.ResetPosition();
-			WallBox.ResetPosition();
+            WallBox.ResetPosition();
         }
+    }
 
-        animator.speed = 1;
-
-        if (hanging)
-		{
-            animator.Play("Base Layer.Player-Hang");
-		}
-        else if (climbing)
-		{
-            animator.Play("Base Layer.Player-Climb");
-
-            if (velocity.y == 0)
-			{
-                animator.speed = 0;
-			}
-		}
-        else if (climbingLedge)
-		{
-            animator.Play("Base Layer.Player-ClimbLedge");
-		}
-        else if (wallSliding != 0)
-		{
-            animator.Play("Base Layer.Player-Slide");
-		}
-        else if (!grounded)
+    public void ClimbLedge()
+	{
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1) 
         {
-            if (velocity.y >= 0)
-			{
-                animator.Play("Base Layer.Player-Jump");
-			} 
-            else if (velocity.y < 0)
-			{
-                animator.Play("Base Layer.Player-Fall");
-			}
-		}
-        else if (velocity.x != 0)
-		{
-            animator.Play("Base Layer.Player-Run");
-		}
-        else
-		{
-            animator.Play("Base Layer.Player-Idle");
-		}
+            climbingLedge = false;
+
+            Move(new Vector3(0.6f, 1.4f, 0));
+        }
     }
 
 	void OnDrawGizmos()

@@ -13,6 +13,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	private float wallSlideTimer;
 
+	private float hangTimer;
+	private float hangCooldown;
+
 	[SerializeField]
 	public float WallSlideTimer;
 
@@ -29,6 +32,9 @@ public class PhysicsSystem : MonoBehaviour
 
 		wallSlideTimer = 0.0f;
 
+		hangTimer = 0;
+		hangCooldown = 0.2f;
+
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
 	}
@@ -40,18 +46,50 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void MovePlayer()
 	{
-		ApplyForces();
+		if (player.ClimbingLedge)
+		{
+			player.ClimbLedge();
+		}
+		else
+		{
+			ApplyForces();
 		
-		ResolveCollisions();
+			ResolveCollisions();
 
-		LedgeCheck();
-		ClimbCheck();
-		WallSlideCheck();
-		GroundCheck();
+			if (player.Hanging)
+			{
+				LedgeClimbCheck();
+			}
+
+			LedgeCheck();
+			ClimbCheck();
+			WallSlideCheck();
+			GroundCheck();
+
+			if (!player.Climbing && !player.Hanging && !player.ClimbingLedge && player.WallSliding == 0)
+			{
+				if (player.Velocity.y > 0)
+				{
+					player.SetAnimation("Jump");
+				}
+				else if (player.Velocity.y < 0)
+				{
+					player.SetAnimation("Fall");
+				}
+				else if (player.Velocity.x != 0)
+				{
+					player.SetAnimation("Run");
+				}
+				else
+				{
+					player.SetAnimation("Idle");
+				}
+			}
+		}
 
 		Physics2D.SyncTransforms();
 
-		player.UpdateAnimation();
+		player.UpdateOrientation();
 	}
 
 	private void ApplyForces()
@@ -110,7 +148,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		player.Move(Time.deltaTime * player.Velocity);
 	}
-
+	
 	private void ResolveCollisions()
 	{
 		player.CollisionInfo.Reset();
@@ -145,6 +183,26 @@ public class PhysicsSystem : MonoBehaviour
 					player.SetVelocity(player.Velocity.x, 0);
 				}
 			}
+		}
+	}
+
+	private void LedgeClimbCheck()
+	{
+		if (hangTimer > hangCooldown)
+		{
+			if (player.Hanging && player.PlayerInputInfo.Direction.y > 0)
+			{
+				hangTimer = 0;
+
+				player.Hanging = false;
+				player.ClimbingLedge = true;
+
+				player.SetAnimation("LedgeClimb");
+			}
+		} 
+		else
+		{
+			hangTimer += Time.deltaTime;
 		}
 	}
 
@@ -184,6 +242,8 @@ public class PhysicsSystem : MonoBehaviour
 			player.Hanging = true;
 			player.Climbing = false;
 
+			player.SetAnimation("Hang");
+
 			if (player.Facing == 1)
 			{
 				player.SetPosition(wallSurface.BodyBox.TopLeft + physicsSettings.HangOffset);
@@ -199,7 +259,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ClimbCheck()
 	{
-		if (player.Hanging)
+		if (player.Hanging || player.ClimbingLedge)
 		{
 			return;
 		}
@@ -223,6 +283,7 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			player.Climbing = true;
 
+			player.SetAnimation("Climb");
 			player.SetVelocity(0, player.Velocity.y);
 		}
 	}
@@ -254,14 +315,14 @@ public class PhysicsSystem : MonoBehaviour
 				wallSlideTimer = 0;
 				player.WallSliding = -1;
 
-				player.SetVelocity(0, player.Velocity.y);
+				player.SetAnimation("Slide");
 			}
 			else if (player.PlayerInputInfo.Direction.x == 1 && player.CollisionInfo.Right)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = 1;
 
-				player.SetVelocity(0, player.Velocity.y);
+				player.SetAnimation("Slide");
 			}
 		}
 
