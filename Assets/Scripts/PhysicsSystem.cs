@@ -11,7 +11,7 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityXDamped;
 	private float playerVelocityXSmoothTime;
 
-	private float hangTimer;
+	public float hangTimer;
 	private float wallSlideTimer;
 
 	private List<Surface> surfaces;
@@ -42,11 +42,6 @@ public class PhysicsSystem : MonoBehaviour
 		if (player.Hanging)
 		{
 			LedgeClimbCheck();
-
-			if (player.ClimbingLedge)
-			{
-				return;
-			}
 		}
 
 		if (player.ClimbingLedge)
@@ -56,17 +51,19 @@ public class PhysicsSystem : MonoBehaviour
 		else
 		{
 			ApplyForces();
-		
 			ResolveCollisions();
+			GroundCheck();
 
 			if (!player.Grounded)
 			{
 				ClimbCheck();
 				WallSlideCheck();
-				LedgeCheck();
-			}
 
-			GroundCheck();
+				if (!player.Hanging)
+				{
+					LedgeCheck();
+				}
+			}
 
 			if (!player.Hanging && !player.Climbing && player.WallSliding == 0)
 			{
@@ -100,14 +97,12 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			if (player.PlayerInputInfo.Direction.y > 0)
 			{
-				hangTimer = 0.4f;
-
 				player.Hanging = false;
 				player.ClimbingLedge = true;
 
 				player.SetAnimation("LedgeClimb");
 			}
-		} 
+		}
 		else
 		{
 			hangTimer -= Time.deltaTime;
@@ -118,15 +113,9 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		Vector2 newVelocity = player.Velocity;
 
-		if (player.WallSliding != 0)
+		if (player.Hanging)
 		{
-			newVelocity.x = 0;
-			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
-
-			if (newVelocity.y < -player.WallSlideSpeed)
-			{
-				newVelocity.y = -player.WallSlideSpeed;
-			}
+			newVelocity = Vector2.zero;
 		}
 		else if (player.Climbing)
 		{
@@ -144,7 +133,17 @@ public class PhysicsSystem : MonoBehaviour
 				newVelocity.x = 0;
 			}
 		}
-		else if (!player.Hanging)
+		else if (player.WallSliding != 0)
+		{
+			newVelocity.x = 0;
+			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
+
+			if (newVelocity.y < -player.WallSlideSpeed)
+			{
+				newVelocity.y = -player.WallSlideSpeed;
+			}
+		}
+		else
 		{
 			newVelocity += Time.deltaTime * player.Mass * physicsSettings.Gravity;
 

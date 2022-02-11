@@ -197,21 +197,25 @@ public class Player : MonoBehaviour
 
     public void ClimbLedge()
 	{
-        bool climbLedgeAnimationFinished = !animator.IsInTransition(0) && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
+		{
+            bool climbLedgeAnimationFinished = animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1;
 
-        if (climbLedgeAnimationFinished)
-        {
-            ClimbingLedge = false;
+            if (climbLedgeAnimationFinished)
+            {
+                ClimbingLedge = false;
 
-            if (Facing == 1)
-			{
-                Move(new Vector3(0.54f, 1.28f, 0));
-			}
-            else if (Facing == -1)
-			{
-                Move(new Vector3(-0.54f, 1.28f, 0));
-			}
-        }
+                if (Facing == 1)
+			    {
+                    Move(new Vector3(0.54f, 1.28f, 0));
+			    }
+                else if (Facing == -1)
+			    {
+                    Move(new Vector3(-0.54f, 1.28f, 0));
+			    }
+            }
+		}
+
     }
 
 	void OnDrawGizmos()
