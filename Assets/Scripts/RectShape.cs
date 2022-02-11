@@ -7,10 +7,10 @@ public class RectShape : MonoBehaviour
 	public Vector2 Center { get; private set; }
 	public Vector2 Size { get; private set; }
 
-	public Vector2 BottomLeft => Vertices[0];
-	public Vector2 TopLeft => Vertices[1];
-	public Vector2 TopRight => Vertices[2];
-	public Vector2 BottomRight => Vertices[3];
+	public Vector2 BottomLeft => rectTransform.parent.transform.localScale.x == 1 ? Vertices[0] : Vertices[3];
+	public Vector2 TopLeft => rectTransform.parent.transform.localScale.x == 1 ? Vertices[1] : Vertices[2];
+	public Vector2 TopRight => rectTransform.parent.transform.localScale.x == 1 ? Vertices[2] : Vertices[1];
+	public Vector2 BottomRight => rectTransform.parent.transform.localScale.x == 1 ? Vertices[3] : Vertices[0];
 
 	public Vector2 Min => BottomLeft;
 	public Vector2 Max => TopRight;
