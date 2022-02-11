@@ -86,12 +86,6 @@ public class Player : MonoBehaviour
         }
 
         Position = transform.position;
-
-        BodyRect.ResetPosition();
-        WallHighRect.ResetPosition();
-        WallMidRect.ResetPosition();
-        WallLowRect.ResetPosition();
-        GroundRect.ResetPosition();
     }
 
     public void SetPosition(Vector2 position)
@@ -99,12 +93,6 @@ public class Player : MonoBehaviour
         transform.position = position;
 
         Position = transform.position;
-
-        BodyRect.ResetPosition();
-        WallHighRect.ResetPosition();
-        WallMidRect.ResetPosition();
-        WallLowRect.ResetPosition();
-        GroundRect.ResetPosition();
     }
 
     public void SetVelocity(float vx, float vy)
@@ -205,10 +193,6 @@ public class Player : MonoBehaviour
             Vector3 scale = transform.localScale;
             scale.x = 1;
             transform.localScale = scale;
-
-            WallHighRect.ResetPosition();
-            WallMidRect.ResetPosition();
-            WallLowRect.ResetPosition();
         }
         else if (Velocity.x < 0 && !(Facing == -1))
         {
@@ -217,10 +201,6 @@ public class Player : MonoBehaviour
             Vector3 scale = transform.localScale;
             scale.x = -1;
             transform.localScale = scale;
-
-            WallHighRect.ResetPosition();
-            WallMidRect.ResetPosition();
-            WallLowRect.ResetPosition();
         }
     }
 

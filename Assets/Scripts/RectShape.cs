@@ -1,21 +1,35 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class RectShape : MonoBehaviour
 {
-	public Vector2 Center { get; private set; }
-	public Vector2 Size { get; private set; }
+	public Vector2 Center => rectTransform.position;
+	public Vector2 Size => rectTransform.rect.size;
 
-	public Vector2 BottomLeft => rectTransform.parent.transform.localScale.x == 1 ? Vertices[0] : Vertices[3];
-	public Vector2 TopLeft => rectTransform.parent.transform.localScale.x == 1 ? Vertices[1] : Vertices[2];
-	public Vector2 TopRight => rectTransform.parent.transform.localScale.x == 1 ? Vertices[2] : Vertices[1];
-	public Vector2 BottomRight => rectTransform.parent.transform.localScale.x == 1 ? Vertices[3] : Vertices[0];
+	public Vector2 BottomLeft => new Vector2(Center.x - Size.x / 2, Center.y - Size.y / 2);
+	public Vector2 TopLeft => new Vector2(Center.x - Size.x / 2, Center.y + Size.y / 2);
+	public Vector2 TopRight => new Vector2(Center.x + Size.x / 2, Center.y + Size.y / 2);
+	public Vector2 BottomRight => new Vector2(Center.x + Size.x / 2, Center.y - Size.y / 2);
 
 	public Vector2 Min => BottomLeft;
 	public Vector2 Max => TopRight;
 
-	public List<Vector2> Vertices;
+	public List<Vector2> Vertices
+	{
+		get
+		{
+			Vector2 halfSize = new Vector2(Size.x / 2, Size.y / 2);
+
+			return new List<Vector2>
+			{
+				new Vector2(Center.x - halfSize.x, Center.y - halfSize.y),
+				new Vector2(Center.x - halfSize.x, Center.y + halfSize.y),
+				new Vector2(Center.x + halfSize.x, Center.y + halfSize.y),
+				new Vector2(Center.x + halfSize.x, Center.y - halfSize.y),
+			};
+		}
+	}
+
 	public List<Vector2> Edges;
 	public List<Vector2> Normals;
 
@@ -25,36 +39,20 @@ public class RectShape : MonoBehaviour
 	{
 		rectTransform = GetComponent<RectTransform>();
 
-		Center = rectTransform.position;
-		Size = rectTransform.rect.size;
-
-		Vertices = new List<Vector2>();
 		Edges = new List<Vector2>();
 		Normals = new List<Vector2>();
 
-		CalculateVertices();
 		CalculateEdges();
 		CalculateNormals();
 	}
 
-	private void CalculateVertices()
-	{
-		Vertices.Clear();
-
-		Vector3[] vertices = new Vector3[4];
-		rectTransform.GetWorldCorners(vertices);
-
-		for (int i = 0; i < vertices.Length; i++)
-		{
-			Vertices.Add(vertices[i]);
-		}
-	}
-
 	private void CalculateEdges()
 	{
-		for (int i = 0; i < Vertices.Count; i++)
+		List<Vector2> vertices = Vertices;
+
+		for (int i = 0; i < vertices.Count; i++)
 		{
-			Vector2 edge = Vertices[(i + 1) % Vertices.Count] - Vertices[i];
+			Vector2 edge = vertices[(i + 1) % vertices.Count] - vertices[i];
 			Edges.Add(edge);
 		}
 	}
@@ -66,13 +64,5 @@ public class RectShape : MonoBehaviour
 			Vector2 normal = new Vector2(-edge.y, edge.x);
 			Normals.Add(normal);
 		}
-	}
-
-	public void ResetPosition()
-	{
-		Center = rectTransform.position;
-		Size = rectTransform.rect.size;
-
-		CalculateVertices();
 	}
 }
