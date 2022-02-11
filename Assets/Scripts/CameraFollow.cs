@@ -27,37 +27,32 @@ public class CameraFollow : MonoBehaviour
 
 		public void Update()
 		{
-			float shiftX = 0;
+			Velocity = Vector2.zero;
 
 			if (targetRectShape.Min.x < left)
 			{
-				shiftX = targetRectShape.Min.x - left;
+				Velocity.x = targetRectShape.Min.x - left;
 			}
 			else if (targetRectShape.Max.x > right)
 			{
-				shiftX = targetRectShape.Max.x - right;
+				Velocity.x = targetRectShape.Max.x - right;
 			}
-
-			left += shiftX;
-			right += shiftX;
-
-			float shiftY = 0;
-
+			
 			if (targetRectShape.Min.y < bottom)
 			{
-				shiftY = targetRectShape.Min.y - bottom;
+				Velocity.y = targetRectShape.Min.y - bottom;
 			}
 			else if (targetRectShape.Max.y > top)
 			{
-				shiftY = targetRectShape.Max.y - top;
+				Velocity.y = targetRectShape.Max.y - top;
 			}
 
-			top += shiftY;
-			bottom += shiftY;
+			left += Velocity.x;
+			right += Velocity.x;
+			top += Velocity.y;
+			bottom += Velocity.y;
 
 			Center = new Vector2((left + right) / 2, (top + bottom) / 2);
-
-			Velocity = new Vector2(shiftX, shiftY);
 		}
 	}
 

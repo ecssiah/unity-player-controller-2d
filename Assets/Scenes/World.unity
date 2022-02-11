@@ -3957,7 +3957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: DebugDraw
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1388665138392701145, guid: e94491416da31d94bac4c96896921032, type: 3}
