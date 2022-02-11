@@ -46,6 +46,57 @@ public struct SeparatingAxisTheorem
 		return !(max1 >= min2 && max2 >= min1);
 	}
 
+	public static Vector2 CheckForCollisionResolution(BoxShape polygonToResolve, BoxShape polygonToCollide)
+	{
+		List<Vector2> resolutionVectors = new List<Vector2>();
+
+		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
+
+		foreach (Vector2 normal in normals)
+		{
+			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
+
+			if (resolutionVector == Vector2.zero)
+			{
+				return resolutionVector;
+			}
+			else
+			{
+				resolutionVectors.Add(resolutionVector);
+			}
+		}
+
+		Vector2 minResolutionVector = CalculateMinResolutionVector(resolutionVectors);
+
+		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
+
+		if (Vector2.Dot(centerDisplacement, minResolutionVector) < 0)
+		{
+			minResolutionVector *= -1;
+		}
+
+		return minResolutionVector;
+	}
+	
+	public static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
+	{
+		Vector2 minResolutionVector = Vector2.positiveInfinity;
+		float minMagnitudeSquared = float.PositiveInfinity;
+
+		foreach (Vector2 resolutionVector in resolutionVectors)
+		{
+			float resolutionMagnitudeSquared = resolutionVector.sqrMagnitude;
+
+			if (resolutionMagnitudeSquared < minMagnitudeSquared)
+			{
+				minResolutionVector = resolutionVector;
+				minMagnitudeSquared = resolutionMagnitudeSquared;
+			}
+		}
+
+		return minResolutionVector;
+	}
+
 	public static Vector2 FindSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
 	{
 		float min1 = float.PositiveInfinity;
@@ -84,56 +135,5 @@ public struct SeparatingAxisTheorem
 		{
 			return Vector2.zero;
 		}
-	}
-
-	public static Vector2 CheckForCollisionResolution(BoxShape polygonToResolve, BoxShape polygonToCollide)
-	{
-		List<Vector2> resolutionVectors = new List<Vector2>();
-
-		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
-
-		foreach (Vector2 normal in normals)
-		{
-			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
-
-			if (resolutionVector == Vector2.zero)
-			{
-				return resolutionVector;
-			}
-			else
-			{
-				resolutionVectors.Add(resolutionVector);
-			}
-		}
-
-		Vector2 minResolutionVector = CalculateMinResolutionVector(resolutionVectors);
-
-		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
-
-		if (Vector2.Dot(centerDisplacement, minResolutionVector) < 0)
-		{
-			minResolutionVector *= -1;
-		}
-
-		return minResolutionVector;
-	}
-
-	public static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
-	{
-		Vector2 minResolutionVector = Vector2.positiveInfinity;
-		float minMagnitudeSquared = float.PositiveInfinity;
-
-		foreach (Vector2 resolutionVector in resolutionVectors)
-		{
-			float resolutionMagnitudeSquared = resolutionVector.sqrMagnitude;
-
-			if (resolutionMagnitudeSquared < minMagnitudeSquared)
-			{
-				minResolutionVector = resolutionVector;
-				minMagnitudeSquared = resolutionMagnitudeSquared;
-			}
-		}
-
-		return minResolutionVector;
 	}
 }
