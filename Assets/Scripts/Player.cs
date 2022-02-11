@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
     public bool DebugDraw;
 
     public float Mass;
+
+    public Vector2 Position;
 	public Vector2 Velocity;
 
     public float Speed;
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour
     private float jumpForce;
     private Vector2 wallJumpForce;
 
+    private PhysicsSettings physicsSettings;
+
     private Animator animator;
 
 	private BoxCollider2D bodyBoxCollider2D;
@@ -41,6 +45,7 @@ public class Player : MonoBehaviour
 
 	void Awake()
 	{
+        
         DebugDraw = false;
 
         Mass = 4;
@@ -65,6 +70,8 @@ public class Player : MonoBehaviour
         jumpForce = 21f;
         wallJumpForce = new Vector2(24, 20);
 
+        physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
+
         animator = GetComponent<Animator>();
 
         bodyBoxCollider2D = GetComponent<BoxCollider2D>();
@@ -78,14 +85,16 @@ public class Player : MonoBehaviour
         GroundBox = new BoxShape(groundBoxCollider2D);
 	}
 
-    public void Move(Vector3 displacement)
+    public void Move(Vector2 displacement)
 	{
-        transform.position += displacement;
+        transform.position += new Vector3(displacement.x, displacement.y, 0);
 
         if (transform.position.y < -30)
         {
             SetPosition(new Vector2(0, 3));
         }
+
+        Position = transform.position;
 
         BodyBox.ResetPosition();
         HandBox.ResetPosition();
@@ -96,6 +105,8 @@ public class Player : MonoBehaviour
     public void SetPosition(Vector2 position)
 	{
         transform.position = position;
+
+        Position = transform.position;
 
         BodyBox.ResetPosition();
         HandBox.ResetPosition();
@@ -203,15 +214,23 @@ public class Player : MonoBehaviour
 
             if (climbLedgeAnimationFinished)
             {
+                SetAnimation("Idle");
+
                 ClimbingLedge = false;
+
+                Vector2 climbLedgePosition = new Vector2(
+                    physicsSettings.ClimbLedgePosition.x, 
+                    physicsSettings.ClimbLedgePosition.y
+                );
 
                 if (Facing == 1)
 			    {
-                    Move(new Vector3(0.54f, 1.28f, 0));
+                    Move(climbLedgePosition);
 			    }
                 else if (Facing == -1)
 			    {
-                    Move(new Vector3(-0.54f, 1.28f, 0));
+                    climbLedgePosition.x = -climbLedgePosition.x;
+                    Move(climbLedgePosition);
 			    }
             }
 		}

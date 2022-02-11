@@ -336,15 +336,22 @@ public class PhysicsSystem : MonoBehaviour
 
 			player.SetAnimation("Hang");
 
+			Vector2 hangPosition = player.Position;
+
 			if (player.Facing == 1)
 			{
-				player.SetPosition(wallSurface.BodyBox.TopLeft + physicsSettings.HangOffset);
+				hangPosition = wallSurface.BodyBox.TopLeft;
+				hangPosition.x -= physicsSettings.HangPositionOffset.x;
+				hangPosition.y += physicsSettings.HangPositionOffset.y;
 			}
 			else if (player.Facing == -1)
 			{
-				player.SetPosition(wallSurface.BodyBox.TopRight + physicsSettings.HangOffset);
+				hangPosition = wallSurface.BodyBox.TopRight;
+				hangPosition.x += physicsSettings.HangPositionOffset.x;
+				hangPosition.y += physicsSettings.HangPositionOffset.y;
 			}
 
+			player.SetPosition(hangPosition);
 			player.SetVelocity(Vector2.zero);
 		}
 	}

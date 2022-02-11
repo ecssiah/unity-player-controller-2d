@@ -7,5 +7,6 @@ public class PhysicsSettings : ScriptableObject
 
 	public float TerminalVelocity = -53f;
 
-	public Vector2 HangOffset = new Vector2(0, -1.3f);
+	public Vector2 HangPositionOffset = new Vector2(0, -1.3f);
+	public Vector2 ClimbLedgePosition = new Vector2(0.55f, 1.20f);
 }
