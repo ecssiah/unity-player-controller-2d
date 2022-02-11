@@ -327,6 +327,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9025624457049681783, guid: 92f01fb67a959764a841b2b69b4cd341, type: 3}
   m_PrefabInstance: {fileID: 77100043}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &205108820 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4987104136793102635, guid: e94491416da31d94bac4c96896921032, type: 3}
+  m_PrefabInstance: {fileID: 1347083850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &315203006
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -933,6 +938,11 @@ MonoBehaviour:
   DebugDraw: 0
   focusAreaSize: {x: 0, y: 0}
   verticalOffset: 0
+--- !u!224 &534379464 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1507139368710916609, guid: e94491416da31d94bac4c96896921032, type: 3}
+  m_PrefabInstance: {fileID: 1347083850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &538203852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1730,6 +1740,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9025624457049681783, guid: 92f01fb67a959764a841b2b69b4cd341, type: 3}
   m_PrefabInstance: {fileID: 836909489}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &858437977 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3957406714107393570, guid: e94491416da31d94bac4c96896921032, type: 3}
+  m_PrefabInstance: {fileID: 1347083850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &931113346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1802,6 +1817,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1133701575 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5914781970295097769, guid: e94491416da31d94bac4c96896921032, type: 3}
+  m_PrefabInstance: {fileID: 1347083850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1256561824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,6 +1967,11 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9025624457049681783, guid: 92f01fb67a959764a841b2b69b4cd341, type: 3}
   m_PrefabInstance: {fileID: 1287521202}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1298236440 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 9007530374943069725, guid: e94491416da31d94bac4c96896921032, type: 3}
+  m_PrefabInstance: {fileID: 1347083850}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1318057601
 PrefabInstance:
@@ -3899,6 +3924,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 826618366989169879, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Name
+      value: WallTop
+      objectReference: {fileID: 0}
     - target: {fileID: 1462099927545901324, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3958,6 +3987,46 @@ PrefabInstance:
     - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: DebugDraw
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: BodyTransform
+      value: 
+      objectReference: {fileID: 1298236440}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: GroundTransform
+      value: 
+      objectReference: {fileID: 858437977}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: WallLowTransform
+      value: 
+      objectReference: {fileID: 205108820}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: WallMidTransform
+      value: 
+      objectReference: {fileID: 1133701575}
+    - target: {fileID: 2640678332789003859, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: WallTopTransform
+      value: 
+      objectReference: {fileID: 534379464}
+    - target: {fileID: 2988519004037662964, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Name
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5586526900582725503, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Name
+      value: WallMid
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532210164569319421, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Name
+      value: WallLow
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103301850110322891, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Name
+      value: Body
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1388665138392701145, guid: e94491416da31d94bac4c96896921032, type: 3}

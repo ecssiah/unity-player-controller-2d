@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhysicsSystem : MonoBehaviour
 {
-	private PhysicsSettings physicsSettings;
+	private GameSettings gameSettings;
 
 	private Player player;
 
@@ -14,22 +14,36 @@ public class PhysicsSystem : MonoBehaviour
 	private float wallSlideDamping;
 
 	public float hangTimer;
+
 	private float wallSlideTimer;
 
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
 
+	private struct WallTriggers
+	{
+		public Surface Top;
+		public Surface Mid;
+		public Surface Low;
+
+		public void Reset()
+		{
+			Top = Mid = Low = null;
+		}
+	}
+
+	private WallTriggers wallTriggers;
+
 	void Awake()
 	{
-		physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
+		gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 
 		playerVelocityXSmoothTime = 0.1f;
 
-		wallSlideDamping = 0.2f;
+		wallSlideDamping = 0.1f;
 
-		hangTimer = 0.4f;
 		wallSlideTimer = 0.0f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
@@ -52,20 +66,19 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			player.ClimbLedge();
 		}
-		else
+		else if (!player.Hanging)
 		{
 			ApplyForces();
 			ResolveCollisions();
 
 			GroundCheck();
 			ClimbCheck();
+
+			WallTriggersCheck();
+
 			WallSlideCheck();
-
-			if (!player.Hanging)
-			{
-				LedgeCheck();
-			}
-
+			LedgeCheck();
+			
 			player.UpdateAnimation();
 		}
 
@@ -129,7 +142,7 @@ public class PhysicsSystem : MonoBehaviour
 			playerVelocityXSmoothTime
 		);
 
-		if (Mathf.Abs(newVelocity.x) < physicsSettings.MinimumVelocity)
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinimumVelocity)
 		{
 			newVelocity.x = 0;
 		}
@@ -138,7 +151,7 @@ public class PhysicsSystem : MonoBehaviour
 	private void ApplyWallSlidingForces(ref Vector2 newVelocity)
 	{
 		newVelocity.x = 0;
-		newVelocity.y += wallSlideDamping * Time.deltaTime * player.Mass * physicsSettings.Gravity;
+		newVelocity.y += wallSlideDamping * Time.deltaTime * player.Mass * gameSettings.Gravity;
 
 		if (newVelocity.y < -player.WallSlideSpeed)
 		{
@@ -148,7 +161,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyGeneralForces(ref Vector2 newVelocity)
 	{
-		newVelocity.y += Time.deltaTime * player.Mass * physicsSettings.Gravity;
+		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity;
 
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
@@ -157,14 +170,14 @@ public class PhysicsSystem : MonoBehaviour
 			playerVelocityXSmoothTime
 		);
 
-		if (Mathf.Abs(newVelocity.x) < physicsSettings.MinimumVelocity)
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinimumVelocity)
 		{
 			newVelocity.x = 0;
 		}
 
-		if (newVelocity.y < physicsSettings.TerminalVelocity)
+		if (newVelocity.y < gameSettings.TerminalVelocity)
 		{
-			newVelocity.y = physicsSettings.TerminalVelocity;
+			newVelocity.y = gameSettings.TerminalVelocity;
 		}
 	}
 	
@@ -174,7 +187,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(player.BodyRect, surface.BodyRect);
+			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(player.BodyRectShape, surface.BodyRect);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -205,6 +218,20 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
+	private void GroundCheck()
+	{
+		foreach (Surface surface in surfaces)
+		{
+			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRectShape, surface.BodyRect))
+			{
+				player.Grounded = true;
+				return;
+			}
+		}
+
+		player.Grounded = false;
+	}
+
 	private void ClimbCheck()
 	{
 		if (player.Hanging)
@@ -221,7 +248,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Climbable climbable in climbables)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRect, climbable.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, climbable.BodyRect))
 			{
 				climbableContact = true;
 				break;
@@ -241,6 +268,29 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
+	private void WallTriggersCheck()
+	{
+		wallTriggers.Reset();
+
+		foreach (Surface surface in surfaces)
+		{
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, surface.BodyRect))
+			{
+				wallTriggers.Top = surface;
+			}
+
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRectShape, surface.BodyRect))
+			{
+				wallTriggers.Mid = surface;
+			}
+
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, surface.BodyRect))
+			{
+				wallTriggers.Low = surface;
+			}
+		}
+	}
+
 	private void WallSlideCheck()
 	{
 		if (player.Hanging || player.Climbing || player.Grounded)
@@ -250,20 +300,11 @@ public class PhysicsSystem : MonoBehaviour
 			return;
 		}
 
-		bool wallContact = false;
-
-		foreach (Surface surface in surfaces)
-		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, surface.BodyRect))
-			{
-				wallContact = true;
-				break;
-			}
-		}
+		bool wallContact = wallTriggers.Top && wallTriggers.Mid && wallTriggers.Low;
 
 		if (wallContact)
 		{
-			if (player.PlayerInputInfo.Direction.x == -1 && player.CollisionInfo.Left)
+			if (player.CollisionInfo.Left && player.PlayerInputInfo.Direction.x == -1)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = -1;
@@ -271,7 +312,7 @@ public class PhysicsSystem : MonoBehaviour
 				player.SetAnimation("Slide");
 				player.SetVelocity(player.Velocity.x, 0);
 			}
-			else if (player.PlayerInputInfo.Direction.x == 1 && player.CollisionInfo.Right)
+			else if (player.CollisionInfo.Right && player.PlayerInputInfo.Direction.x == 1)
 			{
 				wallSlideTimer = 0;
 				player.WallSliding = 1;
@@ -300,41 +341,19 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 	}
-
+	
 	private void LedgeCheck()
 	{
-		bool handContact = false;
-
-		foreach (Surface surface in surfaces)
-		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallHighRect, surface.BodyRect))
-			{
-				handContact = true;
-				break;
-			}
-		}
-
-		if (handContact)
+		if (wallTriggers.Top)
 		{
 			return;
 		}
 
-		Surface wallSurface = null;
-
-		foreach (Surface surface in surfaces)
-		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, surface.BodyRect))
-			{
-				wallSurface = surface;
-				break;
-			}
-		}
-
-		bool canGrabLedge = wallSurface != null;
+		bool canGrabLedge = wallTriggers.Mid;
 
 		if (canGrabLedge && player.PlayerInputInfo.Direction.y > 0)
 		{
-			hangTimer = 0.4f;
+			hangTimer = gameSettings.HangTime;
 
 			player.Hanging = true;
 			player.Climbing = false;
@@ -345,33 +364,19 @@ public class PhysicsSystem : MonoBehaviour
 
 			if (player.Facing == 1)
 			{
-				hangPosition = wallSurface.BodyRect.TopLeft;
-				hangPosition.x -= physicsSettings.HangPositionOffset.x;
-				hangPosition.y += physicsSettings.HangPositionOffset.y;
+				hangPosition = wallTriggers.Mid.BodyRect.TopLeft;
+				hangPosition.x -= gameSettings.HangPositionOffset.x;
+				hangPosition.y += gameSettings.HangPositionOffset.y;
 			}
 			else if (player.Facing == -1)
 			{
-				hangPosition = wallSurface.BodyRect.TopRight;
-				hangPosition.x += physicsSettings.HangPositionOffset.x;
-				hangPosition.y += physicsSettings.HangPositionOffset.y;
+				hangPosition = wallTriggers.Mid.BodyRect.TopRight;
+				hangPosition.x += gameSettings.HangPositionOffset.x;
+				hangPosition.y += gameSettings.HangPositionOffset.y;
 			}
 
 			player.SetPosition(hangPosition);
 			player.SetVelocity(Vector2.zero);
 		}
-	}
-
-	private void GroundCheck()
-	{
-		foreach (Surface surface in surfaces)
-		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRect, surface.BodyRect))
-			{
-				player.Grounded = true;
-				return;
-			}
-		}
-
-		player.Grounded = false;
 	}
 }

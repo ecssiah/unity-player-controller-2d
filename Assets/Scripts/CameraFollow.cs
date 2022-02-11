@@ -76,7 +76,7 @@ public class CameraFollow : MonoBehaviour
 		
 		focusAreaSize = new Vector2(3, 5);
 
-		targetRectShape = GameObject.Find("Player/BodyRect").GetComponent<RectShape>();
+		targetRectShape = GameObject.Find("Player/Body").GetComponent<RectShape>();
 
 		focusArea = new FocusArea(targetRectShape, focusAreaSize);
 	}

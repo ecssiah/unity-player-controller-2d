@@ -29,17 +29,17 @@ public class Player : MonoBehaviour
     private float jumpForce;
     private Vector2 wallJumpForce;
 
-    private PhysicsSettings physicsSettings;
+    private GameSettings gameSettings;
 
     private Animator animator;
 
-    public RectShape BodyRect { get; private set; }
-    public RectShape WallHighRect { get; private set; }
-    public RectShape WallMidRect { get; private set; }
-    public RectShape WallLowRect { get; private set; }
-    public RectShape GroundRect { get; private set; }
+    public RectShape BodyRectShape;
+    public RectShape WallTopRectShape;
+    public RectShape WallMidRectShape;
+    public RectShape WallLowRectShape;
+    public RectShape GroundRectShape;
 
-    void Awake()
+	void Awake()
     {
         DebugDraw = false;
 
@@ -65,15 +65,15 @@ public class Player : MonoBehaviour
         jumpForce = 21f;
         wallJumpForce = new Vector2(24, 20);
 
-        physicsSettings = Resources.Load<PhysicsSettings>("Settings/PhysicsSettings");
+        gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
         animator = GetComponent<Animator>();
 
-        BodyRect = transform.Find("BodyRect").GetComponent<RectShape>();
-        WallHighRect = transform.Find("WallHighRect").GetComponent<RectShape>();
-        WallMidRect = transform.Find("WallMidRect").GetComponent<RectShape>();
-        WallLowRect = transform.Find("WallLowRect").GetComponent<RectShape>();
-        GroundRect = transform.Find("GroundRect").GetComponent<RectShape>();
+        BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
+        WallTopRectShape = transform.Find("WallTop").GetComponent<RectShape>();
+        WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
+        WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
+        GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
     }
 
     public void Move(Vector2 displacement)
@@ -217,8 +217,8 @@ public class Player : MonoBehaviour
                 ClimbingLedge = false;
 
                 Vector2 climbLedgePosition = new Vector2(
-                    physicsSettings.ClimbLedgePosition.x, 
-                    physicsSettings.ClimbLedgePosition.y
+                    gameSettings.ClimbLedgeOffset.x, 
+                    gameSettings.ClimbLedgeOffset.y
                 );
 
                 if (Facing == 1)
@@ -241,11 +241,11 @@ public class Player : MonoBehaviour
         {
             Gizmos.color = new Color(1.0f, 0.0f, 1.0f, 0.2f);
             
-            Gizmos.DrawWireCube(BodyRect.Center, BodyRect.Size);
-            Gizmos.DrawWireCube(WallHighRect.Center, WallHighRect.Size);
-            Gizmos.DrawWireCube(WallMidRect.Center, WallMidRect.Size);
-            Gizmos.DrawWireCube(WallLowRect.Center, WallLowRect.Size);
-            Gizmos.DrawWireCube(GroundRect.Center, GroundRect.Size);
+            Gizmos.DrawWireCube(BodyRectShape.Center, BodyRectShape.Size);
+            Gizmos.DrawWireCube(WallTopRectShape.Center, WallTopRectShape.Size);
+            Gizmos.DrawWireCube(WallMidRectShape.Center, WallMidRectShape.Size);
+            Gizmos.DrawWireCube(WallLowRectShape.Center, WallLowRectShape.Size);
+            Gizmos.DrawWireCube(GroundRectShape.Center, GroundRectShape.Size);
         }
     }
 }

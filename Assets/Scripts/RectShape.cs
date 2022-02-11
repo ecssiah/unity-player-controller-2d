@@ -30,8 +30,7 @@ public class RectShape : MonoBehaviour
 		}
 	}
 
-	public List<Vector2> Edges;
-	public List<Vector2> Normals;
+	public List<Vector2> Normals { get; private set; }
 
 	private RectTransform rectTransform;
 
@@ -39,27 +38,23 @@ public class RectShape : MonoBehaviour
 	{
 		rectTransform = GetComponent<RectTransform>();
 
-		Edges = new List<Vector2>();
-		Normals = new List<Vector2>();
-
-		CalculateEdges();
 		CalculateNormals();
-	}
-
-	private void CalculateEdges()
-	{
-		List<Vector2> vertices = Vertices;
-
-		for (int i = 0; i < vertices.Count; i++)
-		{
-			Vector2 edge = vertices[(i + 1) % vertices.Count] - vertices[i];
-			Edges.Add(edge);
-		}
 	}
 
 	private void CalculateNormals()
 	{
-		foreach (Vector2 edge in Edges)
+		List<Vector2> vertices = Vertices;
+		List<Vector2> edges = new List<Vector2>();
+		
+		for (int i = 0; i < vertices.Count; i++)
+		{
+			Vector2 edge = vertices[(i + 1) % vertices.Count] - vertices[i];
+			edges.Add(edge);
+		}
+
+		Normals = new List<Vector2>();
+
+		foreach (Vector2 edge in edges)
 		{
 			Vector2 normal = new Vector2(-edge.y, edge.x);
 			Normals.Add(normal);
