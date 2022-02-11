@@ -42,6 +42,11 @@ public class PhysicsSystem : MonoBehaviour
 		if (player.Hanging)
 		{
 			LedgeClimbCheck();
+
+			if (player.ClimbingLedge)
+			{
+				return;
+			}
 		}
 
 		if (player.ClimbingLedge)
@@ -93,16 +98,17 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		if (hangTimer <= 0)
 		{
-			hangTimer = 0.4f;
-
 			if (player.PlayerInputInfo.Direction.y > 0)
 			{
+				hangTimer = 0.4f;
+
 				player.Hanging = false;
 				player.ClimbingLedge = true;
 
 				player.SetAnimation("LedgeClimb");
 			}
-		} else
+		} 
+		else
 		{
 			hangTimer -= Time.deltaTime;
 		}
@@ -204,7 +210,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ClimbCheck()
 	{
-		if (player.Hanging || player.ClimbingLedge)
+		if (player.Hanging)
 		{
 			return;
 		}
@@ -229,7 +235,65 @@ public class PhysicsSystem : MonoBehaviour
 			player.Climbing = true;
 
 			player.SetAnimation("Climb");
-			player.SetVelocity(0, player.Velocity.y);
+			player.SetVelocity(0, 0);
+		}
+	}
+
+	private void WallSlideCheck()
+	{
+		if (player.Hanging || player.Climbing)
+		{
+			wallSlideTimer = 0;
+			player.WallSliding = 0;
+			return;
+		}
+
+		bool wallContact = false;
+
+		foreach (Surface surface in surfaces)
+		{
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallBox, surface.BodyBox))
+			{
+				wallContact = true;
+				break;
+			}
+		}
+
+		if (wallContact)
+		{
+			if (player.PlayerInputInfo.Direction.x == -1 && player.CollisionInfo.Left)
+			{
+				wallSlideTimer = 0;
+				player.WallSliding = -1;
+
+				player.SetAnimation("Slide");
+			}
+			else if (player.PlayerInputInfo.Direction.x == 1 && player.CollisionInfo.Right)
+			{
+				wallSlideTimer = 0;
+				player.WallSliding = 1;
+
+				player.SetAnimation("Slide");
+			}
+		}
+
+		if (player.WallSliding != 0)
+		{
+			if (!wallContact)
+			{
+				wallSlideTimer = 0;
+				player.WallSliding = 0;
+			}
+			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
+			{
+				wallSlideTimer += Time.deltaTime;
+
+				if (wallSlideTimer >= player.WallSlideStickTime)
+				{
+					wallSlideTimer = 0;
+					player.WallSliding = 0;
+				}
+			}
 		}
 	}
 
@@ -283,64 +347,6 @@ public class PhysicsSystem : MonoBehaviour
 			}
 
 			player.SetVelocity(Vector2.zero);
-		}
-	}
-
-	private void WallSlideCheck()
-	{
-		if (player.Grounded || player.Climbing || player.Hanging)
-		{
-			wallSlideTimer = 0;
-			player.WallSliding = 0;
-			return;
-		}
-
-		bool wallContact = false;
-
-		foreach (Surface surface in surfaces)
-		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallBox, surface.BodyBox))
-			{
-				wallContact = true;
-				break;
-			}
-		}
-
-		if (wallContact)
-		{
-			if (player.PlayerInputInfo.Direction.x == -1 && player.CollisionInfo.Left)
-			{
-				wallSlideTimer = 0;
-				player.WallSliding = -1;
-
-				player.SetAnimation("Slide");
-			}
-			else if (player.PlayerInputInfo.Direction.x == 1 && player.CollisionInfo.Right)
-			{
-				wallSlideTimer = 0;
-				player.WallSliding = 1;
-
-				player.SetAnimation("Slide");
-			}
-		}
-
-		if (player.WallSliding != 0)
-		{
-			if (!wallContact)
-			{
-				wallSlideTimer = 0;
-				player.WallSliding = 0;
-			}
-			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
-			{
-				wallSlideTimer += Time.deltaTime;
-
-				if (wallSlideTimer >= player.WallSlideStickTime)
-				{
-					wallSlideTimer = 0;
-					player.WallSliding = 0;
-				}
-			}
 		}
 	}
 
