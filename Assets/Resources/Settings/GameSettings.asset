@@ -15,7 +15,7 @@ MonoBehaviour:
   Gravity: -9.8
   MinSpeed: 0.1
   MaxAirSpeed: -53
-  WallSlideDamping: 0.2
+  WallSlideDamping: 0.16
   MaxWallSlideSpeed: 4.2
   HangTime: 0.2
   HangPositionOffset: {x: 0.19, y: -1.38}

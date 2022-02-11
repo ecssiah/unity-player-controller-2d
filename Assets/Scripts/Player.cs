@@ -12,10 +12,12 @@ public class Player : MonoBehaviour
 
     public float Speed;
     public float ClimbSpeed;
-    public float WallSlideStickTime;
 
     public int Facing;
+
     public int WallSliding;
+    private float wallSlideTimer;
+    private float wallSlideHoldTime;
 
     public bool Grounded;
     public bool Hanging;
@@ -55,7 +57,7 @@ public class Player : MonoBehaviour
         ClimbingLedge = false;
 
         ClimbSpeed = 3.2f;
-        WallSlideStickTime = 0.3f;
+        wallSlideHoldTime = 0.3f;
 
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
@@ -102,6 +104,28 @@ public class Player : MonoBehaviour
 	{
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
+
+    public void SetWallSlide(int slideDirection)
+	{
+        wallSlideTimer = 0;
+        WallSliding = slideDirection;
+
+        if (slideDirection != 0)
+		{
+            SetAnimation("Slide");
+            SetVelocity(Velocity.x, 0);
+        }
+	}
+
+    public void UpdateWallSlide()
+	{
+        wallSlideTimer += Time.deltaTime;
+
+        if (wallSlideTimer >= wallSlideHoldTime)
+        {
+            SetWallSlide(0);
+        }
+    }
 
     public void SetRunInput(float runInput)
 	{

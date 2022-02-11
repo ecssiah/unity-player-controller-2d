@@ -13,8 +13,6 @@ public class PhysicsSystem : MonoBehaviour
 
 	public float hangTimer;
 
-	private float wallSlideTimer;
-
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
 
@@ -39,8 +37,6 @@ public class PhysicsSystem : MonoBehaviour
 		player = GameObject.Find("Player").GetComponent<Player>();
 
 		playerVelocityXSmoothTime = 0.1f;
-
-		wallSlideTimer = 0.0f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
@@ -291,8 +287,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		if (player.Hanging || player.Climbing || player.Grounded)
 		{
-			wallSlideTimer = 0;
-			player.WallSliding = 0;
+			player.SetWallSlide(0);
 			return;
 		}
 
@@ -300,21 +295,9 @@ public class PhysicsSystem : MonoBehaviour
 
 		if (wallContact)
 		{
-			if (player.CollisionInfo.Left && player.PlayerInputInfo.Direction.x == -1)
+			if (player.CollisionInfo.Left || player.CollisionInfo.Right)
 			{
-				wallSlideTimer = 0;
-				player.WallSliding = -1;
-
-				player.SetAnimation("Slide");
-				player.SetVelocity(player.Velocity.x, 0);
-			}
-			else if (player.CollisionInfo.Right && player.PlayerInputInfo.Direction.x == 1)
-			{
-				wallSlideTimer = 0;
-				player.WallSliding = 1;
-
-				player.SetAnimation("Slide");
-				player.SetVelocity(player.Velocity.x, 0);
+				player.SetWallSlide((int)player.PlayerInputInfo.Direction.x);
 			}
 		}
 
@@ -322,18 +305,11 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			if (!wallContact)
 			{
-				wallSlideTimer = 0;
-				player.WallSliding = 0;
+				player.SetWallSlide(0);
 			}
 			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
 			{
-				wallSlideTimer += Time.deltaTime;
-
-				if (wallSlideTimer >= player.WallSlideStickTime)
-				{
-					wallSlideTimer = 0;
-					player.WallSliding = 0;
-				}
+				player.UpdateWallSlide();
 			}
 		}
 	}
