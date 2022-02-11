@@ -4,34 +4,38 @@ public class CameraFollow : MonoBehaviour
 {
 	private struct FocusArea
 	{
+		private readonly RectShape targetRectShape;
+
 		public Vector2 Center;
 		public Vector2 Velocity;
 
 		float top, bottom;
 		float left, right;
 
-		public FocusArea(Bounds targetBounds, Vector2 size)
+		public FocusArea(RectShape _targetRectShape, Vector2 size)
 		{
-			left = targetBounds.center.x - size.x / 2;
-			right = targetBounds.center.x + size.x / 2;
-			bottom = targetBounds.min.y;
-			top = targetBounds.min.y + size.y;
+			targetRectShape = _targetRectShape;
+
+			left = targetRectShape.Center.x - size.x / 2;
+			right = targetRectShape.Center.x + size.x / 2;
+			bottom = targetRectShape.Center.y - size.y / 2;
+			top = targetRectShape.Center.y + size.y / 2;
 
 			Center = new Vector2((left + right) / 2, (top + bottom) / 2);
 			Velocity = Vector2.zero;
 		}
 
-		public void Update(Bounds targetBounds)
+		public void Update()
 		{
 			float shiftX = 0;
 
-			if (targetBounds.min.x < left)
+			if (targetRectShape.Min.x < left)
 			{
-				shiftX = targetBounds.min.x - left;
+				shiftX = targetRectShape.Min.x - left;
 			}
-			else if (targetBounds.max.x > right)
+			else if (targetRectShape.Max.x > right)
 			{
-				shiftX = targetBounds.max.x - right;
+				shiftX = targetRectShape.Max.x - right;
 			}
 
 			left += shiftX;
@@ -39,13 +43,13 @@ public class CameraFollow : MonoBehaviour
 
 			float shiftY = 0;
 
-			if (targetBounds.min.y < bottom)
+			if (targetRectShape.Min.y < bottom)
 			{
-				shiftY = targetBounds.min.y - bottom;
+				shiftY = targetRectShape.Min.y - bottom;
 			}
-			else if (targetBounds.max.y > top)
+			else if (targetRectShape.Max.y > top)
 			{
-				shiftY = targetBounds.max.y - top;
+				shiftY = targetRectShape.Max.y - top;
 			}
 
 			top += shiftY;
@@ -59,7 +63,7 @@ public class CameraFollow : MonoBehaviour
 
 	public bool DebugDraw;
 
-	private BoxCollider2D targetCollider;
+	private RectShape targetRectShape;
 
 	private FocusArea focusArea;
 
@@ -69,7 +73,7 @@ public class CameraFollow : MonoBehaviour
 	public Vector2 focusAreaSize;
 	public float verticalOffset;
 
-	void Awake()
+	void Start()
 	{
 		DebugDraw = false;
 
@@ -77,14 +81,14 @@ public class CameraFollow : MonoBehaviour
 		
 		focusAreaSize = new Vector2(3, 5);
 
-		targetCollider = GameObject.Find("Player").GetComponent<BoxCollider2D>();
+		targetRectShape = GameObject.Find("Player/BodyRect").GetComponent<RectShape>();
 
-		focusArea = new FocusArea(targetCollider.bounds, focusAreaSize);
+		focusArea = new FocusArea(targetRectShape, focusAreaSize);
 	}
 
     void LateUpdate()
     {
-		focusArea.Update(targetCollider.bounds);
+		focusArea.Update();
 
 		Vector2 focusPosition = focusArea.Center + verticalOffset * Vector2.up;
 

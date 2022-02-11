@@ -174,7 +174,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(player.BodyBox, surface.BodyBox);
+			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(player.BodyRect, surface.BodyRect);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -221,7 +221,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Climbable climbable in climbables)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallBox, climbable.BodyBox))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, climbable.BodyRect))
 			{
 				climbableContact = true;
 				break;
@@ -254,7 +254,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallBox, surface.BodyBox))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, surface.BodyRect))
 			{
 				wallContact = true;
 				break;
@@ -307,7 +307,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.HandBox, surface.BodyBox))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallHighRect, surface.BodyRect))
 			{
 				handContact = true;
 				break;
@@ -323,7 +323,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallBox, surface.BodyBox))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, surface.BodyRect))
 			{
 				wallSurface = surface;
 				break;
@@ -345,13 +345,13 @@ public class PhysicsSystem : MonoBehaviour
 
 			if (player.Facing == 1)
 			{
-				hangPosition = wallSurface.BodyBox.TopLeft;
+				hangPosition = wallSurface.BodyRect.TopLeft;
 				hangPosition.x -= physicsSettings.HangPositionOffset.x;
 				hangPosition.y += physicsSettings.HangPositionOffset.y;
 			}
 			else if (player.Facing == -1)
 			{
-				hangPosition = wallSurface.BodyBox.TopRight;
+				hangPosition = wallSurface.BodyRect.TopRight;
 				hangPosition.x += physicsSettings.HangPositionOffset.x;
 				hangPosition.y += physicsSettings.HangPositionOffset.y;
 			}
@@ -365,7 +365,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.GroundBox, surface.BodyBox))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRect, surface.BodyRect))
 			{
 				player.Grounded = true;
 				return;

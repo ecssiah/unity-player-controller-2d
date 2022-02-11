@@ -4,13 +4,13 @@ using UnityEngine;
 
 public struct SeparatingAxisTheorem
 {
-	public static bool CheckForCollision(BoxShape polygon1, BoxShape polygon2)
+	public static bool CheckForCollision(RectShape rect1, RectShape rect2)
 	{
-		List<Vector2> normals = polygon1.Normals.Concat(polygon2.Normals).ToList();
+		List<Vector2> normals = rect1.Normals.Concat(rect2.Normals).ToList();
 
 		foreach (Vector2 normal in normals)
 		{
-			if (IsSeparatingAxis(normal, polygon1, polygon2))
+			if (IsSeparatingAxis(normal, rect1, rect2))
 			{
 				return false;
 			}
@@ -19,7 +19,7 @@ public struct SeparatingAxisTheorem
 		return true;
 	}
 
-	public static bool IsSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	public static bool IsSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
 	{
 		float min1 = float.PositiveInfinity;
 		float max1 = float.NegativeInfinity;
@@ -27,7 +27,7 @@ public struct SeparatingAxisTheorem
 		float min2 = float.PositiveInfinity;
 		float max2 = float.NegativeInfinity;
 
-		foreach (Vector2 vertex in polygon1.Vertices)
+		foreach (Vector2 vertex in rect1.Vertices)
 		{
 			float projection = Vector2.Dot(vertex, normal);
 
@@ -35,7 +35,7 @@ public struct SeparatingAxisTheorem
 			max1 = Mathf.Max(max1, projection);
 		}
 
-		foreach (Vector2 vertex in polygon2.Vertices)
+		foreach (Vector2 vertex in rect2.Vertices)
 		{
 			float projection = Vector2.Dot(vertex, normal);
 
@@ -46,15 +46,15 @@ public struct SeparatingAxisTheorem
 		return !(max1 >= min2 && max2 >= min1);
 	}
 
-	public static Vector2 CheckForCollisionResolution(BoxShape polygonToResolve, BoxShape polygonToCollide)
+	public static Vector2 CheckForCollisionResolution(RectShape rectResolve, RectShape rectCollide)
 	{
 		List<Vector2> resolutionVectors = new List<Vector2>();
 
-		List<Vector2> normals = polygonToResolve.Normals.Concat(polygonToCollide.Normals).ToList();
+		List<Vector2> normals = rectResolve.Normals.Concat(rectCollide.Normals).ToList();
 
 		foreach (Vector2 normal in normals)
 		{
-			Vector2 resolutionVector = FindSeparatingAxis(normal, polygonToResolve, polygonToCollide);
+			Vector2 resolutionVector = FindSeparatingAxis(normal, rectResolve, rectCollide);
 
 			if (resolutionVector == Vector2.zero)
 			{
@@ -68,7 +68,7 @@ public struct SeparatingAxisTheorem
 
 		Vector2 minResolutionVector = CalculateMinResolutionVector(resolutionVectors);
 
-		Vector2 centerDisplacement = polygonToResolve.Center - polygonToCollide.Center;
+		Vector2 centerDisplacement = rectResolve.Center - rectCollide.Center;
 
 		if (Vector2.Dot(centerDisplacement, minResolutionVector) < 0)
 		{
@@ -97,7 +97,7 @@ public struct SeparatingAxisTheorem
 		return minResolutionVector;
 	}
 
-	public static Vector2 FindSeparatingAxis(Vector2 normal, BoxShape polygon1, BoxShape polygon2)
+	public static Vector2 FindSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
 	{
 		float min1 = float.PositiveInfinity;
 		float max1 = float.NegativeInfinity;
@@ -105,7 +105,7 @@ public struct SeparatingAxisTheorem
 		float min2 = float.PositiveInfinity;
 		float max2 = float.NegativeInfinity;
 
-		foreach (Vector2 vertex in polygon1.Vertices)
+		foreach (Vector2 vertex in rect1.Vertices)
 		{
 			float projection = Vector2.Dot(vertex, normal);
 
@@ -113,7 +113,7 @@ public struct SeparatingAxisTheorem
 			max1 = Mathf.Max(max1, projection);
 		}
 
-		foreach (Vector2 vertex in polygon2.Vertices)
+		foreach (Vector2 vertex in rect2.Vertices)
 		{
 			float projection = Vector2.Dot(vertex, normal);
 

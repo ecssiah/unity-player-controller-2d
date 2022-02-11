@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public float Mass;
 
     public Vector2 Position;
-	public Vector2 Velocity;
+    public Vector2 Velocity;
 
     public float Speed;
     public float ClimbSpeed;
@@ -33,19 +33,14 @@ public class Player : MonoBehaviour
 
     private Animator animator;
 
-	private BoxCollider2D bodyBoxCollider2D;
-    private BoxCollider2D handBoxCollider2D;
-    private BoxCollider2D wallBoxCollider2D;
-    private BoxCollider2D groundBoxCollider2D;
+    public RectShape BodyRect { get; private set; }
+    public RectShape WallHighRect { get; private set; }
+    public RectShape WallMidRect { get; private set; }
+    public RectShape WallLowRect { get; private set; }
+    public RectShape GroundRect { get; private set; }
 
-    public BoxShape BodyBox;
-    public BoxShape HandBox;
-    public BoxShape WallBox;
-    public BoxShape GroundBox;
-
-	void Awake()
-	{
-        
+    void Awake()
+    {
         DebugDraw = false;
 
         Mass = 4;
@@ -74,16 +69,12 @@ public class Player : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        bodyBoxCollider2D = GetComponent<BoxCollider2D>();
-        handBoxCollider2D = GameObject.Find("Player/HandTrigger").GetComponent<BoxCollider2D>();
-        wallBoxCollider2D = GameObject.Find("Player/WallTrigger").GetComponent<BoxCollider2D>();
-        groundBoxCollider2D = GameObject.Find("Player/GroundTrigger").GetComponent<BoxCollider2D>();
-
-        BodyBox = new BoxShape(bodyBoxCollider2D);
-        HandBox = new BoxShape(handBoxCollider2D);
-        WallBox = new BoxShape(wallBoxCollider2D);
-        GroundBox = new BoxShape(groundBoxCollider2D);
-	}
+        BodyRect = transform.Find("BodyRect").GetComponent<RectShape>();
+        WallHighRect = transform.Find("WallHighRect").GetComponent<RectShape>();
+        WallMidRect = transform.Find("WallMidRect").GetComponent<RectShape>();
+        WallLowRect = transform.Find("WallLowRect").GetComponent<RectShape>();
+        GroundRect = transform.Find("GroundRect").GetComponent<RectShape>();
+    }
 
     public void Move(Vector2 displacement)
 	{
@@ -96,10 +87,10 @@ public class Player : MonoBehaviour
 
         Position = transform.position;
 
-        BodyBox.ResetPosition();
-        HandBox.ResetPosition();
-        WallBox.ResetPosition();
-        GroundBox.ResetPosition();
+        BodyRect.ResetPosition();
+        WallHighRect.ResetPosition();
+        WallMidRect.ResetPosition();
+        WallLowRect.ResetPosition();
     }
 
     public void SetPosition(Vector2 position)
@@ -108,10 +99,10 @@ public class Player : MonoBehaviour
 
         Position = transform.position;
 
-        BodyBox.ResetPosition();
-        HandBox.ResetPosition();
-        WallBox.ResetPosition();
-        GroundBox.ResetPosition();
+        BodyRect.ResetPosition();
+        WallHighRect.ResetPosition();
+        WallMidRect.ResetPosition();
+        WallLowRect.ResetPosition();
     }
 
     public void SetVelocity(float vx, float vy)
@@ -213,8 +204,8 @@ public class Player : MonoBehaviour
             scale.x = 1;
             transform.localScale = scale;
 
-            HandBox.ResetPosition();
-            WallBox.ResetPosition();
+            WallHighRect.ResetPosition();
+            WallMidRect.ResetPosition();
         }
         else if (Velocity.x < 0 && !(Facing == -1))
         {
@@ -224,8 +215,8 @@ public class Player : MonoBehaviour
             scale.x = -1;
             transform.localScale = scale;
 
-            HandBox.ResetPosition();
-            WallBox.ResetPosition();
+            WallHighRect.ResetPosition();
+            WallMidRect.ResetPosition();
         }
     }
 
@@ -266,9 +257,9 @@ public class Player : MonoBehaviour
         {
             Gizmos.color = new Color(1.0f, 0.0f, 1.0f, 0.2f);
 
-            Gizmos.DrawWireCube(HandBox.Center, HandBox.Size);
-            Gizmos.DrawWireCube(WallBox.Center, WallBox.Size);
-            Gizmos.DrawWireCube(GroundBox.Center, GroundBox.Size);
+            Gizmos.DrawWireCube(WallHighRect.Center, WallHighRect.Size);
+            Gizmos.DrawWireCube(WallMidRect.Center, WallMidRect.Size);
+            Gizmos.DrawWireCube(WallLowRect.Center, WallLowRect.Size);
         }
     }
 }
