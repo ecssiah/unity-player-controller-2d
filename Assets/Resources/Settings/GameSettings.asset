@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   Gravity: -9.8
-  MinimumVelocity: 0.2
-  TerminalVelocity: -53
-  WallSlideDamping: 0.1
+  MinSpeed: 0.1
+  MaxAirSpeed: -53
+  WallSlideDamping: 0.2
+  MaxWallSlideSpeed: 4.2
   HangTime: 0.2
   HangPositionOffset: {x: 0.19, y: -1.38}
   ClimbLedgeOffset: {x: 0.62, y: 1.18}

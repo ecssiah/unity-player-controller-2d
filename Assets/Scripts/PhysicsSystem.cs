@@ -11,8 +11,6 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityXDamped;
 	private float playerVelocityXSmoothTime;
 
-	private float wallSlideDamping;
-
 	public float hangTimer;
 
 	private float wallSlideTimer;
@@ -41,8 +39,6 @@ public class PhysicsSystem : MonoBehaviour
 		player = GameObject.Find("Player").GetComponent<Player>();
 
 		playerVelocityXSmoothTime = 0.1f;
-
-		wallSlideDamping = 0.1f;
 
 		wallSlideTimer = 0.0f;
 
@@ -142,7 +138,7 @@ public class PhysicsSystem : MonoBehaviour
 			playerVelocityXSmoothTime
 		);
 
-		if (Mathf.Abs(newVelocity.x) < gameSettings.MinimumVelocity)
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
 		{
 			newVelocity.x = 0;
 		}
@@ -151,11 +147,11 @@ public class PhysicsSystem : MonoBehaviour
 	private void ApplyWallSlidingForces(ref Vector2 newVelocity)
 	{
 		newVelocity.x = 0;
-		newVelocity.y += wallSlideDamping * Time.deltaTime * player.Mass * gameSettings.Gravity;
+		newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * player.Mass * gameSettings.Gravity;
 
-		if (newVelocity.y < -player.WallSlideSpeed)
+		if (newVelocity.y < -gameSettings.MaxWallSlideSpeed)
 		{
-			newVelocity.y = -player.WallSlideSpeed;
+			newVelocity.y = -gameSettings.MaxWallSlideSpeed;
 		}
 	}
 
@@ -170,14 +166,14 @@ public class PhysicsSystem : MonoBehaviour
 			playerVelocityXSmoothTime
 		);
 
-		if (Mathf.Abs(newVelocity.x) < gameSettings.MinimumVelocity)
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
 		{
 			newVelocity.x = 0;
 		}
 
-		if (newVelocity.y < gameSettings.TerminalVelocity)
+		if (newVelocity.y < gameSettings.MaxAirSpeed)
 		{
-			newVelocity.y = gameSettings.TerminalVelocity;
+			newVelocity.y = gameSettings.MaxAirSpeed;
 		}
 	}
 	

@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     public float Speed;
     public float ClimbSpeed;
-    public float WallSlideSpeed;
     public float WallSlideStickTime;
 
     public int Facing;
@@ -56,7 +55,6 @@ public class Player : MonoBehaviour
         ClimbingLedge = false;
 
         ClimbSpeed = 3.2f;
-        WallSlideSpeed = 2.4f;
         WallSlideStickTime = 0.3f;
 
         PlayerInputInfo = new PlayerInputInfo();
