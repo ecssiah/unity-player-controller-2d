@@ -180,6 +180,29 @@ public class Player : MonoBehaviour
         animator.Play($"Base Layer.Player-{stateName}");
 	}
 
+    public void UpdateAnimation()
+	{
+        if (!Hanging && !Climbing && WallSliding == 0)
+        {
+            if (Velocity.y > 0)
+            {
+                SetAnimation("Jump");
+            }
+            else if (Velocity.y < 0)
+            {
+                SetAnimation("Fall");
+            }
+            else if (Velocity.x != 0)
+            {
+                SetAnimation("Run");
+            }
+            else
+            {
+               SetAnimation("Idle");
+            }
+        }
+    }
+
 	public void UpdateOrientation()
 	{
         if (Velocity.x > 0 && !(Facing == 1))
