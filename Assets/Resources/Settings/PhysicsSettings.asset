@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: PhysicsSettings
   m_EditorClassIdentifier: 
-  Gravity: -9.8
+  Gravity: -0.01
   MinimumVelocity: 0.2
   TerminalVelocity: -22
   WallSlideDamping: 0.5

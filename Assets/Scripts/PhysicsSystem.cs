@@ -221,7 +221,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Climbable climbable in climbables)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRect, climbable.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRect, climbable.BodyRect))
 			{
 				climbableContact = true;
 				break;
@@ -365,7 +365,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		foreach (Surface surface in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRect, surface.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRect, surface.BodyRect))
 			{
 				player.Grounded = true;
 				return;

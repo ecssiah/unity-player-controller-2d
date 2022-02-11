@@ -91,6 +91,7 @@ public class Player : MonoBehaviour
         WallHighRect.ResetPosition();
         WallMidRect.ResetPosition();
         WallLowRect.ResetPosition();
+        GroundRect.ResetPosition();
     }
 
     public void SetPosition(Vector2 position)
@@ -103,6 +104,7 @@ public class Player : MonoBehaviour
         WallHighRect.ResetPosition();
         WallMidRect.ResetPosition();
         WallLowRect.ResetPosition();
+        GroundRect.ResetPosition();
     }
 
     public void SetVelocity(float vx, float vy)
@@ -189,7 +191,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-               SetAnimation("Idle");
+                SetAnimation("Idle");
             }
         }
     }
@@ -206,6 +208,7 @@ public class Player : MonoBehaviour
 
             WallHighRect.ResetPosition();
             WallMidRect.ResetPosition();
+            WallLowRect.ResetPosition();
         }
         else if (Velocity.x < 0 && !(Facing == -1))
         {
@@ -217,6 +220,7 @@ public class Player : MonoBehaviour
 
             WallHighRect.ResetPosition();
             WallMidRect.ResetPosition();
+            WallLowRect.ResetPosition();
         }
     }
 
@@ -256,10 +260,12 @@ public class Player : MonoBehaviour
         if (DebugDraw)
         {
             Gizmos.color = new Color(1.0f, 0.0f, 1.0f, 0.2f);
-
+            
+            Gizmos.DrawWireCube(BodyRect.Center, BodyRect.Size);
             Gizmos.DrawWireCube(WallHighRect.Center, WallHighRect.Size);
             Gizmos.DrawWireCube(WallMidRect.Center, WallMidRect.Size);
             Gizmos.DrawWireCube(WallLowRect.Center, WallLowRect.Size);
+            Gizmos.DrawWireCube(GroundRect.Center, GroundRect.Size);
         }
     }
 }
