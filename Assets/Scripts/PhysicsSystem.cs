@@ -228,7 +228,7 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		if (!climbableContact && player.Grounded)
+		if (!climbableContact)
 		{
 			player.Climbing = false;
 		} 
