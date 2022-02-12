@@ -8,8 +8,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	private Player player;
 
-	private float playerVelocityXDamped;
-	private float playerVelocityXSmoothTime;
+	private float playerSpeedDamped;
+	private float playerSpeedSmoothTime;
 
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
@@ -20,7 +20,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 
-		playerVelocityXSmoothTime = 0.1f;
+		playerSpeedSmoothTime = 0.1f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
@@ -91,13 +91,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyClimbingForces(ref Vector2 newVelocity)
 	{
-		newVelocity.y = player.PlayerInputInfo.Direction.y * player.ClimbSpeed;
-
-		newVelocity.x = Mathf.SmoothDamp(
-			player.Velocity.x,
-			player.PlayerInputInfo.Direction.x * player.Speed,
-			ref playerVelocityXDamped,
-			playerVelocityXSmoothTime
+		newVelocity = Vector2.Scale(
+			player.PlayerInputInfo.Direction, player.ClimbSpeed
 		);
 
 		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
@@ -124,8 +119,8 @@ public class PhysicsSystem : MonoBehaviour
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
 			player.PlayerInputInfo.Direction.x * player.Speed,
-			ref playerVelocityXDamped,
-			playerVelocityXSmoothTime
+			ref playerSpeedDamped,
+			playerSpeedSmoothTime
 		);
 
 		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
@@ -217,7 +212,7 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			player.Climbing = false;
 		} 
-		else if (climbableContact && player.PlayerInputInfo.Direction.y != 0)
+		else if (climbableContact && !player.Climbing && player.PlayerInputInfo.Direction.y != 0)
 		{
 			player.AttemptClimb();
 		}

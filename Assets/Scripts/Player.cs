@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public bool Hanging;
 
     public bool Climbing;
-    public float ClimbSpeed;
+    public Vector2 ClimbSpeed;
     public bool ClimbingLedge;
 
     private float wallSlideTimer;
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         Hanging = false;
         
         Climbing = false;
-        ClimbSpeed = 3.2f;
+        ClimbSpeed = new Vector2(1.8f, 3.2f);
         ClimbingLedge = false;
 
         PlayerInputInfo = new PlayerInputInfo();
