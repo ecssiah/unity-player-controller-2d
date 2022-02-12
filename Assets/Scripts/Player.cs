@@ -16,8 +16,10 @@ public class Player : MonoBehaviour
     private float hangTimer;
     public bool Hanging;
 
+    public Vector2 CurrentJumpForce;
+    public Vector2 JumpImpulse;
+
     public bool Climbing;
-    public Vector2 ClimbSpeed;
     public bool ClimbingLedge;
 
     private float wallSlideTimer;
@@ -29,9 +31,6 @@ public class Player : MonoBehaviour
     public PlayerInputInfo PlayerInputInfo;
     public CollisionInfo CollisionInfo;
     public TriggerInfo TriggerInfo;
-
-    private float jumpForce;
-    private Vector2 wallJumpForce;
 
     private GameSettings gameSettings;
 
@@ -49,8 +48,8 @@ public class Player : MonoBehaviour
 
         DebugDraw = false;
 
-        Mass = 4;
-        Speed = 7f;
+        Mass = 6;
+        Speed = 8f;
         Velocity = Vector2.zero;
 
         Facing = 1;
@@ -58,18 +57,17 @@ public class Player : MonoBehaviour
 
         Grounded = false;
 
+        CurrentJumpForce = Vector2.zero;
+        JumpImpulse = Vector2.zero;
+
         hangTimer = gameSettings.HangTime;
         Hanging = false;
         
         Climbing = false;
-        ClimbSpeed = new Vector2(1.8f, 3.2f);
         ClimbingLedge = false;
 
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
-
-        jumpForce = 21f;
-        wallJumpForce = new Vector2(24, 20);
 
         animator = GetComponent<Animator>();
 
@@ -247,25 +245,36 @@ public class Player : MonoBehaviour
 
     public void SetJumpInput(int jumpInput)
 	{
-        if (Grounded)
-        {
-            Velocity.y += jumpForce;
+        CurrentJumpForce = Vector2.zero;
+        
+        if (jumpInput == 1)
+		{
+            if (WallSliding != 0)
+			{
+                SetWallSlide(0);
+
+                if (Facing == 1)
+				{
+                    JumpImpulse = gameSettings.WallJumpImpulse;
+                    JumpImpulse.x *= -1;
+				}
+                else if (Facing == -1)
+				{
+                    JumpImpulse = gameSettings.WallJumpImpulse;
+				}
+			}
+            else if (Grounded || Hanging || Climbing)
+			{
+                Hanging = false;
+                Climbing = false;
+
+                JumpImpulse = gameSettings.JumpImpulse;
+			}
         }
-        else if (Hanging)
+        else
 		{
-            Hanging = false;
-            Velocity.y += jumpForce;
+            JumpImpulse = Vector2.zero;
 		}
-        else if (Climbing)
-		{
-            Climbing = false;
-            Velocity.y = jumpForce;
-		}
-        else if (WallSliding != 0)
-		{
-            WallSliding = 0;
-            Velocity += new Vector2(-Facing * wallJumpForce.x, wallJumpForce.y);
-        }
     }
 
     public void SetAnimation(string stateName)

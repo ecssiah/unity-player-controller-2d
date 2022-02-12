@@ -92,7 +92,7 @@ public class PhysicsSystem : MonoBehaviour
 	private void ApplyClimbingForces(ref Vector2 newVelocity)
 	{
 		newVelocity = Vector2.Scale(
-			player.PlayerInputInfo.Direction, player.ClimbSpeed
+			player.PlayerInputInfo.Direction, gameSettings.ClimbSpeed
 		);
 
 		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
@@ -114,11 +114,24 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyGeneralForces(ref Vector2 newVelocity)
 	{
-		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity;
+		Vector2 appliedJumpImpulse = player.JumpImpulse;
+		
+		if (appliedJumpImpulse != Vector2.zero)
+		{
+			player.CurrentJumpForce += player.JumpImpulse;
+			print(player.CurrentJumpForce);
 
+			float magnitudeDifference = player.CurrentJumpForce.magnitude - gameSettings.MaxJumpSpeed;
+
+			if (magnitudeDifference > 0)
+			{
+				player.SetJumpInput(0);
+			}
+		}
+		
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
-			player.PlayerInputInfo.Direction.x * player.Speed,
+			player.PlayerInputInfo.Direction.x * player.Speed + appliedJumpImpulse.x,
 			ref playerSpeedDamped,
 			playerSpeedSmoothTime
 		);
@@ -128,9 +141,11 @@ public class PhysicsSystem : MonoBehaviour
 			newVelocity.x = 0;
 		}
 
-		if (newVelocity.y < gameSettings.MaxAirSpeed)
+		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity + appliedJumpImpulse.y;
+
+		if (newVelocity.y < gameSettings.MaxFallSpeed)
 		{
-			newVelocity.y = gameSettings.MaxAirSpeed;
+			newVelocity.y = gameSettings.MaxFallSpeed;
 		}
 	}
 	

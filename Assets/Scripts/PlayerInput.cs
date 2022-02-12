@@ -72,5 +72,6 @@ public class PlayerInput : MonoBehaviour
 
 	private void OnJumpCancel(InputAction.CallbackContext context)
 	{
+		player.SetJumpInput(0);
 	}
 }

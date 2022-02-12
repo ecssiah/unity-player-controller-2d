@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Gravity: -9.8
   MinSpeed: 0.1
-  MaxAirSpeed: -53
+  MaxFallSpeed: -53
+  ClimbSpeed: {x: 1.8, y: 3.2}
+  MaxJumpSpeed: 38
+  JumpImpulse: {x: 0, y: 2}
+  WallJumpImpulse: {x: 12, y: 6}
+  WallSlideHoldTime: 0.3
   WallSlideDamping: 0.16
   MaxWallSlideSpeed: 4.2
   HangTime: 0.2
