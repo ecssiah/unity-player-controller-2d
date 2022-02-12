@@ -6,26 +6,29 @@ public class Player : MonoBehaviour
     public bool DebugDraw;
 
     public float Mass;
-
+    public float Speed;
     public Vector2 Position;
     public Vector2 Velocity;
-
-    public float Speed;
-    public float ClimbSpeed;
-
+    
     public int Facing;
-
-    public int WallSliding;
-    private float wallSlideTimer;
-    private float wallSlideHoldTime;
-
     public bool Grounded;
+    
+    private float hangTimer;
     public bool Hanging;
+
     public bool Climbing;
+    public float ClimbSpeed;
     public bool ClimbingLedge;
+
+    private float wallSlideTimer;
+    public int WallSliding;
+
+    public bool LedgeContact => !TriggerInfo.Top && TriggerInfo.Mid;
+    public bool WallContact => TriggerInfo.Top && TriggerInfo.Mid && TriggerInfo.Low;
 
     public PlayerInputInfo PlayerInputInfo;
     public CollisionInfo CollisionInfo;
+    public TriggerInfo TriggerInfo;
 
     private float jumpForce;
     private Vector2 wallJumpForce;
@@ -40,8 +43,10 @@ public class Player : MonoBehaviour
     public RectShape WallLowRectShape;
     public RectShape GroundRectShape;
 
-	void Awake()
+    void Awake()
     {
+        gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
+
         DebugDraw = false;
 
         Mass = 4;
@@ -52,20 +57,19 @@ public class Player : MonoBehaviour
         WallSliding = 0;
 
         Grounded = false;
-        Hanging = false;
-        Climbing = false;
-        ClimbingLedge = false;
 
+        hangTimer = gameSettings.HangTime;
+        Hanging = false;
+        
+        Climbing = false;
         ClimbSpeed = 3.2f;
-        wallSlideHoldTime = 0.3f;
+        ClimbingLedge = false;
 
         PlayerInputInfo = new PlayerInputInfo();
         CollisionInfo = new CollisionInfo();
 
         jumpForce = 21f;
         wallJumpForce = new Vector2(24, 20);
-
-        gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
         animator = GetComponent<Animator>();
 
@@ -105,9 +109,77 @@ public class Player : MonoBehaviour
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
 
+    public void AttemptClimb()
+	{
+        if (PlayerInputInfo.Direction.y != 0)
+		{
+            Climbing = true;
+
+            SetAnimation("Climb");
+            SetVelocity(0, 0);
+        }
+    }
+
+    public void AttemptWallSlide()
+	{
+        if (Hanging || Climbing || Grounded)
+        {
+            SetWallSlide(0);
+            return;
+        }
+
+        if (WallContact)
+        {
+            if (CollisionInfo.Left || CollisionInfo.Right)
+            {
+                SetWallSlide((int)PlayerInputInfo.Direction.x);
+            }
+        }
+
+        if (WallSliding != 0)
+        {
+            if (!WallContact)
+            {
+                SetWallSlide(0);
+            }
+            else if (PlayerInputInfo.Direction.x != WallSliding)
+            {
+                UpdateWallSlide();
+            }
+        }
+    }
+
+    public void AttemptLedgeGrab()
+	{
+        if (LedgeContact && PlayerInputInfo.Direction.y > 0)
+		{
+            Hanging = true;
+            Climbing = false;
+
+            Vector2 position = Position;
+
+            if (Facing == 1)
+            {
+                position = TriggerInfo.Mid.BodyRect.TopLeft;
+                position.x -= gameSettings.HangPositionOffset.x;
+                position.y += gameSettings.HangPositionOffset.y;
+            }
+            else if (Facing == -1)
+            {
+                position = TriggerInfo.Mid.BodyRect.TopRight;
+                position.x += gameSettings.HangPositionOffset.x;
+                position.y += gameSettings.HangPositionOffset.y;
+            }
+
+            SetPosition(position);
+            SetAnimation("Hang");
+            SetVelocity(Vector2.zero);
+		}
+    }
+
     public void SetWallSlide(int slideDirection)
 	{
-        wallSlideTimer = 0;
+        wallSlideTimer = gameSettings.WallSlideHoldTime;
         WallSliding = slideDirection;
 
         if (slideDirection != 0)
@@ -119,11 +191,30 @@ public class Player : MonoBehaviour
 
     public void UpdateWallSlide()
 	{
-        wallSlideTimer += Time.deltaTime;
+        wallSlideTimer -= Time.deltaTime;
 
-        if (wallSlideTimer >= wallSlideHoldTime)
+        if (wallSlideTimer <= 0)
         {
             SetWallSlide(0);
+        }
+    }
+
+    public void AttemptLedgeClimb()
+    {
+        if (hangTimer <= 0)
+        {
+            if (PlayerInputInfo.Direction.y > 0)
+            {
+                Hanging = false;
+                ClimbingLedge = true;
+                SetAnimation("LedgeClimb");
+
+                hangTimer = gameSettings.HangTime;
+            }
+        }
+        else
+        {
+            hangTimer -= Time.deltaTime;
         }
     }
 
@@ -226,7 +317,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ClimbLedge()
+    public void UpdateLedgeClimb()
 	{
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
 		{

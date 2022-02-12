@@ -11,24 +11,8 @@ public class PhysicsSystem : MonoBehaviour
 	private float playerVelocityXDamped;
 	private float playerVelocityXSmoothTime;
 
-	public float hangTimer;
-
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
-
-	private struct WallTriggers
-	{
-		public Surface Top;
-		public Surface Mid;
-		public Surface Low;
-
-		public void Reset()
-		{
-			Top = Mid = Low = null;
-		}
-	}
-
-	private WallTriggers wallTriggers;
 
 	void Awake()
 	{
@@ -51,12 +35,12 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		if (player.Hanging)
 		{
-			LedgeClimbCheck();
+			player.AttemptLedgeClimb();
 		}
 
 		if (player.ClimbingLedge)
 		{
-			player.ClimbLedge();
+			player.UpdateLedgeClimb();
 		}
 		else if (!player.Hanging)
 		{
@@ -68,33 +52,15 @@ public class PhysicsSystem : MonoBehaviour
 
 			WallTriggersCheck();
 
-			WallSlideCheck();
-			LedgeCheck();
-			
+			player.AttemptWallSlide();
+			player.AttemptLedgeGrab();
+
 			player.UpdateAnimation();
 		}
 
 		Physics2D.SyncTransforms();
 
 		player.UpdateOrientation();
-	}
-
-	private void LedgeClimbCheck()
-	{
-		if (hangTimer <= 0)
-		{
-			if (player.PlayerInputInfo.Direction.y > 0)
-			{
-				player.Hanging = false;
-				player.ClimbingLedge = true;
-
-				player.SetAnimation("LedgeClimb");
-			}
-		}
-		else
-		{
-			hangTimer -= Time.deltaTime;
-		}
 	}
 
 	private void ApplyForces()
@@ -247,108 +213,36 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		if (!climbableContact)
+		if (!climbableContact && player.Climbing)
 		{
 			player.Climbing = false;
 		} 
-		else if (climbableContact && !player.Climbing && player.PlayerInputInfo.Direction.y != 0)
+		else if (climbableContact && player.PlayerInputInfo.Direction.y != 0)
 		{
-			player.Climbing = true;
-
-			player.SetAnimation("Climb");
-			player.SetVelocity(0, 0);
+			player.AttemptClimb();
 		}
 	}
 
 	private void WallTriggersCheck()
 	{
-		wallTriggers.Reset();
+		player.TriggerInfo.Reset();
 
 		foreach (Surface surface in surfaces)
 		{
 			if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, surface.BodyRect))
 			{
-				wallTriggers.Top = surface;
+				player.TriggerInfo.Top = surface;
 			}
 
 			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRectShape, surface.BodyRect))
 			{
-				wallTriggers.Mid = surface;
+				player.TriggerInfo.Mid = surface;
 			}
 
 			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, surface.BodyRect))
 			{
-				wallTriggers.Low = surface;
+				player.TriggerInfo.Low = surface;
 			}
-		}
-	}
-
-	private void WallSlideCheck()
-	{
-		if (player.Hanging || player.Climbing || player.Grounded)
-		{
-			player.SetWallSlide(0);
-			return;
-		}
-
-		bool wallContact = wallTriggers.Top && wallTriggers.Mid && wallTriggers.Low;
-
-		if (wallContact)
-		{
-			if (player.CollisionInfo.Left || player.CollisionInfo.Right)
-			{
-				player.SetWallSlide((int)player.PlayerInputInfo.Direction.x);
-			}
-		}
-
-		if (player.WallSliding != 0)
-		{
-			if (!wallContact)
-			{
-				player.SetWallSlide(0);
-			}
-			else if (player.PlayerInputInfo.Direction.x != player.WallSliding)
-			{
-				player.UpdateWallSlide();
-			}
-		}
-	}
-	
-	private void LedgeCheck()
-	{
-		if (wallTriggers.Top)
-		{
-			return;
-		}
-
-		bool canGrabLedge = wallTriggers.Mid;
-
-		if (canGrabLedge && player.PlayerInputInfo.Direction.y > 0)
-		{
-			hangTimer = gameSettings.HangTime;
-
-			player.Hanging = true;
-			player.Climbing = false;
-
-			player.SetAnimation("Hang");
-
-			Vector2 hangPosition = player.Position;
-
-			if (player.Facing == 1)
-			{
-				hangPosition = wallTriggers.Mid.BodyRect.TopLeft;
-				hangPosition.x -= gameSettings.HangPositionOffset.x;
-				hangPosition.y += gameSettings.HangPositionOffset.y;
-			}
-			else if (player.Facing == -1)
-			{
-				hangPosition = wallTriggers.Mid.BodyRect.TopRight;
-				hangPosition.x += gameSettings.HangPositionOffset.x;
-				hangPosition.y += gameSettings.HangPositionOffset.y;
-			}
-
-			player.SetPosition(hangPosition);
-			player.SetVelocity(Vector2.zero);
 		}
 	}
 }

@@ -9,6 +9,7 @@ public class GameSettings : ScriptableObject
 	public float MaxAirSpeed = -53f;
 
 	[Space]
+	public float WallSlideHoldTime = 0.3f;
 	public float WallSlideDamping = 0.2f;
 	public float MaxWallSlideSpeed = 4.2f;
 
