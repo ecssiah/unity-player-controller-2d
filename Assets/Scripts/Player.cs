@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
     public bool DebugDraw;
@@ -107,7 +106,7 @@ public class Player : MonoBehaviour
         SetVelocity(newVelocity.x, newVelocity.y);
 	}
 
-    public void AttemptClimb()
+    public void ClimbCheck()
 	{
         if (PlayerInputInfo.Direction.y != 0)
 		{
@@ -118,7 +117,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AttemptWallSlide()
+    public void WallSlideCheck()
 	{
         if (Hanging || Climbing || Grounded)
         {
@@ -147,7 +146,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AttemptLedgeGrab()
+    public void HangingCheck()
 	{
         if (LedgeContact && PlayerInputInfo.Direction.y > 0)
 		{
@@ -197,7 +196,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AttemptLedgeClimb()
+    public void ClimbLedgeCheck()
     {
         if (hangTimer <= 0)
         {
@@ -326,7 +325,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void UpdateLedgeClimb()
+    public void ClimbLedgeUpdate()
 	{
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
 		{

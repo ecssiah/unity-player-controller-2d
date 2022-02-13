@@ -38,32 +38,31 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		if (player.Hanging)
 		{
-			player.AttemptLedgeClimb();
+			player.ClimbLedgeCheck();
 		}
 
 		if (player.ClimbingLedge)
 		{
-			player.UpdateLedgeClimb();
+			player.ClimbLedgeUpdate();
 		}
 		else if (!player.Hanging)
 		{
+			GroundCheck();
+			ClimbTriggersCheck();
+			WallTriggersCheck();
+			
+			player.WallSlideCheck();
+			player.HangingCheck();
+
 			ApplyForces();
 			ResolveCollisions();
-
-			GroundCheck();
-			ClimbCheck();
-
-			WallTriggersCheck();
-
-			player.AttemptWallSlide();
-			player.AttemptLedgeGrab();
-
+			
 			player.UpdateAnimation();
 		}
 
-		Physics2D.SyncTransforms();
-
 		player.UpdateOrientation();
+		
+		Physics2D.SyncTransforms();
 	}
 
 	private void ApplyForces()
@@ -76,11 +75,11 @@ public class PhysicsSystem : MonoBehaviour
 		}
 		else if (player.Climbing)
 		{
-			ApplyClimbingForces(ref newVelocity);	
+			ApplyClimbForces(ref newVelocity);	
 		}
 		else if (player.WallSliding != 0)
 		{
-			ApplyWallSlidingForces(ref newVelocity);
+			ApplyWallSlideForces(ref newVelocity);
 		}
 		else
 		{
@@ -92,7 +91,7 @@ public class PhysicsSystem : MonoBehaviour
 		player.Move(Time.deltaTime * player.Velocity);
 	}
 
-	private void ApplyClimbingForces(ref Vector2 newVelocity)
+	private void ApplyClimbForces(ref Vector2 newVelocity)
 	{
 		newVelocity = Vector2.Scale(
 			player.PlayerInputInfo.Direction, gameSettings.ClimbSpeed
@@ -104,7 +103,7 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
-	private void ApplyWallSlidingForces(ref Vector2 newVelocity)
+	private void ApplyWallSlideForces(ref Vector2 newVelocity)
 	{
 		newVelocity.x = 0;
 		newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * player.Mass * gameSettings.Gravity;
@@ -203,7 +202,7 @@ public class PhysicsSystem : MonoBehaviour
 		player.Grounded = false;
 	}
 
-	private void ClimbCheck()
+	private void ClimbTriggersCheck()
 	{
 		if (player.Hanging)
 		{
@@ -232,7 +231,7 @@ public class PhysicsSystem : MonoBehaviour
 		} 
 		else if (climbableContact && !player.Climbing && player.PlayerInputInfo.Direction.y != 0)
 		{
-			player.AttemptClimb();
+			player.ClimbCheck();
 		}
 	}
 
