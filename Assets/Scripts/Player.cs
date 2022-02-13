@@ -4,8 +4,6 @@ public class Player : MonoBehaviour
 {
     public bool DebugDraw;
 
-    public float Mass;
-    public float Speed;
     public Vector2 Position;
     public Vector2 Velocity;
     
@@ -23,12 +21,9 @@ public class Player : MonoBehaviour
     private float wallSlideTimer;
     public int WallSliding;
 
-    public bool LedgeContact => !TriggerInfo.Top && TriggerInfo.Mid;
-    public bool WallContact => TriggerInfo.Top && TriggerInfo.Mid && TriggerInfo.Low;
-
-    public PlayerInputInfo PlayerInputInfo;
-    public CollisionInfo CollisionInfo;
     public TriggerInfo TriggerInfo;
+    public CollisionInfo CollisionInfo;
+    public PlayerInputInfo PlayerInputInfo;
 
     private GameSettings gameSettings;
 
@@ -46,8 +41,6 @@ public class Player : MonoBehaviour
 
         DebugDraw = false;
 
-        Mass = 6;
-        Speed = 8f;
         Velocity = Vector2.zero;
 
         Facing = 1;
@@ -63,9 +56,6 @@ public class Player : MonoBehaviour
         Climbing = false;
         ClimbingLedge = false;
 
-        PlayerInputInfo = new PlayerInputInfo();
-        CollisionInfo = new CollisionInfo();
-
         animator = GetComponent<Animator>();
 
         BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
@@ -75,23 +65,18 @@ public class Player : MonoBehaviour
         GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
     }
 
-    public void Move(Vector2 displacement)
-	{
-        transform.position += new Vector3(displacement.x, displacement.y, 0);
+	
 
-        if (transform.position.y < -30)
-        {
-            SetPosition(new Vector2(0, 3));
-        }
-
-        Position = transform.position;
-    }
-
-    public void SetPosition(Vector2 position)
+	public void SetPosition(Vector2 position)
 	{
         transform.position = position;
 
         Position = transform.position;
+    }
+
+    public void Move(Vector2 displacement)
+	{
+        SetPosition((Vector2)transform.position + displacement);
     }
 
     public void SetVelocity(float vx, float vy)
@@ -99,55 +84,20 @@ public class Player : MonoBehaviour
         Velocity = new Vector2(vx, vy);
 	}
 
-    public void SetVelocity(Vector2 newVelocity)
+    public void SetVelocity(Vector2 velocity)
 	{
-        SetVelocity(newVelocity.x, newVelocity.y);
+        SetVelocity(velocity.x, velocity.y);
 	}
 
-    public void ClimbCheck()
-	{
-        if (PlayerInputInfo.Direction.y != 0)
-		{
-            Climbing = true;
-
-            SetAnimation("Climb");
-            SetVelocity(0, 0);
-        }
-    }
-
-    public void WallSlideCheck()
-	{
-        if (Hanging || Climbing || Grounded)
+    public void HangCheck()
+    {
+        if (Hanging)
         {
-            SetWallSlide(0);
-            return;
+            ClimbLedgeCheck();
         }
 
-        if (WallContact)
+        if (TriggerInfo.LedgeContact && PlayerInputInfo.Direction.y > 0)
         {
-            if (CollisionInfo.Left || CollisionInfo.Right)
-            {
-                SetWallSlide((int)PlayerInputInfo.Direction.x);
-            }
-        }
-
-        if (WallSliding != 0)
-        {
-            if (!WallContact)
-            {
-                SetWallSlide(0);
-            }
-            else if (PlayerInputInfo.Direction.x != WallSliding)
-            {
-                UpdateWallSlide();
-            }
-        }
-    }
-
-    public void HangingCheck()
-	{
-        if (LedgeContact && PlayerInputInfo.Direction.y > 0)
-		{
             Hanging = true;
             Climbing = false;
 
@@ -167,30 +117,8 @@ public class Player : MonoBehaviour
             }
 
             SetPosition(position);
+            SetVelocity(0, 0);
             SetAnimation("Hang");
-            SetVelocity(Vector2.zero);
-		}
-    }
-
-    public void SetWallSlide(int slideDirection)
-	{
-        wallSlideTimer = gameSettings.WallSlideHoldTime;
-        WallSliding = slideDirection;
-
-        if (slideDirection != 0)
-		{
-            SetAnimation("Slide");
-            SetVelocity(Velocity.x, 0);
-        }
-	}
-
-    public void UpdateWallSlide()
-	{
-        wallSlideTimer -= Time.deltaTime;
-
-        if (wallSlideTimer <= 0)
-        {
-            SetWallSlide(0);
         }
     }
 
@@ -213,6 +141,91 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void ClimbLedgeUpdate()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
+        {
+            bool climbLedgeAnimationFinished = animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1;
+
+            if (climbLedgeAnimationFinished)
+            {
+                SetAnimation("Idle");
+
+                ClimbingLedge = false;
+
+                Vector2 climbLedgePosition = new Vector2(
+                    gameSettings.ClimbLedgeOffset.x,
+                    gameSettings.ClimbLedgeOffset.y
+                );
+
+                if (Facing == 1)
+                {
+                    Move(climbLedgePosition);
+                }
+                else if (Facing == -1)
+                {
+                    climbLedgePosition.x = -climbLedgePosition.x;
+                    Move(climbLedgePosition);
+                }
+            }
+        }
+
+    }
+
+    public void WallSlideCheck()
+	{
+        if (Climbing || Grounded)
+        {
+            SetWallSlide(0);
+            return;
+        }
+
+        if (TriggerInfo.WallContact)
+        {
+            if (CollisionInfo.Left || CollisionInfo.Right)
+            {
+                SetWallSlide((int)PlayerInputInfo.Direction.x);
+            }
+        }
+
+        if (WallSliding != 0)
+        {
+            if (!TriggerInfo.WallContact)
+            {
+                SetWallSlide(0);
+            }
+            else if (PlayerInputInfo.Direction.x != WallSliding)
+            {
+                UpdateWallSlide();
+            }
+        }
+    }
+
+    public void SetWallSlide(int slideDirection)
+	{
+        WallSliding = slideDirection;
+
+        if (WallSliding == 0)
+		{
+            wallSlideTimer = gameSettings.WallSlideHoldTime;
+		} 
+        else
+		{
+            SetAnimation("Slide");
+            SetVelocity(Velocity.x, 0);
+        }
+	}
+
+    public void UpdateWallSlide()
+	{
+        wallSlideTimer -= Time.deltaTime;
+
+        if (wallSlideTimer <= 0)
+        {
+            SetWallSlide(0);
+        }
+    }
+    
     public void SetRunInput(float runInput)
 	{
         PlayerInputInfo.Direction.x = runInput;
@@ -224,20 +237,24 @@ public class Player : MonoBehaviour
 		{
             Hanging = false;
 		}
-
-        if (Climbing)
+        else if (TriggerInfo.ClimbableTrigger && PlayerInputInfo.Direction.y != 0)
 		{
-            if (climbInput == 0)
+            Climbing = true;
+
+            SetVelocity(0, 0);
+            SetAnimation("Climb");
+        }
+        else if (Climbing)
+		{
+            if (Grounded || !TriggerInfo.ClimbableTrigger)
+			{
+                Climbing = false;
+			} 
+            else if (climbInput == 0)
 		    {
                 animator.speed = 0;
 		    }
-            else
-		    {
-                animator.speed = 1;
-		    }
         }
-
-        PlayerInputInfo.Direction.y = climbInput;
 	}
 
     public void SetJumpInput(int jumpInput)
@@ -322,38 +339,7 @@ public class Player : MonoBehaviour
             transform.localScale = scale;
         }
     }
-
-    public void ClimbLedgeUpdate()
-	{
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
-		{
-            bool climbLedgeAnimationFinished = animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1;
-
-            if (climbLedgeAnimationFinished)
-            {
-                SetAnimation("Idle");
-
-                ClimbingLedge = false;
-
-                Vector2 climbLedgePosition = new Vector2(
-                    gameSettings.ClimbLedgeOffset.x, 
-                    gameSettings.ClimbLedgeOffset.y
-                );
-
-                if (Facing == 1)
-			    {
-                    Move(climbLedgePosition);
-			    }
-                else if (Facing == -1)
-			    {
-                    climbLedgePosition.x = -climbLedgePosition.x;
-                    Move(climbLedgePosition);
-			    }
-            }
-		}
-
-    }
-
+    
 	void OnDrawGizmos()
 	{
         if (DebugDraw)

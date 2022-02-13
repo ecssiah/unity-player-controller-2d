@@ -9,7 +9,6 @@ public class PhysicsSystem : MonoBehaviour
 	private Player player;
 
 	private float playerSpeedDamped;
-	private float playerSpeedSmoothTime;
 
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
@@ -20,57 +19,51 @@ public class PhysicsSystem : MonoBehaviour
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 
-		playerSpeedSmoothTime = 0.1f;
-
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
 		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
 	}
 
 	void Update()
 	{
-		MovePlayer();
-	}
-
-	private void MovePlayer()
-	{
-		if (player.Hanging)
-		{
-			player.ClimbLedgeCheck();
-		}
+		player.HangCheck();
 
 		if (player.ClimbingLedge)
 		{
 			player.ClimbLedgeUpdate();
 		}
-		else if (!player.Hanging)
+
+		if (!player.Hanging)
 		{
+			MovePlayer();
+
 			GroundCheck();
 			ClimbTriggersCheck();
 			WallTriggersCheck();
-			
-			player.WallSlideCheck();
-			player.HangingCheck();
 
-			ApplyForces();
-			ResolveCollisions();
+			player.WallSlideCheck();
 			
 			player.UpdateAnimation();
 		}
 
 		player.UpdateOrientation();
-		
+
 		Physics2D.SyncTransforms();
+	}
+
+	private void MovePlayer()
+	{
+		ApplyForces();
+
+		player.Move(Time.deltaTime * player.Velocity);
+
+		ResolveCollisions();
 	}
 
 	private void ApplyForces()
 	{
 		Vector2 newVelocity = player.Velocity;
 
-		if (player.Hanging)
-		{
-			newVelocity = Vector2.zero;
-		}
-		else if (player.Climbing)
+		if (player.Climbing)
 		{
 			ApplyClimbForces(ref newVelocity);	
 		}
@@ -83,9 +76,12 @@ public class PhysicsSystem : MonoBehaviour
 			ApplyGeneralForces(ref newVelocity);
 		}
 
-		player.SetVelocity(newVelocity);
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
+		{
+			newVelocity.x = 0;
+		}
 
-		player.Move(Time.deltaTime * player.Velocity);
+		player.SetVelocity(newVelocity);
 	}
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
@@ -93,17 +89,12 @@ public class PhysicsSystem : MonoBehaviour
 		newVelocity = Vector2.Scale(
 			player.PlayerInputInfo.Direction, gameSettings.ClimbSpeed
 		);
-
-		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
-		{
-			newVelocity.x = 0;
-		}
 	}
 
 	private void ApplyWallSlideForces(ref Vector2 newVelocity)
 	{
 		newVelocity.x = 0;
-		newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * player.Mass * gameSettings.Gravity;
+		newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * gameSettings.Gravity;
 
 		if (newVelocity.y < -gameSettings.MaxWallSlideSpeed)
 		{
@@ -115,17 +106,12 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
-			player.PlayerInputInfo.Direction.x * player.Speed,
+			player.PlayerInputInfo.Direction.x * gameSettings.RunSpeed,
 			ref playerSpeedDamped,
-			playerSpeedSmoothTime
+			gameSettings.SpeedSmoothTime
 		);
-
-		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
-		{
-			newVelocity.x = 0;
-		}
-
-		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity;
+		
+		newVelocity.y += Time.deltaTime * gameSettings.Gravity;
 
 		if (newVelocity.y < gameSettings.MaxFallSpeed)
 		{
@@ -145,26 +131,32 @@ public class PhysicsSystem : MonoBehaviour
 			{
 				player.Move(resolutionVector);
 
-				if (resolutionVector.x > 0)
+				if (resolutionVector.x != 0)
 				{
-					player.CollisionInfo.Left = true;
 					player.SetVelocity(0, player.Velocity.y);
-				}
-				else if (resolutionVector.x < 0)
-				{
-					player.CollisionInfo.Right = true;
-					player.SetVelocity(0, player.Velocity.y);
+
+					if (resolutionVector.x > 0)
+					{
+						player.CollisionInfo.Left = true;
+					}
+					else if (resolutionVector.x < 0)
+					{
+						player.CollisionInfo.Right = true;
+					}
 				}
 
-				if (resolutionVector.y > 0)
+				if (resolutionVector.y != 0)
 				{
-					player.CollisionInfo.Bottom = true;
 					player.SetVelocity(player.Velocity.x, 0);
-				}
-				else if (resolutionVector.y < 0)
-				{
-					player.CollisionInfo.Top = true;
-					player.SetVelocity(player.Velocity.x, 0);
+
+					if (resolutionVector.y > 0)
+					{
+						player.CollisionInfo.Bottom = true;
+					}
+					else if (resolutionVector.y < 0)
+					{
+						player.CollisionInfo.Top = true;
+					}
 				}
 			}
 		}
@@ -207,14 +199,7 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		if (!climbableContact && player.Climbing)
-		{
-			player.Climbing = false;
-		} 
-		else if (climbableContact && !player.Climbing && player.PlayerInputInfo.Direction.y != 0)
-		{
-			player.ClimbCheck();
-		}
+		player.TriggerInfo.ClimbableTrigger = climbableContact;
 	}
 
 	private void WallTriggersCheck()
