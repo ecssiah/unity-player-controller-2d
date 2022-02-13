@@ -12,6 +12,7 @@ public class GameSettings : ScriptableObject
 	[Space]
 	public float MaxJumpSpeed = 26f;
 	public Vector2 JumpImpulse = new Vector2(0, 5.6f);
+	public float JumpImpulseDamping = 0.96f;
 	public Vector2 WallJumpImpulse = new Vector2(4f, 4f);
 
 	[Space]

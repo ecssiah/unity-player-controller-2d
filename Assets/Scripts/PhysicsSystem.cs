@@ -8,8 +8,6 @@ public class PhysicsSystem : MonoBehaviour
 
 	private Player player;
 
-	private float playerJumpImpulseDamping;
-
 	private float playerSpeedDamped;
 	private float playerSpeedSmoothTime;
 
@@ -22,7 +20,6 @@ public class PhysicsSystem : MonoBehaviour
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 
-		playerJumpImpulseDamping = 0.9f;
 		playerSpeedSmoothTime = 0.1f;
 
 		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
@@ -116,12 +113,12 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyGeneralForces(ref Vector2 newVelocity)
 	{
-		player.JumpImpulse *= playerJumpImpulseDamping;
 		Vector2 appliedJumpImpulse = player.JumpImpulse;
+		player.JumpImpulse *= gameSettings.JumpImpulseDamping;
 		
 		if (appliedJumpImpulse != Vector2.zero)
 		{
-			player.CurrentJumpForce += player.JumpImpulse;
+			player.CurrentJumpForce += appliedJumpImpulse;
 
 			float magnitudeDifference = player.CurrentJumpForce.magnitude - gameSettings.MaxJumpSpeed;
 
