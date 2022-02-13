@@ -15,8 +15,7 @@ public class Player : MonoBehaviour
     private float hangTimer;
     public bool Hanging;
 
-    public Vector2 CurrentJumpForce;
-    public Vector2 JumpImpulse;
+    public Vector2 JumpVelocity;
 
     public bool Climbing;
     public bool ClimbingLedge;
@@ -56,8 +55,7 @@ public class Player : MonoBehaviour
 
         Grounded = false;
 
-        CurrentJumpForce = Vector2.zero;
-        JumpImpulse = Vector2.zero;
+        JumpVelocity = Vector2.zero;
 
         hangTimer = gameSettings.HangTime;
         Hanging = false;
@@ -244,8 +242,6 @@ public class Player : MonoBehaviour
 
     public void SetJumpInput(int jumpInput)
 	{
-        CurrentJumpForce = Vector2.zero;
-        
         if (jumpInput == 1)
 		{
             if (WallSliding != 0)
@@ -254,12 +250,12 @@ public class Player : MonoBehaviour
 
                 if (Facing == 1)
 				{
-                    JumpImpulse = gameSettings.WallJumpImpulse;
-                    JumpImpulse.x *= -1;
+                    JumpVelocity = gameSettings.WallJumpVelocity;
+                    JumpVelocity.x *= -1;
 				}
                 else if (Facing == -1)
 				{
-                    JumpImpulse = gameSettings.WallJumpImpulse;
+                    JumpVelocity = gameSettings.WallJumpVelocity;
 				}
 			}
             else if (Grounded || Hanging || Climbing)
@@ -267,13 +263,15 @@ public class Player : MonoBehaviour
                 Hanging = false;
                 Climbing = false;
 
-                JumpImpulse = gameSettings.JumpImpulse;
+                JumpVelocity = gameSettings.JumpVelocity;
 			}
         }
         else
 		{
-            JumpImpulse = Vector2.zero;
+            JumpVelocity = Vector2.zero;
 		}
+
+        Velocity += JumpVelocity;
     }
 
     public void SetAnimation(string stateName)

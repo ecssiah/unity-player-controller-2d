@@ -16,9 +16,8 @@ MonoBehaviour:
   MinSpeed: 0.1
   MaxFallSpeed: -53
   ClimbSpeed: {x: 1.8, y: 3.2}
-  MaxJumpSpeed: 38
-  JumpImpulse: {x: 0, y: 2}
-  JumpImpulseDamping: 0.96
+  JumpImpulse: {x: 0, y: 14}
+  JumpImpulseDamping: 0.84
   WallJumpImpulse: {x: 12, y: 6}
   WallSlideHoldTime: 0.3
   WallSlideDamping: 0.16

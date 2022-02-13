@@ -113,24 +113,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyGeneralForces(ref Vector2 newVelocity)
 	{
-		Vector2 appliedJumpImpulse = player.JumpImpulse;
-		player.JumpImpulse *= gameSettings.JumpImpulseDamping;
-		
-		if (appliedJumpImpulse != Vector2.zero)
-		{
-			player.CurrentJumpForce += appliedJumpImpulse;
-
-			float magnitudeDifference = player.CurrentJumpForce.magnitude - gameSettings.MaxJumpSpeed;
-
-			if (magnitudeDifference > 0)
-			{
-				player.SetJumpInput(0);
-			}
-		}
-		
 		newVelocity.x = Mathf.SmoothDamp(
 			player.Velocity.x,
-			player.PlayerInputInfo.Direction.x * player.Speed + appliedJumpImpulse.x,
+			player.PlayerInputInfo.Direction.x * player.Speed,
 			ref playerSpeedDamped,
 			playerSpeedSmoothTime
 		);
@@ -140,7 +125,7 @@ public class PhysicsSystem : MonoBehaviour
 			newVelocity.x = 0;
 		}
 
-		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity + appliedJumpImpulse.y;
+		newVelocity.y += Time.deltaTime * player.Mass * gameSettings.Gravity;
 
 		if (newVelocity.y < gameSettings.MaxFallSpeed)
 		{
