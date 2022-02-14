@@ -7,11 +7,13 @@ public class GameSettings : ScriptableObject
 	public float Gravity = -9.8f;
 	public float MinSpeed = 0.1f;
 	public float MaxFallSpeed = -53f;
-	public float SpeedSmoothTime = 0.1f;
+	public float GroundSpeedSmoothTime = 0.24f;
+	public float AirSpeedSmoothTime = 0.05f;
 	public float RunSpeed = 8f;
 	public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 	[Space]
+	public float MinJumpSpeed = 6f;
 	public Vector2 JumpVelocity = new Vector2(0, 24f);
 	public Vector2 WallJumpVelocity = new Vector2(10f, 16f);
 

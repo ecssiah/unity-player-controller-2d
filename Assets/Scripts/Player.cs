@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
             SetVelocity(0, 0);
             SetAnimation("Climb");
         }
-        else if (Climbing && PlayerInputInfo.Direction.magnitude == 0)
+        else if (Climbing && PlayerInputInfo.Direction.y == 0)
         {
             animator.speed = 0;
         }
@@ -152,9 +152,9 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Velocity.y > 6f)
+            if (Velocity.y > gameSettings.MinJumpSpeed)
 			{
-                Velocity.y = 6f;
+                Velocity.y = gameSettings.MinJumpSpeed;
 			}
         }
 

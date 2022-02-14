@@ -104,7 +104,7 @@ public class PhysicsSystem : MonoBehaviour
 			player.Velocity.x,
 			player.PlayerInputInfo.Direction.x * gameSettings.RunSpeed,
 			ref playerSpeedDamped,
-			gameSettings.SpeedSmoothTime
+			player.TriggerInfo.Grounded ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 		);
 		
 		newVelocity.y += Time.deltaTime * gameSettings.Gravity;

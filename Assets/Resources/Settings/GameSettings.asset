@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  Gravity: -32
+  Gravity: -50
   MinSpeed: 0.1
   MaxFallSpeed: -53
-  SpeedSmoothTime: 0.2
+  GroundSpeedSmoothTime: 0.24
+  AirSpeedSmoothTime: 0.3
   RunSpeed: 8
   ClimbSpeed: {x: 1.8, y: 3.2}
-  JumpVelocity: {x: 0, y: 16}
-  WallJumpVelocity: {x: 8, y: 16}
+  MinJumpSpeed: 6
+  JumpVelocity: {x: 0, y: 20}
+  WallJumpVelocity: {x: 12, y: 18}
   WallSlideHoldTime: 0.3
   WallSlideDamping: 0.16
   MaxWallSlideSpeed: 4.2
