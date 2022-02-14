@@ -15,7 +15,7 @@ MonoBehaviour:
   Gravity: -32
   MinSpeed: 0.1
   MaxFallSpeed: -53
-  SpeedSmoothTime: 0.1
+  SpeedSmoothTime: 0.2
   RunSpeed: 8
   ClimbSpeed: {x: 1.8, y: 3.2}
   JumpVelocity: {x: 0, y: 16}
