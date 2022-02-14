@@ -199,7 +199,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void HangUpdate()
+    public void UpdateState()
+	{
+        HangUpdate();
+        ClimbUpdate();
+        WallSlideUpdate();
+
+        UpdateAnimation();
+        UpdateOrientation();
+    }
+
+    private void HangUpdate()
     {
         if (TriggerInfo.Ledge && PlayerInputInfo.Direction.y > 0)
         {
@@ -227,7 +237,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ClimbUpdate()
+    private void ClimbUpdate()
     {
         if (Hanging || WallSliding != 0)
         {
@@ -246,7 +256,7 @@ public class Player : MonoBehaviour
         }
     }
     
-    public void WallSlideUpdate()
+    private void WallSlideUpdate()
 	{
         if (Hanging || Climbing)
 		{
@@ -273,7 +283,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetWallSlide(int slideDirection)
+    private void SetWallSlide(int slideDirection)
 	{
         WallSliding = slideDirection;
 
@@ -288,7 +298,7 @@ public class Player : MonoBehaviour
         }
 	}
 
-    public void UpdateWallSlide()
+    private void UpdateWallSlide()
 	{
         wallSlideTimer -= Time.deltaTime;
 
@@ -299,13 +309,13 @@ public class Player : MonoBehaviour
     }
     
     
-    public void SetAnimation(string stateName)
+    private void SetAnimation(string stateName)
 	{
         animator.speed = 1;
         animator.Play($"Base Layer.Player-{stateName}");
 	}
 
-    public void UpdateAnimation()
+    private void UpdateAnimation()
 	{
         if (!Hanging && !Climbing && WallSliding == 0)
         {
@@ -328,7 +338,7 @@ public class Player : MonoBehaviour
         }
     }
 
-	public void UpdateOrientation()
+	private void UpdateOrientation()
 	{
         if (Velocity.x > 0 && !(Facing == 1))
         {

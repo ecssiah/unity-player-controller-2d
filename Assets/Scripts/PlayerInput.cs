@@ -11,7 +11,7 @@ public class PlayerInput : MonoBehaviour
 	private InputAction jumpAction;
 
 	private Vector2 previousMoveInput;
-	public Vector2 MoveInput;
+	private Vector2 currentMoveInput;
 
 	void Awake()
 	{
@@ -26,64 +26,40 @@ public class PlayerInput : MonoBehaviour
 		jumpAction.performed += OnJumpPerformed;
 
 		previousMoveInput = Vector2.zero;
-		MoveInput = Vector2.zero;
+		currentMoveInput = Vector2.zero;
 	}
 
 	void Update()
 	{
-		MoveInput = moveAction.ReadValue<Vector2>();
+		currentMoveInput = moveAction.ReadValue<Vector2>();
 
-		if (MoveInput.x > 0 && previousMoveInput.x == 0)
+		if (currentMoveInput.x > 0 && previousMoveInput.x <= 0)
 		{
 			player.SetHorizontalInput(1);
 		}
-		else if (MoveInput.x < 0 && previousMoveInput.x == 0)
+		else if (currentMoveInput.x < 0 && previousMoveInput.x >= 0)
 		{
 			player.SetHorizontalInput(-1);
 		}
-		else if (MoveInput.x == 0 && previousMoveInput.x > 0)
+		else if (currentMoveInput.x == 0 && previousMoveInput.x != 0)
 		{
 			player.SetHorizontalInput(0);
 		}
-		else if (MoveInput.x == 0 && previousMoveInput.x < 0)
-		{
-			player.SetHorizontalInput(0);
-		}
-		else if (MoveInput.x > 0 && previousMoveInput.x < 0)
-		{
-			player.SetHorizontalInput(1);
-		}
-		else if (MoveInput.x < 0 && previousMoveInput.x > 0)
-		{
-			player.SetHorizontalInput(-1);
-		}
 
-		if (MoveInput.y > 0 && previousMoveInput.y == 0)
+		if (currentMoveInput.y > 0 && previousMoveInput.y <= 0)
 		{
 			player.SetVerticalInput(1);
 		}
-		else if (MoveInput.y < 0 && previousMoveInput.y == 0)
+		else if (currentMoveInput.y < 0 && previousMoveInput.y >= 0)
 		{
 			player.SetVerticalInput(-1);
 		}
-		else if (MoveInput.y == 0 && previousMoveInput.y > 0)
+		else if (currentMoveInput.y == 0 && previousMoveInput.y != 0)
 		{
 			player.SetVerticalInput(0);
-		}
-		else if (MoveInput.y == 0 && previousMoveInput.y < 0)
-		{
-			player.SetVerticalInput(0);
-		}
-		else if (MoveInput.y > 0 && previousMoveInput.y < 0)
-		{
-			player.SetVerticalInput(1);
-		}
-		else if (MoveInput.y < 0 && previousMoveInput.y > 0)
-		{
-			player.SetVerticalInput(-1);
 		}
 
-		previousMoveInput = MoveInput;
+		previousMoveInput = currentMoveInput;
 	}
 
 	void OnEnable()

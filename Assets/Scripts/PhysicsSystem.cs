@@ -41,13 +41,8 @@ public class PhysicsSystem : MonoBehaviour
 			ClimbTriggersCheck();
 			WallTriggersCheck();
 
-			player.HangUpdate();
-			player.ClimbUpdate();
-			player.WallSlideUpdate();
+			player.UpdateState();
 			
-			player.UpdateAnimation();
-			player.UpdateOrientation();
-
 			ApplyForces();
 
 			player.Move(Time.deltaTime * player.Velocity);
