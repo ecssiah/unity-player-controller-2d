@@ -136,15 +136,6 @@ public class PhysicsSystem : MonoBehaviour
 
 				if (resolutionVector.x != 0)
 				{
-					if (player.Velocity.y >= 0)
-					{
-						player.SetVelocity(0, 0);
-					}
-					else
-					{
-						player.SetVelocity(0, player.Velocity.y);
-					}
-
 					if (resolutionVector.x > 0)
 					{
 						player.CollisionInfo.Left = true;
@@ -153,12 +144,19 @@ public class PhysicsSystem : MonoBehaviour
 					{
 						player.CollisionInfo.Right = true;
 					}
+
+					if (player.Velocity.y >= 0)
+					{
+						player.SetVelocity(0, 0.4f * player.Velocity.y);
+					}
+					else
+					{
+						player.SetVelocity(0, player.Velocity.y);
+					}
 				}
 
 				if (resolutionVector.y != 0)
 				{
-					player.SetVelocity(player.Velocity.x, 0);
-
 					if (resolutionVector.y > 0)
 					{
 						player.CollisionInfo.Bottom = true;
@@ -167,6 +165,8 @@ public class PhysicsSystem : MonoBehaviour
 					{
 						player.CollisionInfo.Top = true;
 					}
+
+					player.SetVelocity(player.Velocity.x, 0);
 				}
 			}
 		}

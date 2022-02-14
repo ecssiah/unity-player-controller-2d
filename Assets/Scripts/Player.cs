@@ -124,6 +124,8 @@ public class Player : MonoBehaviour
 
     public void SetJumpInput(float jumpInput)
     {
+        Vector2 jumpForce = Vector2.zero;
+
         if (jumpInput == 1)
         {
             if (WallSliding != 0)
@@ -132,12 +134,12 @@ public class Player : MonoBehaviour
 
                 if (Facing == 1)
                 {
-                    JumpVelocity = gameSettings.WallJumpVelocity;
-                    JumpVelocity.x *= -1;
+                    jumpForce = gameSettings.WallJumpVelocity;
+                    jumpForce.x *= -1;
                 }
                 else if (Facing == -1)
                 {
-                    JumpVelocity = gameSettings.WallJumpVelocity;
+                    jumpForce = gameSettings.WallJumpVelocity;
                 }
             }
             else if (TriggerInfo.Grounded || Climbing)
@@ -145,15 +147,18 @@ public class Player : MonoBehaviour
                 Hanging = false;
                 Climbing = false;
 
-                JumpVelocity = gameSettings.JumpVelocity;
+                jumpForce = gameSettings.JumpVelocity;
             }
         }
         else
         {
-            JumpVelocity = Vector2.zero;
+            if (Velocity.y > 6f)
+			{
+                Velocity.y = 6f;
+			}
         }
 
-        Velocity += JumpVelocity;
+        Velocity += jumpForce;
     }
 
     public void ClimbLedgeCheck()
