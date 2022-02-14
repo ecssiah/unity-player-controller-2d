@@ -99,6 +99,11 @@ public class Player : MonoBehaviour
 	{
         PlayerInputInfo.Direction.y = inputValue;
 
+        if (ClimbingLedge)
+		{
+            return;
+		}
+
         if (Hanging && inputValue < 0)
         {
             Hanging = false;

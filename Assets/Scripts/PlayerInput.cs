@@ -23,7 +23,7 @@ public class PlayerInput : MonoBehaviour
 		jumpAction = playerInputActions.Player.Jump;
 
 		jumpAction.started += OnJumpStart;
-		jumpAction.performed += OnJumpPerformed;
+		jumpAction.canceled += OnJumpCancel;
 
 		previousMoveInput = Vector2.zero;
 		currentMoveInput = Vector2.zero;
@@ -79,7 +79,7 @@ public class PlayerInput : MonoBehaviour
 		player.SetJumpInput(context.ReadValue<float>());
 	}
 
-	private void OnJumpPerformed(InputAction.CallbackContext context)
+	private void OnJumpCancel(InputAction.CallbackContext context)
 	{
 		player.SetJumpInput(context.ReadValue<float>());
 	}

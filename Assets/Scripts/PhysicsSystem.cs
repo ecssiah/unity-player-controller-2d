@@ -70,7 +70,7 @@ public class PhysicsSystem : MonoBehaviour
 			ApplyGeneralForces(ref newVelocity);
 		}
 		
-		if (player.Position.y < -10)
+		if (player.Position.y < -30)
 		{
 			player.SetPosition(0, 3);
 			player.SetVelocity(0, 0);
