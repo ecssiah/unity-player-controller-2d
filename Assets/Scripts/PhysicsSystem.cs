@@ -136,7 +136,14 @@ public class PhysicsSystem : MonoBehaviour
 
 				if (resolutionVector.x != 0)
 				{
-					player.SetVelocity(0, player.Velocity.y);
+					if (player.Velocity.y >= 0)
+					{
+						player.SetVelocity(0, 0);
+					}
+					else
+					{
+						player.SetVelocity(0, player.Velocity.y);
+					}
 
 					if (resolutionVector.x > 0)
 					{
