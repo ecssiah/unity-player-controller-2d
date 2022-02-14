@@ -184,12 +184,6 @@ public class Player : MonoBehaviour
         RectTransform rectTransform = transform.Find("Body").GetComponent<RectTransform>();
 
         Vector3 ledgeOffset = gameSettings.ClimbLedgeOffset;
-
-  //      if (Facing == -1)
-		//{
-  //          ledgeOffset.x *= -1;
-		//}
-
         Vector3 startPosition = rectTransform.localPosition;
         Vector3 endPosition = rectTransform.localPosition + ledgeOffset;
 

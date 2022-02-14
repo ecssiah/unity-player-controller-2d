@@ -65,7 +65,7 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			ApplyWallSlideForces(ref newVelocity);
 		}
-		else
+		else if (!player.Hanging)
 		{
 			ApplyGeneralForces(ref newVelocity);
 		}
