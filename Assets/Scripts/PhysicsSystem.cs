@@ -181,23 +181,15 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ClimbTriggersCheck()
 	{
-		if (player.Hanging)
-		{
-			return;
-		}
-
-		bool climbableContact = false;
-
 		foreach (Climbable climbable in climbables)
 		{
 			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, climbable.BodyRect))
 			{
-				climbableContact = true;
+				player.TriggerInfo.Climbable = true;
 				break;
 			}
 		}
 
-		player.TriggerInfo.Climbable = climbableContact;
 	}
 
 	private void WallTriggersCheck()
