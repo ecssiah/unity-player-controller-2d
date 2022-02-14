@@ -25,27 +25,31 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Update()
 	{
-		player.HangCheck();
-
 		if (player.ClimbingLedge)
 		{
 			player.ClimbLedgeUpdate();
-		}
-
-		if (!player.Hanging)
+		} 
+		else if (player.Hanging)
 		{
-			MovePlayer();
+			player.ClimbLedgeCheck();
+		} 
+		else
+		{
+			player.TriggerInfo.Reset();
 
-			GroundCheck();
+			GroundTriggerCheck();
 			ClimbTriggersCheck();
 			WallTriggersCheck();
 
+			player.HangUpdate();
+			player.ClimbingUpdate();
 			player.WallSlideCheck();
 			
 			player.UpdateAnimation();
-		}
+			player.UpdateOrientation();
 
-		player.UpdateOrientation();
+			MovePlayer();
+		}
 
 		Physics2D.SyncTransforms();
 	}
@@ -86,9 +90,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
 	{
-		newVelocity = Vector2.Scale(
-			player.PlayerInputInfo.Direction, gameSettings.ClimbSpeed
-		);
+		newVelocity.x = player.PlayerInputInfo.Direction.x * gameSettings.ClimbSpeed.x;
+		newVelocity.y = player.PlayerInputInfo.Direction.y * gameSettings.ClimbSpeed.y;
 	}
 
 	private void ApplyWallSlideForces(ref Vector2 newVelocity)
@@ -125,7 +128,9 @@ public class PhysicsSystem : MonoBehaviour
 
 		foreach (Surface surface in surfaces)
 		{
-			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(player.BodyRectShape, surface.BodyRect);
+			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(
+				player.BodyRectShape, surface.BodyRect
+			);
 
 			if (resolutionVector != Vector2.zero)
 			{
@@ -162,18 +167,16 @@ public class PhysicsSystem : MonoBehaviour
 		}
 	}
 
-	private void GroundCheck()
+	private void GroundTriggerCheck()
 	{
 		foreach (Surface surface in surfaces)
 		{
 			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRectShape, surface.BodyRect))
 			{
-				player.Grounded = true;
+				player.TriggerInfo.Grounded = true;
 				return;
 			}
 		}
-
-		player.Grounded = false;
 	}
 
 	private void ClimbTriggersCheck()
@@ -181,11 +184,6 @@ public class PhysicsSystem : MonoBehaviour
 		if (player.Hanging)
 		{
 			return;
-		}
-
-		if (player.Climbing && player.Grounded)
-		{
-			player.Climbing = false;
 		}
 
 		bool climbableContact = false;
@@ -199,13 +197,11 @@ public class PhysicsSystem : MonoBehaviour
 			}
 		}
 
-		player.TriggerInfo.ClimbableTrigger = climbableContact;
+		player.TriggerInfo.Climbable = climbableContact;
 	}
 
 	private void WallTriggersCheck()
 	{
-		player.TriggerInfo.Reset();
-
 		foreach (Surface surface in surfaces)
 		{
 			if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, surface.BodyRect))

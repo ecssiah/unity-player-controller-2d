@@ -7,9 +7,10 @@ public struct TriggerInfo
     public Surface Mid;
     public Surface Low;
 
-    public bool ClimbableTrigger;
-    public bool LedgeContact => !Top && Mid;
-    public bool WallContact => Top && Mid && Low;
+    public bool Grounded;
+    public bool Climbable;
+    public bool Ledge => !Top && Mid;
+    public bool Wall => Top && Mid && Low;
 
     public void Reset()
     {
@@ -17,6 +18,7 @@ public struct TriggerInfo
         Mid = null;
         Low = null;
 
-        ClimbableTrigger = false;
+        Grounded = false;
+        Climbable = false;
     }
 }

@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     public Vector2 Velocity;
     
     public int Facing;
-    public bool Grounded;
     
     private float hangTimer;
     public bool Hanging;
@@ -37,16 +36,15 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        DebugDraw = false;
+        
         gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
-        DebugDraw = false;
-
+        Position = transform.position;
         Velocity = Vector2.zero;
 
         Facing = 1;
         WallSliding = 0;
-
-        Grounded = false;
 
         JumpVelocity = Vector2.zero;
 
@@ -64,8 +62,6 @@ public class Player : MonoBehaviour
         WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
         GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
     }
-
-	
 
 	public void SetPosition(Vector2 position)
 	{
@@ -89,14 +85,9 @@ public class Player : MonoBehaviour
         SetVelocity(velocity.x, velocity.y);
 	}
 
-    public void HangCheck()
+    public void HangUpdate()
     {
-        if (Hanging)
-        {
-            ClimbLedgeCheck();
-        }
-
-        if (TriggerInfo.LedgeContact && PlayerInputInfo.Direction.y > 0)
+        if (TriggerInfo.Ledge && PlayerInputInfo.Direction.y > 0)
         {
             Hanging = true;
             Climbing = false;
@@ -124,6 +115,11 @@ public class Player : MonoBehaviour
 
     public void ClimbLedgeCheck()
     {
+        if (!Hanging)
+		{
+            return;
+		}
+
         if (hangTimer <= 0)
         {
             if (PlayerInputInfo.Direction.y > 0)
@@ -169,18 +165,17 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
     }
 
     public void WallSlideCheck()
 	{
-        if (Climbing || Grounded)
+        if (Climbing || TriggerInfo.Grounded)
         {
             SetWallSlide(0);
             return;
         }
 
-        if (TriggerInfo.WallContact)
+        if (TriggerInfo.Wall)
         {
             if (CollisionInfo.Left || CollisionInfo.Right)
             {
@@ -190,7 +185,7 @@ public class Player : MonoBehaviour
 
         if (WallSliding != 0)
         {
-            if (!TriggerInfo.WallContact)
+            if (!TriggerInfo.Wall)
             {
                 SetWallSlide(0);
             }
@@ -233,29 +228,42 @@ public class Player : MonoBehaviour
 
     public void SetClimbInput(float climbInput)
 	{
+        PlayerInputInfo.Direction.y = climbInput;
+        
         if (Hanging && climbInput < 0)
 		{
             Hanging = false;
 		}
-        else if (TriggerInfo.ClimbableTrigger && PlayerInputInfo.Direction.y != 0)
+        else if (TriggerInfo.Climbable && climbInput != 0)
 		{
+            print("Start climbing");
+
             Climbing = true;
 
             SetVelocity(0, 0);
             SetAnimation("Climb");
+        } 
+        else if (Climbing && PlayerInputInfo.Direction.y == 0)
+        {
+            animator.speed = 0;
         }
-        else if (Climbing)
-		{
-            if (Grounded || !TriggerInfo.ClimbableTrigger)
+
+    }
+
+    public void ClimbingUpdate()
+	{
+        if (Climbing)
+        {
+            if (TriggerInfo.Grounded && PlayerInputInfo.Direction.y < 0)
 			{
                 Climbing = false;
-			} 
-            else if (climbInput == 0)
-		    {
-                animator.speed = 0;
-		    }
+            } 
+            else if (!TriggerInfo.Climbable)
+            {
+                Climbing = false;
+            }
         }
-	}
+    }
 
     public void SetJumpInput(int jumpInput)
 	{
@@ -275,7 +283,7 @@ public class Player : MonoBehaviour
                     JumpVelocity = gameSettings.WallJumpVelocity;
 				}
 			}
-            else if (Grounded || Hanging || Climbing)
+            else if (TriggerInfo.Grounded || Hanging || Climbing)
 			{
                 Hanging = false;
                 Climbing = false;
