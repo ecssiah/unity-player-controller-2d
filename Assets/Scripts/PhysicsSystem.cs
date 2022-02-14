@@ -35,12 +35,6 @@ public class PhysicsSystem : MonoBehaviour
 		} 
 		else
 		{
-			player.TriggerInfo.Reset();
-
-			GroundTriggerCheck();
-			ClimbTriggersCheck();
-			WallTriggersCheck();
-
 			player.UpdateState();
 			
 			ApplyForces();
@@ -48,6 +42,12 @@ public class PhysicsSystem : MonoBehaviour
 			player.Move(Time.deltaTime * player.Velocity);
 			
 			ResolveCollisions();
+
+			player.TriggerInfo.Reset();
+
+			GroundTriggerCheck();
+			ClimbTriggersCheck();
+			WallTriggersCheck();
 		}
 
 		Physics2D.SyncTransforms();

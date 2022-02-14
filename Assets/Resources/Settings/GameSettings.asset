@@ -25,4 +25,4 @@ MonoBehaviour:
   MaxWallSlideSpeed: 4.2
   HangTime: 0.2
   HangPositionOffset: {x: 0.19, y: -1.38}
-  ClimbLedgeOffset: {x: 0.62, y: 1.18}
+  ClimbLedgeOffset: {x: 0.62, y: 1.38}

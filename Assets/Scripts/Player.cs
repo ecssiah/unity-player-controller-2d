@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -115,7 +116,7 @@ public class Player : MonoBehaviour
             SetVelocity(0, 0);
             SetAnimation("Climb");
         }
-        else if (Climbing && PlayerInputInfo.Direction.y == 0)
+        else if (Climbing && PlayerInputInfo.Direction.magnitude == 0)
         {
             animator.speed = 0;
         }
@@ -139,7 +140,7 @@ public class Player : MonoBehaviour
                     JumpVelocity = gameSettings.WallJumpVelocity;
                 }
             }
-            else if (TriggerInfo.Grounded || Hanging || Climbing)
+            else if (TriggerInfo.Grounded || Climbing)
             {
                 Hanging = false;
                 Climbing = false;
@@ -165,6 +166,8 @@ public class Player : MonoBehaviour
                 ClimbingLedge = true;
                 SetAnimation("LedgeClimb");
 
+                StartCoroutine(FollowLedgeClimb());
+
                 hangTimer = gameSettings.HangTime;
             }
         }
@@ -173,6 +176,38 @@ public class Player : MonoBehaviour
             hangTimer -= Time.deltaTime;
         }
     }
+
+    private IEnumerator FollowLedgeClimb()
+	{
+        yield return null;
+
+        RectTransform rectTransform = transform.Find("Body").GetComponent<RectTransform>();
+
+        Vector3 ledgeOffset = gameSettings.ClimbLedgeOffset;
+
+  //      if (Facing == -1)
+		//{
+  //          ledgeOffset.x *= -1;
+		//}
+
+        Vector3 startPosition = rectTransform.localPosition;
+        Vector3 endPosition = rectTransform.localPosition + ledgeOffset;
+
+        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+		{
+            rectTransform.localPosition = Vector3.Lerp(
+                startPosition, 
+                endPosition, 
+                animator.GetCurrentAnimatorStateInfo(0).normalizedTime
+            );
+
+            yield return null;
+		}
+
+        rectTransform.localPosition = startPosition;
+
+        yield return null;
+	}
 
     public void ClimbLedgeUpdate()
     {
