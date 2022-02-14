@@ -25,13 +25,13 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Update()
 	{
-		if (player.ClimbingLedge)
-		{
-			player.ClimbLedgeUpdate();
-		} 
-		else if (player.Hanging)
+		if (player.Hanging)
 		{
 			player.ClimbLedgeCheck();
+		} 
+		else if (player.ClimbingLedge)
+		{
+			player.ClimbLedgeUpdate();
 		} 
 		else
 		{
@@ -42,25 +42,20 @@ public class PhysicsSystem : MonoBehaviour
 			WallTriggersCheck();
 
 			player.HangUpdate();
-			player.ClimbingUpdate();
-			player.WallSlideCheck();
+			player.ClimbUpdate();
+			player.WallSlideUpdate();
 			
 			player.UpdateAnimation();
 			player.UpdateOrientation();
 
-			MovePlayer();
+			ApplyForces();
+
+			player.Move(Time.deltaTime * player.Velocity);
+			
+			ResolveCollisions();
 		}
 
 		Physics2D.SyncTransforms();
-	}
-
-	private void MovePlayer()
-	{
-		ApplyForces();
-
-		player.Move(Time.deltaTime * player.Velocity);
-
-		ResolveCollisions();
 	}
 
 	private void ApplyForces()
@@ -79,13 +74,16 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			ApplyGeneralForces(ref newVelocity);
 		}
-
-		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
+		
+		if (player.Position.y < -10)
 		{
-			newVelocity.x = 0;
+			player.SetPosition(0, 3);
+			player.SetVelocity(0, 0);
 		}
-
-		player.SetVelocity(newVelocity);
+		else
+		{
+			player.SetVelocity(newVelocity);
+		}
 	}
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
@@ -115,6 +113,11 @@ public class PhysicsSystem : MonoBehaviour
 		);
 		
 		newVelocity.y += Time.deltaTime * gameSettings.Gravity;
+
+		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
+		{
+			newVelocity.x = 0;
+		}
 
 		if (newVelocity.y < gameSettings.MaxFallSpeed)
 		{

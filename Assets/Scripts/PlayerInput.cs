@@ -7,9 +7,11 @@ public class PlayerInput : MonoBehaviour
 
 	private PlayerInputActions playerInputActions;
 
-	private InputAction runAction;
-	private InputAction climbAction;
+	private InputAction moveAction;
 	private InputAction jumpAction;
+
+	private Vector2 previousMoveInput;
+	public Vector2 MoveInput;
 
 	void Awake()
 	{
@@ -17,61 +19,92 @@ public class PlayerInput : MonoBehaviour
 
 		playerInputActions = new PlayerInputActions();
 
-		runAction = playerInputActions.Player.Run;
-		climbAction = playerInputActions.Player.Climb;
+		moveAction = playerInputActions.Player.Move;
 		jumpAction = playerInputActions.Player.Jump;
 
-		runAction.started += OnRunStart;
-		runAction.canceled += OnRunCancel;
-
-		climbAction.started += OnClimbStart;
-		climbAction.canceled += OnClimbCancel;
-
 		jumpAction.started += OnJumpStart;
-		jumpAction.canceled += OnJumpCancel;
+		jumpAction.performed += OnJumpPerformed;
+
+		previousMoveInput = Vector2.zero;
+		MoveInput = Vector2.zero;
+	}
+
+	void Update()
+	{
+		MoveInput = moveAction.ReadValue<Vector2>();
+
+		if (MoveInput.x > 0 && previousMoveInput.x == 0)
+		{
+			player.SetHorizontalInput(1);
+		}
+		else if (MoveInput.x < 0 && previousMoveInput.x == 0)
+		{
+			player.SetHorizontalInput(-1);
+		}
+		else if (MoveInput.x == 0 && previousMoveInput.x > 0)
+		{
+			player.SetHorizontalInput(0);
+		}
+		else if (MoveInput.x == 0 && previousMoveInput.x < 0)
+		{
+			player.SetHorizontalInput(0);
+		}
+		else if (MoveInput.x > 0 && previousMoveInput.x < 0)
+		{
+			player.SetHorizontalInput(1);
+		}
+		else if (MoveInput.x < 0 && previousMoveInput.x > 0)
+		{
+			player.SetHorizontalInput(-1);
+		}
+
+		if (MoveInput.y > 0 && previousMoveInput.y == 0)
+		{
+			player.SetVerticalInput(1);
+		}
+		else if (MoveInput.y < 0 && previousMoveInput.y == 0)
+		{
+			player.SetVerticalInput(-1);
+		}
+		else if (MoveInput.y == 0 && previousMoveInput.y > 0)
+		{
+			player.SetVerticalInput(0);
+		}
+		else if (MoveInput.y == 0 && previousMoveInput.y < 0)
+		{
+			player.SetVerticalInput(0);
+		}
+		else if (MoveInput.y > 0 && previousMoveInput.y < 0)
+		{
+			player.SetVerticalInput(1);
+		}
+		else if (MoveInput.y < 0 && previousMoveInput.y > 0)
+		{
+			player.SetVerticalInput(-1);
+		}
+
+		previousMoveInput = MoveInput;
 	}
 
 	void OnEnable()
 	{
-		runAction.Enable();
-		climbAction.Enable();
+		moveAction.Enable();
 		jumpAction.Enable();
 	}
 
 	void OnDisable()
 	{
-		runAction.Disable();
-		climbAction.Disable();
+		moveAction.Disable();
 		jumpAction.Disable();
 	}
 	
-	private void OnRunStart(InputAction.CallbackContext context)
-	{
-		player.SetRunInput(context.ReadValue<float>());
-	}
-
-	private void OnRunCancel(InputAction.CallbackContext context)
-	{
-		player.SetRunInput(0);
-	}
-
-	private void OnClimbStart(InputAction.CallbackContext context)
-	{
-		player.SetClimbInput(context.ReadValue<float>());
-	}
-
-	private void OnClimbCancel(InputAction.CallbackContext context)
-	{
-		player.SetClimbInput(0);
-	}
-
 	private void OnJumpStart(InputAction.CallbackContext context)
 	{
-		player.SetJumpInput(1);
+		player.SetJumpInput(context.ReadValue<float>());
 	}
 
-	private void OnJumpCancel(InputAction.CallbackContext context)
+	private void OnJumpPerformed(InputAction.CallbackContext context)
 	{
-		player.SetJumpInput(0);
+		player.SetJumpInput(context.ReadValue<float>());
 	}
 }

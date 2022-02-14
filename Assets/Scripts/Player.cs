@@ -63,11 +63,16 @@ public class Player : MonoBehaviour
         GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
     }
 
+    public void SetPosition(float x, float y)
+	{
+        transform.position = new Vector2(x, y);
+        
+        Position = transform.position;
+	}
+
 	public void SetPosition(Vector2 position)
 	{
-        transform.position = position;
-
-        Position = transform.position;
+        SetPosition(position.x, position.y);
     }
 
     public void Move(Vector2 displacement)
@@ -85,41 +90,68 @@ public class Player : MonoBehaviour
         SetVelocity(velocity.x, velocity.y);
 	}
 
-    public void HangUpdate()
-    {
-        if (TriggerInfo.Ledge && PlayerInputInfo.Direction.y > 0)
+    public void SetHorizontalInput(float inputValue)
+	{
+        PlayerInputInfo.Direction.x = inputValue;
+	}
+
+    public void SetVerticalInput(float inputValue)
+	{
+        PlayerInputInfo.Direction.y = inputValue;
+
+        if (Hanging && inputValue < 0)
         {
-            Hanging = true;
-            Climbing = false;
-
-            Vector2 position = Position;
-
-            if (Facing == 1)
-            {
-                position = TriggerInfo.Mid.BodyRect.TopLeft;
-                position.x -= gameSettings.HangPositionOffset.x;
-                position.y += gameSettings.HangPositionOffset.y;
-            }
-            else if (Facing == -1)
-            {
-                position = TriggerInfo.Mid.BodyRect.TopRight;
-                position.x += gameSettings.HangPositionOffset.x;
-                position.y += gameSettings.HangPositionOffset.y;
-            }
-
-            SetPosition(position);
-            SetVelocity(0, 0);
-            SetAnimation("Hang");
+            Hanging = false;
         }
+        else if (TriggerInfo.Climbable && inputValue != 0)
+        {
+            Climbing = true;
+
+            SetVelocity(0, 0);
+            SetAnimation("Climb");
+        }
+        else if (Climbing && PlayerInputInfo.Direction.y == 0)
+        {
+            animator.speed = 0;
+        }
+    }
+
+    public void SetJumpInput(float jumpInput)
+    {
+        if (jumpInput == 1)
+        {
+            if (WallSliding != 0)
+            {
+                SetWallSlide(0);
+
+                if (Facing == 1)
+                {
+                    JumpVelocity = gameSettings.WallJumpVelocity;
+                    JumpVelocity.x *= -1;
+                }
+                else if (Facing == -1)
+                {
+                    JumpVelocity = gameSettings.WallJumpVelocity;
+                }
+            }
+            else if (TriggerInfo.Grounded || Hanging || Climbing)
+            {
+                Hanging = false;
+                Climbing = false;
+
+                JumpVelocity = gameSettings.JumpVelocity;
+            }
+        }
+        else
+        {
+            JumpVelocity = Vector2.zero;
+        }
+
+        Velocity += JumpVelocity;
     }
 
     public void ClimbLedgeCheck()
     {
-        if (!Hanging)
-		{
-            return;
-		}
-
         if (hangTimer <= 0)
         {
             if (PlayerInputInfo.Direction.y > 0)
@@ -167,30 +199,75 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void WallSlideCheck()
-	{
-        if (Climbing || TriggerInfo.Grounded)
+    public void HangUpdate()
+    {
+        if (TriggerInfo.Ledge && PlayerInputInfo.Direction.y > 0)
         {
-            SetWallSlide(0);
+            Hanging = true;
+            Climbing = false;
+
+            Vector2 position = Position;
+
+            if (Facing == 1)
+            {
+                position = TriggerInfo.Mid.BodyRect.TopLeft;
+                position.x -= gameSettings.HangPositionOffset.x;
+                position.y += gameSettings.HangPositionOffset.y;
+            }
+            else if (Facing == -1)
+            {
+                position = TriggerInfo.Mid.BodyRect.TopRight;
+                position.x += gameSettings.HangPositionOffset.x;
+                position.y += gameSettings.HangPositionOffset.y;
+            }
+
+            SetPosition(position);
+            SetVelocity(0, 0);
+            SetAnimation("Hang");
+        }
+    }
+
+    public void ClimbUpdate()
+    {
+        if (Hanging || WallSliding != 0)
+        {
             return;
         }
-
-        if (TriggerInfo.Wall)
+        else if (Climbing)
         {
-            if (CollisionInfo.Left || CollisionInfo.Right)
+            if (TriggerInfo.Grounded && PlayerInputInfo.Direction.y < 0)
             {
-                SetWallSlide((int)PlayerInputInfo.Direction.x);
+                Climbing = false;
+            }
+            else if (!TriggerInfo.Climbable)
+            {
+                Climbing = false;
             }
         }
+    }
+    
+    public void WallSlideUpdate()
+	{
+        if (Hanging || Climbing)
+		{
+            return;
+		}
 
-        if (WallSliding != 0)
+        if (WallSliding == 0)
+		{
+            if (!TriggerInfo.Grounded && TriggerInfo.Wall && PlayerInputInfo.Direction.x == Facing)
+			{
+                SetWallSlide((int)PlayerInputInfo.Direction.x);
+			}
+		} 
+        else 
         {
-            if (!TriggerInfo.Wall)
+            if (Climbing || TriggerInfo.Grounded || !TriggerInfo.Wall)
             {
                 SetWallSlide(0);
             }
             else if (PlayerInputInfo.Direction.x != WallSliding)
-            {
+			{
                 UpdateWallSlide();
             }
         }
@@ -207,7 +284,7 @@ public class Player : MonoBehaviour
         else
 		{
             SetAnimation("Slide");
-            SetVelocity(Velocity.x, 0);
+            SetVelocity(0, 0);
         }
 	}
 
@@ -221,84 +298,7 @@ public class Player : MonoBehaviour
         }
     }
     
-    public void SetRunInput(float runInput)
-	{
-        PlayerInputInfo.Direction.x = runInput;
-	}
-
-    public void SetClimbInput(float climbInput)
-	{
-        PlayerInputInfo.Direction.y = climbInput;
-        
-        if (Hanging && climbInput < 0)
-		{
-            Hanging = false;
-		}
-        else if (TriggerInfo.Climbable && climbInput != 0)
-		{
-            print("Start climbing");
-
-            Climbing = true;
-
-            SetVelocity(0, 0);
-            SetAnimation("Climb");
-        } 
-        else if (Climbing && PlayerInputInfo.Direction.y == 0)
-        {
-            animator.speed = 0;
-        }
-
-    }
-
-    public void ClimbingUpdate()
-	{
-        if (Climbing)
-        {
-            if (TriggerInfo.Grounded && PlayerInputInfo.Direction.y < 0)
-			{
-                Climbing = false;
-            } 
-            else if (!TriggerInfo.Climbable)
-            {
-                Climbing = false;
-            }
-        }
-    }
-
-    public void SetJumpInput(int jumpInput)
-	{
-        if (jumpInput == 1)
-		{
-            if (WallSliding != 0)
-			{
-                SetWallSlide(0);
-
-                if (Facing == 1)
-				{
-                    JumpVelocity = gameSettings.WallJumpVelocity;
-                    JumpVelocity.x *= -1;
-				}
-                else if (Facing == -1)
-				{
-                    JumpVelocity = gameSettings.WallJumpVelocity;
-				}
-			}
-            else if (TriggerInfo.Grounded || Hanging || Climbing)
-			{
-                Hanging = false;
-                Climbing = false;
-
-                JumpVelocity = gameSettings.JumpVelocity;
-			}
-        }
-        else
-		{
-            JumpVelocity = Vector2.zero;
-		}
-
-        Velocity += JumpVelocity;
-    }
-
+    
     public void SetAnimation(string stateName)
 	{
         animator.speed = 1;
