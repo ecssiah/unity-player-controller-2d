@@ -10,6 +10,7 @@ public class GameSettings : ScriptableObject
 	public float GroundDamping = 0.86f;
 	public float GroundSpeedSmoothTime = 0.24f;
 	public float AirSpeedSmoothTime = 0.05f;
+	public float MinRunSpeed = 1f;
 	public float RunSpeed = 8f;
 	public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 

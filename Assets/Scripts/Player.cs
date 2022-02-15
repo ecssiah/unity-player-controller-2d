@@ -15,8 +15,6 @@ public class Player : MonoBehaviour
 	private float hangTimer;
 	public bool Hanging;
 
-	public Vector2 JumpVelocity;
-
 	public bool Climbing;
 	public bool ClimbingLedge;
 
@@ -48,8 +46,6 @@ public class Player : MonoBehaviour
 
 		Facing = 1;
 		WallSliding = 0;
-
-		JumpVelocity = Vector2.zero;
 
 		hangTimer = gameSettings.HangTime;
 		Hanging = false;
@@ -367,7 +363,7 @@ public class Player : MonoBehaviour
 			{
 				SetAnimation("Fall");
 			}
-			else if (Velocity.x != 0)
+			else if (Mathf.Abs(Velocity.x) > gameSettings.MinRunSpeed)
 			{
 				SetAnimation("Run");
 			}
