@@ -376,21 +376,17 @@ public class Player : MonoBehaviour
 
 	private void UpdateOrientation()
 	{
-		if (Velocity.x > 0 && !(Facing == 1))
+		if (Velocity.x > 0 && Facing != 1)
 		{
 			Facing = 1;
 
-			Vector3 scale = transform.localScale;
-			scale.x = 1;
-			transform.localScale = scale;
+			transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 		}
-		else if (Velocity.x < 0 && !(Facing == -1))
+		else if (Velocity.x < 0 && Facing != -1)
 		{
 			Facing = -1;
 
-			Vector3 scale = transform.localScale;
-			scale.x = -1;
-			transform.localScale = scale;
+			transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 		}
 	}
 
