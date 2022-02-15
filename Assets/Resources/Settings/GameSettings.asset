@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   Gravity: -50
-  MinSpeed: 0.1
-  MaxFallSpeed: -53
-  GroundSpeedSmoothTime: 0.24
-  AirSpeedSmoothTime: 0.3
+  MinSpeed: 0.01
+  MaxFallSpeed: -30
+  GroundDamping: 0.96
+  GroundSpeedSmoothTime: 0.2
+  AirSpeedSmoothTime: 0.2
   RunSpeed: 8
   ClimbSpeed: {x: 1.8, y: 3.2}
   MinJumpSpeed: 6

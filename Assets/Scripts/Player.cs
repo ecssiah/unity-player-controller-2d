@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 
     public Vector2 Position;
     public Vector2 Velocity;
+
+    public float CurrentHorizontalSpeed;
     
     public int Facing;
     
@@ -113,7 +115,6 @@ public class Player : MonoBehaviour
         {
             Climbing = true;
 
-            SetVelocity(0, 0);
             SetAnimation("Climb");
         }
         else if (Climbing && PlayerInputInfo.Direction.y == 0)

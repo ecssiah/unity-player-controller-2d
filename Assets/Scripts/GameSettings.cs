@@ -7,6 +7,7 @@ public class GameSettings : ScriptableObject
 	public float Gravity = -9.8f;
 	public float MinSpeed = 0.1f;
 	public float MaxFallSpeed = -53f;
+	public float GroundDamping = 0.86f;
 	public float GroundSpeedSmoothTime = 0.24f;
 	public float AirSpeedSmoothTime = 0.05f;
 	public float RunSpeed = 8f;

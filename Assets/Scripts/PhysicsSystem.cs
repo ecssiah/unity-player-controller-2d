@@ -8,8 +8,6 @@ public class PhysicsSystem : MonoBehaviour
 
 	private Player player;
 
-	private float playerSpeedDamped;
-
 	private List<Surface> surfaces;
 	private List<Climbable> climbables;
 
@@ -69,16 +67,8 @@ public class PhysicsSystem : MonoBehaviour
 		{
 			ApplyGeneralForces(ref newVelocity);
 		}
-		
-		if (player.Position.y < -30)
-		{
-			player.SetPosition(0, 3);
-			player.SetVelocity(0, 0);
-		}
-		else
-		{
-			player.SetVelocity(newVelocity);
-		}
+
+		player.SetVelocity(newVelocity);
 	}
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
@@ -91,32 +81,30 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		newVelocity.x = 0;
 		newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * gameSettings.Gravity;
-
-		if (newVelocity.y < -gameSettings.MaxWallSlideSpeed)
-		{
-			newVelocity.y = -gameSettings.MaxWallSlideSpeed;
-		}
+		newVelocity.y = Mathf.Max(newVelocity.y, -gameSettings.MaxWallSlideSpeed);
 	}
 
 	private void ApplyGeneralForces(ref Vector2 newVelocity)
 	{
 		newVelocity.x = Mathf.SmoothDamp(
-			player.Velocity.x,
+			newVelocity.x,
 			player.PlayerInputInfo.Direction.x * gameSettings.RunSpeed,
-			ref playerSpeedDamped,
+			ref player.CurrentHorizontalSpeed,
 			player.TriggerInfo.Grounded ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 		);
-		
-		newVelocity.y += Time.deltaTime * gameSettings.Gravity;
 
 		if (Mathf.Abs(newVelocity.x) < gameSettings.MinSpeed)
 		{
 			newVelocity.x = 0;
 		}
 
-		if (newVelocity.y < gameSettings.MaxFallSpeed)
+		newVelocity.y += Time.deltaTime * gameSettings.Gravity;
+		newVelocity.y = Mathf.Max(newVelocity.y, gameSettings.MaxFallSpeed);
+
+		if (player.Position.y < -30)
 		{
-			newVelocity.y = gameSettings.MaxFallSpeed;
+			player.SetPosition(0, 3);
+			newVelocity = Vector2.zero;
 		}
 	}
 	
@@ -147,7 +135,7 @@ public class PhysicsSystem : MonoBehaviour
 
 					if (player.Velocity.y >= 0)
 					{
-						player.SetVelocity(0, 0.4f * player.Velocity.y);
+						player.SetVelocity(0, 0.5f * player.Velocity.y);
 					}
 					else
 					{
