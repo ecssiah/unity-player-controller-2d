@@ -73,8 +73,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
 	{
-		newVelocity.x = player.PlayerInputInfo.Direction.x * gameSettings.ClimbSpeed.x;
-		newVelocity.y = player.PlayerInputInfo.Direction.y * gameSettings.ClimbSpeed.y;
+		newVelocity.x = player.InputInfo.Direction.x * gameSettings.ClimbSpeed.x;
+		newVelocity.y = player.InputInfo.Direction.y * gameSettings.ClimbSpeed.y;
 	}
 
 	private void ApplyWallSlideForces(ref Vector2 newVelocity)
@@ -88,7 +88,7 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		newVelocity.x = Mathf.SmoothDamp(
 			newVelocity.x,
-			player.PlayerInputInfo.Direction.x * gameSettings.RunSpeed,
+			player.InputInfo.Direction.x * gameSettings.RunSpeed,
 			ref player.CurrentHorizontalSpeed,
 			player.TriggerInfo.Grounded ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 		);
@@ -133,7 +133,7 @@ public class PhysicsSystem : MonoBehaviour
 						player.CollisionInfo.Right = true;
 					}
 
-					if (player.Velocity.y >= 0)
+					if (player.Velocity.y > 0)
 					{
 						player.SetVelocity(0, 0.5f * player.Velocity.y);
 					}

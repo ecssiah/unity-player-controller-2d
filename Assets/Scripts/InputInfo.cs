@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public struct PlayerInputInfo
+public struct InputInfo
 {
 	public Vector2 Direction;
 }

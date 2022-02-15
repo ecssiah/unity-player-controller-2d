@@ -21,9 +21,9 @@ public class Player : MonoBehaviour
 	private float wallSlideTimer;
 	public int WallSliding;
 
+	public InputInfo InputInfo;
 	public TriggerInfo TriggerInfo;
 	public CollisionInfo CollisionInfo;
-	public PlayerInputInfo PlayerInputInfo;
 
 	private GameSettings gameSettings;
 
@@ -91,12 +91,12 @@ public class Player : MonoBehaviour
 
 	public void SetHorizontalInput(float inputValue)
 	{
-		PlayerInputInfo.Direction.x = inputValue;
+		InputInfo.Direction.x = inputValue;
 	}
 
 	public void SetVerticalInput(float inputValue)
 	{
-		PlayerInputInfo.Direction.y = inputValue;
+		InputInfo.Direction.y = inputValue;
 
 		if (ClimbingLedge)
 		{
@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
 
 			SetAnimation("Climb");
 		}
-		else if (Climbing && PlayerInputInfo.Direction.y == 0)
+		else if (Climbing && InputInfo.Direction.y == 0)
 		{
 			animator.speed = 0;
 		}
@@ -162,7 +162,7 @@ public class Player : MonoBehaviour
 	{
 		if (hangTimer <= 0)
 		{
-			if (PlayerInputInfo.Direction.y > 0)
+			if (InputInfo.Direction.y > 0)
 			{
 				Hanging = false;
 				ClimbingLedge = true;
@@ -247,7 +247,7 @@ public class Player : MonoBehaviour
 
 	private void HangUpdate()
 	{
-		if (TriggerInfo.Ledge && PlayerInputInfo.Direction.y > 0)
+		if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 		{
 			Hanging = true;
 			Climbing = false;
@@ -281,7 +281,7 @@ public class Player : MonoBehaviour
 		}
 		else if (Climbing)
 		{
-			if (TriggerInfo.Grounded && PlayerInputInfo.Direction.y < 0)
+			if (TriggerInfo.Grounded && InputInfo.Direction.y < 0)
 			{
 				Climbing = false;
 			}
@@ -301,9 +301,9 @@ public class Player : MonoBehaviour
 
 		if (WallSliding == 0)
 		{
-			if (!TriggerInfo.Grounded && TriggerInfo.Wall && PlayerInputInfo.Direction.x == Facing)
+			if (!TriggerInfo.Grounded && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
 			{
-				SetWallSlide((int)PlayerInputInfo.Direction.x);
+				SetWallSlide((int)InputInfo.Direction.x);
 			}
 		}
 		else
@@ -312,7 +312,7 @@ public class Player : MonoBehaviour
 			{
 				SetWallSlide(0);
 			}
-			else if (PlayerInputInfo.Direction.x != WallSliding)
+			else if (InputInfo.Direction.x != WallSliding)
 			{
 				UpdateWallSlide();
 			}
