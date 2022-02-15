@@ -26,19 +26,19 @@ public class PhysicsSystem : MonoBehaviour
 		if (player.Hanging)
 		{
 			player.ClimbLedgeCheck();
-		} 
+		}
 		else if (player.ClimbingLedge)
 		{
 			player.ClimbLedgeUpdate();
-		} 
+		}
 		else
 		{
 			player.UpdateState();
-			
+
 			ApplyForces();
 
 			player.Move(Time.deltaTime * player.Velocity);
-			
+
 			ResolveCollisions();
 
 			player.TriggerInfo.Reset();
@@ -57,7 +57,7 @@ public class PhysicsSystem : MonoBehaviour
 
 		if (player.Climbing)
 		{
-			ApplyClimbForces(ref newVelocity);	
+			ApplyClimbForces(ref newVelocity);
 		}
 		else if (player.WallSliding != 0)
 		{
@@ -107,7 +107,7 @@ public class PhysicsSystem : MonoBehaviour
 			newVelocity = Vector2.zero;
 		}
 	}
-	
+
 	private void ResolveCollisions()
 	{
 		player.CollisionInfo.Reset();

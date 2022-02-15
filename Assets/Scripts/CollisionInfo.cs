@@ -12,7 +12,7 @@ public struct CollisionInfo
 	{
 		Top = false;
 		Bottom = false;
-		Left = false; 
+		Left = false;
 		Right = false;
 	}
 }

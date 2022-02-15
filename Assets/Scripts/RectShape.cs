@@ -44,7 +44,7 @@ public class RectShape : MonoBehaviour
 	{
 		List<Vector2> vertices = Vertices;
 		List<Vector2> edges = new List<Vector2>();
-		
+
 		for (int i = 0; i < vertices.Count; i++)
 		{
 			Vector2 edge = vertices[(i + 1) % vertices.Count] - vertices[i];

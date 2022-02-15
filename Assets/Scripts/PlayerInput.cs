@@ -73,7 +73,7 @@ public class PlayerInput : MonoBehaviour
 		moveAction.Disable();
 		jumpAction.Disable();
 	}
-	
+
 	private void OnJumpStart(InputAction.CallbackContext context)
 	{
 		player.SetJumpInput(context.ReadValue<float>());

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Climbable : MonoBehaviour
 {
-    public RectShape BodyRect;
+	public RectShape BodyRect;
 
-    void Awake()
-    {
-        BodyRect = GetComponent<RectShape>();
-    }
+	void Awake()
+	{
+		BodyRect = GetComponent<RectShape>();
+	}
 }

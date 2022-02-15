@@ -26,7 +26,7 @@ public class GameSettings : ScriptableObject
 	[Space]
 	public float HangTime = 0.2f;
 	public Vector2 HangPositionOffset = new Vector2(0.19f, -1.38f);
-	
+
 	[Space]
 	public Vector2 ClimbLedgeOffset = new Vector2(0.62f, 1.18f);
 }

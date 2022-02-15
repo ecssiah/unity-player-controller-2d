@@ -37,7 +37,7 @@ public class CameraFollow : MonoBehaviour
 			{
 				Velocity.x = targetRectShape.Max.x - right;
 			}
-			
+
 			if (targetRectShape.Min.y < bottom)
 			{
 				Velocity.y = targetRectShape.Min.y - bottom;
@@ -73,7 +73,7 @@ public class CameraFollow : MonoBehaviour
 		DebugDraw = false;
 
 		smoothVelocityTime = 0.05f;
-		
+
 		focusAreaSize = new Vector2(3, 5);
 
 		targetRectShape = GameObject.Find("Player/Body").GetComponent<RectShape>();
@@ -81,8 +81,8 @@ public class CameraFollow : MonoBehaviour
 		focusArea = new FocusArea(targetRectShape, focusAreaSize);
 	}
 
-    void LateUpdate()
-    {
+	void LateUpdate()
+	{
 		focusArea.Update();
 
 		Vector2 focusPosition = focusArea.Center + verticalOffset * Vector2.up;

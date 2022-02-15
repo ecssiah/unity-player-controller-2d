@@ -77,7 +77,7 @@ public struct SeparatingAxisTheorem
 
 		return minResolutionVector;
 	}
-	
+
 	public static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
 	{
 		Vector2 minResolutionVector = Vector2.positiveInfinity;
