@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class RectShape : MonoBehaviour
 {
-	public Vector2 Center => rectTransform.position;
-	public Vector2 Size => rectTransform.rect.size;
-	public Vector2 Extents => rectTransform.rect.size / 2;
+	public Vector2 Center => boxCollider2D.transform.position + (Vector3)boxCollider2D.offset;
+	public Vector2 Size => boxCollider2D.bounds.size;
+	public Vector2 Extents => boxCollider2D.bounds.extents;
 
 	public Vector2 BottomLeft => new Vector2(Center.x - Extents.x, Center.y - Extents.y);
 	public Vector2 TopLeft => new Vector2(Center.x - Extents.x, Center.y + Extents.y);
@@ -31,11 +31,11 @@ public class RectShape : MonoBehaviour
 
 	public List<Vector2> Normals { get; private set; }
 
-	private RectTransform rectTransform;
+	private BoxCollider2D boxCollider2D;
 
 	void Awake()
 	{
-		rectTransform = GetComponent<RectTransform>();
+		boxCollider2D = GetComponent<BoxCollider2D>();
 
 		CalculateNormals();
 	}

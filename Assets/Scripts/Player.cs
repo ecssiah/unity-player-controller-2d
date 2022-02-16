@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
 
 		animator = GetComponent<Animator>();
 
-		BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
+		BodyRectShape = GetComponent<RectShape>();
 		WallTopRectShape = transform.Find("WallTop").GetComponent<RectShape>();
 		WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
 		WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
@@ -183,15 +183,15 @@ public class Player : MonoBehaviour
 	{
 		yield return null;
 
-		RectTransform rectTransform = transform.Find("Body").GetComponent<RectTransform>();
+		BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
 		Vector3 ledgeOffset = gameSettings.ClimbLedgeOffset;
-		Vector3 startPosition = rectTransform.localPosition;
-		Vector3 endPosition = rectTransform.localPosition + ledgeOffset;
+		Vector3 startPosition = boxCollider2D.transform.localPosition;
+		Vector3 endPosition = boxCollider2D.transform.localPosition + ledgeOffset;
 
 		while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
 		{
-			rectTransform.localPosition = Vector3.Lerp(
+			boxCollider2D.transform.localPosition = Vector3.Lerp(
 				startPosition,
 				endPosition,
 				animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -200,7 +200,7 @@ public class Player : MonoBehaviour
 			yield return null;
 		}
 
-		rectTransform.localPosition = startPosition;
+		boxCollider2D.transform.localPosition = startPosition;
 
 		yield return null;
 	}
