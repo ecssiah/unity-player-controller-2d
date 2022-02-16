@@ -53,7 +53,7 @@ public class CameraFollow : MonoBehaviour
 		{
 			Gizmos.color = new Color(1, 0, 1, 0.1f);
 
-			Gizmos.DrawWireCube(focusArea.Center, focusAreaSize);
+			Gizmos.DrawWireCube(focusArea.Center, focusArea.Size);
 		}
 	}
 }

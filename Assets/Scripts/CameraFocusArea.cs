@@ -4,20 +4,18 @@ public class FocusArea
 {
 	private readonly RectShape targetRectShape;
 
-	private Vector2 min;
-	private Vector2 max;
+	private Rect rect;
 	
-	public Vector2 Center;
+	public Vector2 Center => rect.center;
+	public Vector2 Size => rect.size;
 	public Vector2 Velocity;
 
 	public FocusArea(RectShape _targetRectShape, Vector2 size)
 	{
 		targetRectShape = _targetRectShape;
 
-		min = targetRectShape.Center - size / 2;
-		max = targetRectShape.Center + size / 2;
+		rect = new Rect(targetRectShape.Center, size);
 
-		Center = (min + max) / 2;
 		Velocity = Vector2.zero;
 	}
 
@@ -25,27 +23,24 @@ public class FocusArea
 	{
 		Velocity = Vector2.zero;
 
-		if (targetRectShape.Min.x < min.x)
+		if (targetRectShape.Min.x < rect.min.x)
 		{
-			Velocity.x = targetRectShape.Min.x - min.x;
+			Velocity.x = targetRectShape.Min.x - rect.min.x;
 		}
-		else if (targetRectShape.Max.x > max.x)
+		else if (targetRectShape.Max.x > rect.max.x)
 		{
-			Velocity.x = targetRectShape.Max.x - max.x;
-		}
-
-		if (targetRectShape.Min.y < min.y)
-		{
-			Velocity.y = targetRectShape.Min.y - min.y;
-		}
-		else if (targetRectShape.Max.y > max.y)
-		{
-			Velocity.y = targetRectShape.Max.y - max.y;
+			Velocity.x = targetRectShape.Max.x - rect.max.x;
 		}
 
-		min += Velocity;
-		max += Velocity;
+		if (targetRectShape.Min.y < rect.min.y)
+		{
+			Velocity.y = targetRectShape.Min.y - rect.min.y;
+		}
+		else if (targetRectShape.Max.y > rect.max.y)
+		{
+			Velocity.y = targetRectShape.Max.y - rect.max.y;
+		}
 
-		Center = (min + max) / 2;
+		rect.center += Velocity;
 	}
 }
