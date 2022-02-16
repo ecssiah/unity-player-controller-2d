@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PhysicsSystem : MonoBehaviour
 {
+	int wait10Frames;
+
 	private GameSettings gameSettings;
 
 	private Player player;
@@ -13,6 +15,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Awake()
 	{
+		wait10Frames = 10;
+
 		gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 		player = GameObject.Find("Player").GetComponent<Player>();
@@ -23,6 +27,12 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Update()
 	{
+		if (wait10Frames > 0)
+		{
+			wait10Frames--;
+			return;
+		}
+
 		if (player.Hanging)
 		{
 			player.ClimbLedgeCheck();
