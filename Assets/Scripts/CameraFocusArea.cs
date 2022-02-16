@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public struct FocusArea
+public class FocusArea
 {
 	private readonly RectShape targetRectShape;
 
