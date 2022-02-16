@@ -15,7 +15,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Awake()
 	{
-		waitFrames = 4;
+		waitFrames = 8;
 
 		gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
