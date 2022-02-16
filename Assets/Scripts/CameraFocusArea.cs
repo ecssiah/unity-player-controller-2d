@@ -4,18 +4,18 @@ public class FocusArea
 {
 	private readonly RectShape targetRectShape;
 
-	public Vector2 Center;
-	public Vector2 Velocity;
-
 	private Vector2 min;
 	private Vector2 max;
+	
+	public Vector2 Center;
+	public Vector2 Velocity;
 
 	public FocusArea(RectShape _targetRectShape, Vector2 size)
 	{
 		targetRectShape = _targetRectShape;
-		
-		min = new Vector2(targetRectShape.Center.x - size.x / 2, targetRectShape.Center.y - size.y / 2);
-		max = new Vector2(targetRectShape.Center.x + size.x / 2, targetRectShape.Center.y + size.y / 2);
+
+		min = targetRectShape.Center - size / 2;
+		max = targetRectShape.Center + size / 2;
 
 		Center = (min + max) / 2;
 		Velocity = Vector2.zero;
