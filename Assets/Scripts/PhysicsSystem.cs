@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhysicsSystem : MonoBehaviour
 {
-	int waitFrames;
+	public int waitFrames;
 
 	private GameSettings gameSettings;
 
@@ -113,6 +113,8 @@ public class PhysicsSystem : MonoBehaviour
 
 		if (player.Position.y < -30)
 		{
+			waitFrames = 100;
+
 			player.SetPosition(0, 3);
 			newVelocity = Vector2.zero;
 		}
