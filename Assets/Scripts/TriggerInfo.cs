@@ -3,9 +3,9 @@ using UnityEngine;
 [System.Serializable]
 public struct TriggerInfo
 {
-	public Surface Top;
-	public Surface Mid;
-	public Surface Low;
+	public RectShape Top;
+	public RectShape Mid;
+	public RectShape Low;
 
 	public bool Grounded;
 	public bool Climbable;

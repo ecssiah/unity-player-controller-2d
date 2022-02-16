@@ -8,8 +8,8 @@ public class PhysicsSystem : MonoBehaviour
 
 	private Player player;
 
-	private List<Surface> surfaces;
-	private List<Climbable> climbables;
+	private List<RectShape> surfaces;
+	private List<RectShape> climbables;
 
 	void Awake()
 	{
@@ -17,8 +17,8 @@ public class PhysicsSystem : MonoBehaviour
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 
-		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<Surface>().ToList();
-		climbables = GameObject.Find("Climbables").GetComponentsInChildren<Climbable>().ToList();
+		surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<RectShape>().ToList();
+		climbables = GameObject.Find("Climbables").GetComponentsInChildren<RectShape>().ToList();
 	}
 
 	void Update()
@@ -112,10 +112,10 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		player.CollisionInfo.Reset();
 
-		foreach (Surface surface in surfaces)
+		foreach (RectShape surface in surfaces)
 		{
 			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(
-				player.BodyRectShape, surface.BodyRect
+				player.BodyRectShape, surface
 			);
 
 			if (resolutionVector != Vector2.zero)
@@ -162,9 +162,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void GroundTriggerCheck()
 	{
-		foreach (Surface surface in surfaces)
+		foreach (RectShape rectShape in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRectShape, surface.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.GroundRectShape, rectShape))
 			{
 				player.TriggerInfo.Grounded = true;
 				return;
@@ -174,9 +174,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ClimbTriggersCheck()
 	{
-		foreach (Climbable climbable in climbables)
+		foreach (RectShape rectShape in climbables)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, climbable.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, rectShape))
 			{
 				player.TriggerInfo.Climbable = true;
 				break;
@@ -187,21 +187,21 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void WallTriggersCheck()
 	{
-		foreach (Surface surface in surfaces)
+		foreach (RectShape rectShape in surfaces)
 		{
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, surface.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, rectShape))
 			{
-				player.TriggerInfo.Top = surface;
+				player.TriggerInfo.Top = rectShape;
 			}
 
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRectShape, surface.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRectShape, rectShape))
 			{
-				player.TriggerInfo.Mid = surface;
+				player.TriggerInfo.Mid = rectShape;
 			}
 
-			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, surface.BodyRect))
+			if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, rectShape))
 			{
-				player.TriggerInfo.Low = surface;
+				player.TriggerInfo.Low = rectShape;
 			}
 		}
 	}

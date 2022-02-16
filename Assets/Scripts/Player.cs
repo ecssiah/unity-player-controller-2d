@@ -256,13 +256,13 @@ public class Player : MonoBehaviour
 
 			if (Facing == 1)
 			{
-				position = TriggerInfo.Mid.BodyRect.TopLeft;
+				position = TriggerInfo.Mid.TopLeft;
 				position.x -= gameSettings.HangPositionOffset.x;
 				position.y += gameSettings.HangPositionOffset.y;
 			}
 			else if (Facing == -1)
 			{
-				position = TriggerInfo.Mid.BodyRect.TopRight;
+				position = TriggerInfo.Mid.TopRight;
 				position.x += gameSettings.HangPositionOffset.x;
 				position.y += gameSettings.HangPositionOffset.y;
 			}

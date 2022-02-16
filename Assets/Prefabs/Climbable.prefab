@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7887434304843484446}
   - component: {fileID: 6734909510092351021}
-  - component: {fileID: 7827726927327397795}
   m_Layer: 0
   m_Name: Climbable
   m_TagString: Untagged
@@ -49,19 +48,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vertices: []
-  Edges: []
-  Normals: []
---- !u!114 &7827726927327397795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1214105513794415105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86523604b009eb8408a14457a5dd4577, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BodyRect: {fileID: 0}
