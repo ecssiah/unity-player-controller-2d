@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhysicsSystem : MonoBehaviour
 {
-	int wait10Frames;
+	int waitFrames;
 
 	private GameSettings gameSettings;
 
@@ -15,7 +15,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Awake()
 	{
-		wait10Frames = 10;
+		waitFrames = 4;
 
 		gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
@@ -27,9 +27,9 @@ public class PhysicsSystem : MonoBehaviour
 
 	void Update()
 	{
-		if (wait10Frames > 0)
+		if (waitFrames > 0)
 		{
-			wait10Frames--;
+			waitFrames--;
 			return;
 		}
 

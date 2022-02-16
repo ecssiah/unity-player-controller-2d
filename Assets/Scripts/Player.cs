@@ -166,11 +166,12 @@ public class Player : MonoBehaviour
 			{
 				Hanging = false;
 				ClimbingLedge = true;
+
+				hangTimer = gameSettings.HangTime;
+				
 				SetAnimation("LedgeClimb");
 
 				StartCoroutine(FollowLedgeClimb());
-
-				hangTimer = gameSettings.HangTime;
 			}
 		}
 		else
@@ -185,12 +186,12 @@ public class Player : MonoBehaviour
 
 		BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
-		Vector3 startPosition = boxCollider2D.offset;
-		Vector3 endPosition = startPosition + (Vector3)gameSettings.ClimbLedgeOffset;
+		Vector2 startPosition = boxCollider2D.offset;
+		Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
 		while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
 		{
-			boxCollider2D.offset = Vector3.Lerp(
+			boxCollider2D.offset = Vector2.Lerp(
 				startPosition,
 				endPosition,
 				animator.GetCurrentAnimatorStateInfo(0).normalizedTime
