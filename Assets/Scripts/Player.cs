@@ -185,13 +185,12 @@ public class Player : MonoBehaviour
 
 		BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
-		Vector3 ledgeOffset = gameSettings.ClimbLedgeOffset;
-		Vector3 startPosition = boxCollider2D.transform.localPosition;
-		Vector3 endPosition = boxCollider2D.transform.localPosition + ledgeOffset;
+		Vector3 startPosition = boxCollider2D.offset;
+		Vector3 endPosition = startPosition + (Vector3)gameSettings.ClimbLedgeOffset;
 
 		while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
 		{
-			boxCollider2D.transform.localPosition = Vector3.Lerp(
+			boxCollider2D.offset = Vector3.Lerp(
 				startPosition,
 				endPosition,
 				animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -200,7 +199,7 @@ public class Player : MonoBehaviour
 			yield return null;
 		}
 
-		boxCollider2D.transform.localPosition = startPosition;
+		boxCollider2D.offset = startPosition;
 
 		yield return null;
 	}

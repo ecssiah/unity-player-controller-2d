@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RectShape : MonoBehaviour
 {
-	public Vector2 Center => boxCollider2D.transform.position + (Vector3)boxCollider2D.offset;
+	public Vector2 Center => boxCollider2D.transform.TransformPoint(boxCollider2D.offset);
 	public Vector2 Size => boxCollider2D.bounds.size;
 	public Vector2 Extents => boxCollider2D.bounds.extents;
 
