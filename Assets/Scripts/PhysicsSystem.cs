@@ -12,6 +12,8 @@ namespace C0
 
 		private Player player;
 
+		private float playerSmoothDampVelocityX;
+
 		private List<RectShape> surfaces;
 		private List<RectShape> climbables;
 
@@ -108,7 +110,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
-				ref player.SmoothDampVelocityX,
+				ref playerSmoothDampVelocityX,
 				player.TriggerInfo.Grounded ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 
@@ -131,8 +133,6 @@ namespace C0
 
 		private void ResolveCollisions()
 		{
-			player.CollisionInfo.Reset();
-
 			foreach (RectShape rectShape in surfaces)
 			{
 				Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(
@@ -145,15 +145,6 @@ namespace C0
 
 					if (resolutionVector.x != 0)
 					{
-						if (resolutionVector.x > 0)
-						{
-							player.CollisionInfo.Left = true;
-						}
-						else if (resolutionVector.x < 0)
-						{
-							player.CollisionInfo.Right = true;
-						}
-
 						if (player.Velocity.y > 0)
 						{
 							player.SetVelocity(0, 0.5f * player.Velocity.y);
@@ -166,15 +157,6 @@ namespace C0
 
 					if (resolutionVector.y != 0)
 					{
-						if (resolutionVector.y > 0)
-						{
-							player.CollisionInfo.Bottom = true;
-						}
-						else if (resolutionVector.y < 0)
-						{
-							player.CollisionInfo.Top = true;
-						}
-
 						player.SetVelocity(player.Velocity.x, 0);
 					}
 				}

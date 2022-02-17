@@ -45,7 +45,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.21441573, y: 0.06206721}
+  m_Offset: {x: 0.21489677, y: 0.06263289}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -56,7 +56,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.055661276, y: 0.12550032}
+  m_Size: {x: 0.055, y: 0.12}
   m_EdgeRadius: 0
 --- !u!114 &593993080869778243
 MonoBehaviour:
@@ -70,6 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Static: 0
 --- !u!1 &600580087969774125
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +116,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.21505138, y: 0.62837195}
+  m_Offset: {x: 0.21528512, y: 0.6242738}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -126,7 +127,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.055930316, y: 0.12941957}
+  m_Size: {x: 0.055, y: 0.12262559}
   m_EdgeRadius: 0
 --- !u!114 &4853028398294690949
 MonoBehaviour:
@@ -140,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Static: 0
 --- !u!1 &1184381373737784146
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +187,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.21752617, y: 1.3160813}
+  m_Offset: {x: 0.21873525, y: 1.3114846}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -196,7 +198,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.063666165, y: 0.13436902}
+  m_Size: {x: 0.055, y: 0.122273564}
   m_EdgeRadius: 0
 --- !u!114 &2506148337897315586
 MonoBehaviour:
@@ -210,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Static: 0
 --- !u!1 &1462099927545901324
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +335,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugDraw: 0
   Velocity: {x: 0, y: 0}
-  SmoothDampVelocityX: 0
   Facing: 0
   Hanging: 0
   Climbing: 0
@@ -344,18 +346,8 @@ MonoBehaviour:
     Top: {fileID: 0}
     Mid: {fileID: 0}
     Low: {fileID: 0}
-    Grounded: 0
-    Climbable: 0
-  CollisionInfo:
-    Top: 0
-    Bottom: 0
-    Left: 0
-    Right: 0
-  BodyRectShape: {fileID: 0}
-  WallTopRectShape: {fileID: 0}
-  WallMidRectShape: {fileID: 0}
-  WallLowRectShape: {fileID: 0}
-  GroundRectShape: {fileID: 0}
+    Grounded: {fileID: 0}
+    Climbable: {fileID: 0}
 --- !u!1 &3615125620973174591
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +393,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0019338727, y: -0.025725253}
+  m_Offset: {x: 0, y: -0.0125}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -412,7 +404,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3076526, y: 0.05120538}
+  m_Size: {x: 0.3, y: 0.025}
   m_EdgeRadius: 0
 --- !u!114 &7044067472341985244
 MonoBehaviour:
@@ -426,6 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Static: 0
 --- !u!1 &5631331472934875098
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +464,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.00048664212, y: 0.6875918}
+  m_Offset: {x: 0, y: 0.6878818}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -482,7 +475,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.37396407, y: 1.3764296}
+  m_Size: {x: 0.37396407, y: 1.3757601}
   m_EdgeRadius: 0
 --- !u!114 &3337837609910034179
 MonoBehaviour:
@@ -496,3 +489,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Static: 0

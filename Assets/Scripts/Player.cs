@@ -10,8 +10,6 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity;
 
-		public float SmoothDampVelocityX;
-
 		public int Facing;
 
 		private float hangTimer;
@@ -25,17 +23,16 @@ namespace C0
 
 		public InputInfo InputInfo;
 		public TriggerInfo TriggerInfo;
-		public CollisionInfo CollisionInfo;
 
 		private GameSettings gameSettings;
 
 		private Animator animator;
 
-		public RectShape BodyRectShape;
-		public RectShape WallTopRectShape;
-		public RectShape WallMidRectShape;
-		public RectShape WallLowRectShape;
-		public RectShape GroundRectShape;
+		public RectShape BodyRectShape { get; private set; }
+		public RectShape WallTopRectShape { get; private set; }
+		public RectShape WallMidRectShape { get; private set; }
+		public RectShape WallLowRectShape { get; private set; }
+		public RectShape GroundRectShape { get; private set; }
 
 		void Awake()
 		{
