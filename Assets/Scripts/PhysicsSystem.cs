@@ -90,6 +90,11 @@ namespace C0
 				ApplyGeneralForces(ref newVelocity);
 			}
 
+			if (player.Velocity.x == 0)
+			{
+				playerSmoothDampVelocityX = 0;
+			}
+
 			player.SetVelocity(newVelocity);
 		}
 

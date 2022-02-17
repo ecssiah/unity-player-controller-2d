@@ -129,6 +129,11 @@ namespace C0
 
 		public void SetJumpInput(float jumpInput)
 		{
+			if (ClimbingLedge)
+			{
+				return;
+			}
+
 			Vector2 jumpForce = Vector2.zero;
 
 			if (jumpInput == 1)
@@ -212,7 +217,7 @@ namespace C0
 
 			boxCollider2D.offset = startPosition;
 
-			yield return null;
+			SetVelocity(0, 0);
 		}
 
 		public void ClimbLedgeUpdate()
