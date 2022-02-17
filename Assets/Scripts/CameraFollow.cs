@@ -8,8 +8,8 @@ namespace C0
 
 		private RectShape targetRectShape;
 
-		private Vector3 smoothVelocity;
-		private float smoothVelocityTime;
+		private Vector3 smoothDampVelocity;
+		private float smoothDampTime;
 
 		private Vector2 offset;
 
@@ -21,7 +21,7 @@ namespace C0
 
 			targetRectShape = GameObject.Find("Player/Body").GetComponent<RectShape>();
 
-			smoothVelocityTime = 0.05f;
+			smoothDampTime = 0.05f;
 
 			offset = Vector2.zero;
 			focusArea = new FocusArea(targetRectShape, new Vector2(3, 5));
@@ -41,8 +41,8 @@ namespace C0
 			Vector3 focusPosition = Vector3.SmoothDamp(
 				transform.position,
 				focusArea.Center + offset,
-				ref smoothVelocity,
-				smoothVelocityTime
+				ref smoothDampVelocity,
+				smoothDampTime
 			);
 
 			transform.position = focusPosition - 10 * Vector3.forward;

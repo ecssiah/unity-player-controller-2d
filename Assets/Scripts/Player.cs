@@ -328,8 +328,8 @@ namespace C0
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
-				SetAnimation("Slide");
 				SetVelocity(0, 0);
+				SetAnimation("Slide");
 			}
 		}
 
