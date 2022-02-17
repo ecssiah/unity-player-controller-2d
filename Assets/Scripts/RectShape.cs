@@ -8,8 +8,8 @@ namespace C0
 		public bool Static;
 
 		public Vector2 Center => Static ? staticCenter : GetCenter();
-		public Vector2 Size => boxCollider2D.bounds.size;
-		public Vector2 Extents => boxCollider2D.bounds.extents;
+		public Vector2 Size => Static ? staticSize : GetSize();
+		public Vector2 Extents => Static ? staticExtents : GetExtents();
 		
 		public List<Vector2> Vertices => Static ? staticVertices : GetVertices();
 		public List<Vector2> Normals => Static ? staticNormals : GetNormals();
@@ -25,6 +25,8 @@ namespace C0
 		private BoxCollider2D boxCollider2D;
 
 		private Vector2 staticCenter;
+		private Vector2 staticSize;
+		private Vector2 staticExtents;
 		private List<Vector2> staticVertices;
 		private List<Vector2> staticNormals;
 
@@ -35,6 +37,8 @@ namespace C0
 			boxCollider2D = GetComponent<BoxCollider2D>();
 
 			staticCenter = GetCenter();
+			staticSize = GetSize();
+			staticExtents = GetExtents();
 			staticVertices = GetVertices();
 			staticNormals = GetNormals();
 		}
@@ -42,6 +46,16 @@ namespace C0
 		private Vector2 GetCenter()
 		{
 			return boxCollider2D.transform.TransformPoint(boxCollider2D.offset);
+		}
+
+		private Vector2 GetSize()
+		{
+			return boxCollider2D.bounds.size;
+		}
+
+		private Vector2 GetExtents()
+		{
+			return boxCollider2D.bounds.extents;
 		}
 
 		private List<Vector2> GetVertices()
