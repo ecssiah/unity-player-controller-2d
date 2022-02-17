@@ -249,14 +249,12 @@ public class Player : MonoBehaviour
 			if (Facing == 1)
 			{
 				position = TriggerInfo.Mid.TopLeft;
-				position.x -= gameSettings.HangPositionOffset.x;
-				position.y += gameSettings.HangPositionOffset.y;
+				position += gameSettings.HangPositionOffset;
 			}
 			else if (Facing == -1)
 			{
 				position = TriggerInfo.Mid.TopRight;
-				position.x += gameSettings.HangPositionOffset.x;
-				position.y += gameSettings.HangPositionOffset.y;
+				position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1)); ;
 			}
 
 			SetPosition(position);
