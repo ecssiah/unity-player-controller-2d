@@ -17,7 +17,7 @@ MonoBehaviour:
   MaxFallSpeed: -30
   GroundDamping: 0.96
   GroundSpeedSmoothTime: 0.2
-  AirSpeedSmoothTime: 0.2
+  AirSpeedSmoothTime: 0.1
   MinRunSpeed: 1
   RunSpeed: 8
   ClimbSpeed: {x: 1.8, y: 3.2}
