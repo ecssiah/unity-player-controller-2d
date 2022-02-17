@@ -71,9 +71,14 @@ public class Player : MonoBehaviour
 		SetPosition(position.x, position.y);
 	}
 
+	public void Move(float dx, float dy)
+	{
+		SetPosition(Position.x + dx, Position.y + dy);
+	}
+
 	public void Move(Vector2 displacement)
 	{
-		SetPosition((Vector2)transform.position + displacement);
+		SetPosition(Position + displacement);
 	}
 
 	public void SetVelocity(float vx, float vy)
@@ -103,6 +108,13 @@ public class Player : MonoBehaviour
 		if (Hanging && inputValue < 0)
 		{
 			Hanging = false;
+		}
+		else if (TriggerInfo.Climbable && TriggerInfo.Grounded && inputValue == 1)
+		{
+			Climbing = true;
+
+			Move(0, 0.03f);
+			SetAnimation("Climb");
 		}
 		else if (TriggerInfo.Climbable && inputValue != 0)
 		{
