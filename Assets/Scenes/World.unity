@@ -1162,8 +1162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugDraw: 0
-  focusAreaSize: {x: 0, y: 0}
-  verticalOffset: 0
 --- !u!1001 &538203852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2411,6 +2409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5795066fbab1c74f999fb43cca83e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waitFrames: 0
 --- !u!4 &1256561826
 Transform:
   m_ObjectHideFlags: 0
@@ -4791,6 +4790,14 @@ PrefabInstance:
     - target: {fileID: 2988519004037662964, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_Name
       value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 4311895748101348326, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Size.y
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 4311895748101348326, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.012554891
       objectReference: {fileID: 0}
     - target: {fileID: 5586526900582725503, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_Name

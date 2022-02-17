@@ -83,8 +83,7 @@ public class PhysicsSystem : MonoBehaviour
 
 	private void ApplyClimbForces(ref Vector2 newVelocity)
 	{
-		newVelocity.x = player.InputInfo.Direction.x * gameSettings.ClimbSpeed.x;
-		newVelocity.y = player.InputInfo.Direction.y * gameSettings.ClimbSpeed.y;
+		newVelocity = Vector2.Scale(player.InputInfo.Direction, gameSettings.ClimbSpeed);
 	}
 
 	private void ApplyWallSlideForces(ref Vector2 newVelocity)

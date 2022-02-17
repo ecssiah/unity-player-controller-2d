@@ -124,15 +124,14 @@ public class Player : MonoBehaviour
 		{
 			if (WallSliding != 0)
 			{
-				SetWallSlide(0);
-
-				if (Facing == 1)
+				if (Facing == 1 && InputInfo.Direction.x == -1)
 				{
-					jumpForce = gameSettings.WallJumpVelocity;
-					jumpForce.x *= -1;
+					SetWallSlide(0);
+					jumpForce = Vector2.Scale(gameSettings.WallJumpVelocity, new Vector2(-1, 1));
 				}
-				else if (Facing == -1)
+				else if (Facing == -1 && InputInfo.Direction.x == 1)
 				{
+					SetWallSlide(0);
 					jumpForce = gameSettings.WallJumpVelocity;
 				}
 			}
@@ -296,7 +295,7 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			if (Climbing || TriggerInfo.Grounded || !TriggerInfo.Wall)
+			if (TriggerInfo.Grounded || !TriggerInfo.Wall)
 			{
 				SetWallSlide(0);
 			}
@@ -311,12 +310,10 @@ public class Player : MonoBehaviour
 	{
 		WallSliding = slideDirection;
 
-		if (WallSliding == 0)
+		if (WallSliding != 0)
 		{
 			wallSlideTimer = gameSettings.WallSlideHoldTime;
-		}
-		else
-		{
+		
 			SetAnimation("Slide");
 			SetVelocity(0, 0);
 		}
