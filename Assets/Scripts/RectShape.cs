@@ -7,25 +7,26 @@ namespace C0
 	{
 		public bool Static;
 
-		public Vector2 Center => Static ? center : GetCenter();
+		public Vector2 Center => Static ? staticCenter : GetCenter();
 		public Vector2 Size => boxCollider2D.bounds.size;
 		public Vector2 Extents => boxCollider2D.bounds.extents;
 		
-		public List<Vector2> Vertices => Static ? vertices : GetVertices();
-		public List<Vector2> Normals { get; private set; }
+		public List<Vector2> Vertices => Static ? staticVertices : GetVertices();
+		public List<Vector2> Normals => Static ? staticNormals : GetNormals();
 
-		public Vector2 BottomLeft => Static ? vertices[0] : new Vector2(Center.x - Extents.x, Center.y - Extents.y);
-		public Vector2 TopLeft => Static ? vertices[1] : new Vector2(Center.x - Extents.x, Center.y + Extents.y);
-		public Vector2 TopRight => Static ? vertices[2] : new Vector2(Center.x + Extents.x, Center.y + Extents.y);
-		public Vector2 BottomRight => Static ? vertices[3] : new Vector2(Center.x + Extents.x, Center.y - Extents.y);
+		public Vector2 BottomLeft => Static ? staticVertices[0] : new Vector2(Center.x - Extents.x, Center.y - Extents.y);
+		public Vector2 TopLeft => Static ? staticVertices[1] : new Vector2(Center.x - Extents.x, Center.y + Extents.y);
+		public Vector2 TopRight => Static ? staticVertices[2] : new Vector2(Center.x + Extents.x, Center.y + Extents.y);
+		public Vector2 BottomRight => Static ? staticVertices[3] : new Vector2(Center.x + Extents.x, Center.y - Extents.y);
 
 		public Vector2 Min => BottomLeft;
 		public Vector2 Max => TopRight;
 
 		private BoxCollider2D boxCollider2D;
 
-		private Vector2 center;
-		private List<Vector2> vertices;
+		private Vector2 staticCenter;
+		private List<Vector2> staticVertices;
+		private List<Vector2> staticNormals;
 
 		void Awake()
 		{
@@ -33,10 +34,9 @@ namespace C0
 
 			boxCollider2D = GetComponent<BoxCollider2D>();
 
-			center = GetCenter();
-			vertices = GetVertices();
-
-			CalculateNormals();
+			staticCenter = GetCenter();
+			staticVertices = GetVertices();
+			staticNormals = GetNormals();
 		}
 
 		private Vector2 GetCenter()
@@ -55,9 +55,9 @@ namespace C0
 			};
 		}
 
-		private void CalculateNormals()
+		private List<Vector2> GetNormals()
 		{
-			List<Vector2> vertices = Vertices;
+			List<Vector2> vertices = GetVertices();
 			List<Vector2> edges = new List<Vector2>();
 
 			for (int i = 0; i < vertices.Count; i++)
@@ -66,13 +66,15 @@ namespace C0
 				edges.Add(edge);
 			}
 
-			Normals = new List<Vector2>();
+			List<Vector2> normals = new List<Vector2>();
 
 			foreach (Vector2 edge in edges)
 			{
 				Vector2 normal = new Vector2(-edge.y, edge.x);
-				Normals.Add(normal);
+				normals.Add(normal);
 			}
+
+			return normals;
 		}
 	}
 }

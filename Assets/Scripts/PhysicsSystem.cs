@@ -22,12 +22,13 @@ namespace C0
 			player = GameObject.Find("Player").GetComponent<Player>();
 
 			surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<RectShape>().ToList();
-			climbables = GameObject.Find("Climbables").GetComponentsInChildren<RectShape>().ToList();
 		
 			foreach (RectShape rectShape in surfaces)
 			{
 				rectShape.Static = true;
 			}
+			
+			climbables = GameObject.Find("Climbables").GetComponentsInChildren<RectShape>().ToList();
 
 			foreach (RectShape rectShape in climbables)
 			{
