@@ -23,6 +23,16 @@ namespace C0
 
 			surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<RectShape>().ToList();
 			climbables = GameObject.Find("Climbables").GetComponentsInChildren<RectShape>().ToList();
+		
+			foreach (RectShape rectShape in surfaces)
+			{
+				rectShape.Static = true;
+			}
+
+			foreach (RectShape rectShape in climbables)
+			{
+				rectShape.Static = true;
+			}
 		}
 
 		public void StartSystem()
