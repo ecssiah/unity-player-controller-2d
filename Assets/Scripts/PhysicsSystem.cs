@@ -62,8 +62,6 @@ namespace C0
 
 				ResolveCollisions();
 			}
-
-			Physics2D.SyncTransforms();
 		}
 
 		private void ApplyForces()
