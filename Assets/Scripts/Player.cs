@@ -265,20 +265,18 @@ public class Player : MonoBehaviour
 
 	private void ClimbUpdate()
 	{
-		if (Hanging || WallSliding != 0)
+		if (!Climbing)
 		{
 			return;
 		}
-		else if (Climbing)
+
+		if (!TriggerInfo.Climbable)
 		{
-			if (TriggerInfo.Grounded && InputInfo.Direction.y < 0)
-			{
-				Climbing = false;
-			}
-			else if (!TriggerInfo.Climbable)
-			{
-				Climbing = false;
-			}
+			Climbing = false;
+		}
+		else if (TriggerInfo.Grounded)
+		{
+			Climbing = false;
 		}
 	}
 
