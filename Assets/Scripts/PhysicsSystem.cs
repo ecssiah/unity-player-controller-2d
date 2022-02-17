@@ -48,11 +48,7 @@ namespace C0
 			}
 			else
 			{
-				player.TriggerInfo.Reset();
-
-				GroundTriggerCheck();
-				ClimbTriggersCheck();
-				WallTriggersCheck();
+				UpdateTriggers();
 
 				player.UpdateState();
 
@@ -101,7 +97,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
-				ref player.CurrentHorizontalSpeed,
+				ref player.SmoothDampVelocityX,
 				player.TriggerInfo.Grounded ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 
@@ -172,6 +168,15 @@ namespace C0
 					}
 				}
 			}
+		}
+
+		private void UpdateTriggers()
+		{
+			player.TriggerInfo.Reset();
+
+			GroundTriggerCheck();
+			ClimbTriggersCheck();
+			WallTriggersCheck();
 		}
 
 		private void GroundTriggerCheck()

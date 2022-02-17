@@ -10,7 +10,7 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity;
 
-		public float CurrentHorizontalSpeed;
+		public float SmoothDampVelocityX;
 
 		public int Facing;
 
