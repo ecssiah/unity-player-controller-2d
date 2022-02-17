@@ -22,12 +22,12 @@ namespace C0
 			player = GameObject.Find("Player").GetComponent<Player>();
 
 			surfaces = GameObject.Find("Surfaces").GetComponentsInChildren<RectShape>().ToList();
-		
+
 			foreach (RectShape rectShape in surfaces)
 			{
 				rectShape.Static = true;
 			}
-			
+
 			climbables = GameObject.Find("Climbables").GetComponentsInChildren<RectShape>().ToList();
 
 			foreach (RectShape rectShape in climbables)
@@ -209,10 +209,9 @@ namespace C0
 				if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, rectShape))
 				{
 					player.TriggerInfo.Climbable = true;
-					break;
+					return;
 				}
 			}
-
 		}
 
 		private void WallTriggersCheck()
@@ -232,6 +231,11 @@ namespace C0
 				if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, rectShape))
 				{
 					player.TriggerInfo.Low = rectShape;
+				}
+
+				if (player.TriggerInfo.Top && player.TriggerInfo.Mid && player.TriggerInfo.Low)
+				{
+					return;
 				}
 			}
 		}

@@ -10,7 +10,7 @@ namespace C0
 		public Vector2 Center => Static ? staticCenter : GetCenter();
 		public Vector2 Size => Static ? staticSize : GetSize();
 		public Vector2 Extents => Static ? staticExtents : GetExtents();
-		
+
 		public List<Vector2> Vertices => Static ? staticVertices : GetVertices();
 		public List<Vector2> Normals => Static ? staticNormals : GetNormals();
 
@@ -60,12 +60,12 @@ namespace C0
 
 		private List<Vector2> GetVertices()
 		{
-			return new List<Vector2> 
-			{ 
-				new Vector2(Center.x - Extents.x, Center.y - Extents.y), 
-				new Vector2(Center.x - Extents.x, Center.y + Extents.y), 
-				new Vector2(Center.x + Extents.x, Center.y + Extents.y), 
-				new Vector2(Center.x + Extents.x, Center.y - Extents.y) 
+			return new List<Vector2>
+			{
+				new Vector2(Center.x - Extents.x, Center.y - Extents.y),
+				new Vector2(Center.x - Extents.x, Center.y + Extents.y),
+				new Vector2(Center.x + Extents.x, Center.y + Extents.y),
+				new Vector2(Center.x + Extents.x, Center.y - Extents.y)
 			};
 		}
 
