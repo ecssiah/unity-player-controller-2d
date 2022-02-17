@@ -223,7 +223,6 @@ GameObject:
   - component: {fileID: 9041757014320063149}
   - component: {fileID: 8634160127525445191}
   - component: {fileID: 3680085433412139548}
-  - component: {fileID: 5726444193486226886}
   - component: {fileID: 2640678332789003859}
   m_Layer: 0
   m_Name: Player
@@ -358,18 +357,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1969e872de91941999b10c281bf76d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5726444193486226886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1462099927545901324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16f5a588b451d584a82cd83eba79b867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2640678332789003859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,7 +370,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugDraw: 0
-  Position: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
   CurrentHorizontalSpeed: 0
   Facing: 0

@@ -1,24 +1,27 @@
 using UnityEngine;
 
-[System.Serializable]
-public struct TriggerInfo
+namespace C0
 {
-	public RectShape Top;
-	public RectShape Mid;
-	public RectShape Low;
-
-	public bool Grounded;
-	public bool Climbable;
-	public bool Ledge => !Top && Mid;
-	public bool Wall => Top && Mid && Low;
-
-	public void Reset()
+	[System.Serializable]
+	public struct TriggerInfo
 	{
-		Top = null;
-		Mid = null;
-		Low = null;
+		public RectShape Top;
+		public RectShape Mid;
+		public RectShape Low;
 
-		Grounded = false;
-		Climbable = false;
+		public bool Grounded;
+		public bool Climbable;
+		public bool Ledge => !Top && Mid;
+		public bool Wall => Top && Mid && Low;
+
+		public void Reset()
+		{
+			Top = null;
+			Mid = null;
+			Low = null;
+
+			Grounded = false;
+			Climbable = false;
+		}
 	}
 }

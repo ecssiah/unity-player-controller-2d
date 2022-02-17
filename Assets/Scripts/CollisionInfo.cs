@@ -1,18 +1,21 @@
 using UnityEngine;
 
-[System.Serializable]
-public struct CollisionInfo
+namespace C0
 {
-	public bool Top;
-	public bool Bottom;
-	public bool Left;
-	public bool Right;
-
-	public void Reset()
+	[System.Serializable]
+	public struct CollisionInfo
 	{
-		Top = false;
-		Bottom = false;
-		Left = false;
-		Right = false;
+		public bool Top;
+		public bool Bottom;
+		public bool Left;
+		public bool Right;
+
+		public void Reset()
+		{
+			Top = false;
+			Bottom = false;
+			Left = false;
+			Right = false;
+		}
 	}
 }

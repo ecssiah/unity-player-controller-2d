@@ -1,7 +1,10 @@
 using UnityEngine;
 
-[System.Serializable]
-public struct InputInfo
+namespace C0
 {
-	public Vector2 Direction;
+	[System.Serializable]
+	public struct InputInfo
+	{
+		public Vector2 Direction;
+	}
 }
