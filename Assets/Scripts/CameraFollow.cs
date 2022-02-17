@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
 
 	private RectShape targetRectShape;
 
-	private Vector2 smoothVelocity;
+	private Vector3 smoothVelocity;
 	private float smoothVelocityTime;
 
 	private Vector2 offset;
@@ -18,7 +18,7 @@ public class CameraFollow : MonoBehaviour
 		DebugDraw = false;
 
 		targetRectShape = GameObject.Find("Player").GetComponent<RectShape>();
-		
+
 		smoothVelocityTime = 0.05f;
 
 		offset = Vector2.zero;
@@ -36,13 +36,14 @@ public class CameraFollow : MonoBehaviour
 	{
 		focusArea.UpdatePosition();
 
-		Vector2 focusPosition = focusArea.Center + offset;
-
-		focusPosition = Vector2.SmoothDamp(
-			transform.position, focusPosition, ref smoothVelocity, smoothVelocityTime
+		Vector3 focusPosition = Vector3.SmoothDamp(
+			transform.position,
+			focusArea.Center + offset,
+			ref smoothVelocity,
+			smoothVelocityTime
 		);
 
-		transform.position = (Vector3)focusPosition + Vector3.forward * -10;
+		transform.position = focusPosition - 10 * Vector3.forward;
 	}
 
 	void OnDrawGizmos()

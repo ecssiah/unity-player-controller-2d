@@ -168,7 +168,7 @@ public class Player : MonoBehaviour
 				ClimbingLedge = true;
 
 				hangTimer = gameSettings.HangTime;
-				
+
 				SetAnimation("LedgeClimb");
 
 				StartCoroutine(FollowLedgeClimb());

@@ -5,7 +5,7 @@ public class FocusArea
 	private readonly RectShape targetRectShape;
 
 	private Rect rect;
-	
+
 	public Vector2 Center => rect.center;
 	public Vector2 Size => rect.size;
 	public Vector2 Velocity;
