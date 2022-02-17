@@ -136,11 +136,14 @@ public class Player : MonoBehaviour
 					jumpForce = gameSettings.WallJumpVelocity;
 				}
 			}
-			else if (TriggerInfo.Grounded || Climbing)
+			else if (Climbing)
 			{
-				Hanging = false;
 				Climbing = false;
 
+				jumpForce = 0.8f * gameSettings.JumpVelocity;
+			}
+			else if (TriggerInfo.Grounded)
+			{
 				jumpForce = gameSettings.JumpVelocity;
 			}
 		}
