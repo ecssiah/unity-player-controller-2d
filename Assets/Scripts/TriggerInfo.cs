@@ -5,20 +5,20 @@ namespace C0
 	[System.Serializable]
 	public struct TriggerInfo
 	{
-		public RectShape Top;
-		public RectShape Mid;
-		public RectShape Low;
+		public RectShape WallTop;
+		public RectShape WallMid;
+		public RectShape WallLow;
 
 		public RectShape Grounded;
 		public RectShape Climbable;
-		public bool Ledge => !Top && Mid;
-		public bool Wall => Top && Mid && Low;
+		public bool Ledge => !WallTop && WallMid;
+		public bool Wall => WallTop && WallMid && WallLow;
 
 		public void Reset()
 		{
-			Top = null;
-			Mid = null;
-			Low = null;
+			WallTop = null;
+			WallMid = null;
+			WallLow = null;
 
 			Grounded = null;
 			Climbable = null;

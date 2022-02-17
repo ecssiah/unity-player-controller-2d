@@ -258,12 +258,12 @@ namespace C0
 
 				if (Facing == 1)
 				{
-					position = TriggerInfo.Mid.TopLeft;
+					position = TriggerInfo.WallMid.TopLeft;
 					position += gameSettings.HangPositionOffset;
 				}
 				else if (Facing == -1)
 				{
-					position = TriggerInfo.Mid.TopRight;
+					position = TriggerInfo.WallMid.TopRight;
 					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1)); ;
 				}
 

@@ -202,20 +202,20 @@ namespace C0
 			{
 				if (SeparatingAxisTheorem.CheckForCollision(player.WallTopRectShape, rectShape))
 				{
-					player.TriggerInfo.Top = rectShape;
+					player.TriggerInfo.WallTop = rectShape;
 				}
 
 				if (SeparatingAxisTheorem.CheckForCollision(player.WallMidRectShape, rectShape))
 				{
-					player.TriggerInfo.Mid = rectShape;
+					player.TriggerInfo.WallMid = rectShape;
 				}
 
 				if (SeparatingAxisTheorem.CheckForCollision(player.WallLowRectShape, rectShape))
 				{
-					player.TriggerInfo.Low = rectShape;
+					player.TriggerInfo.WallLow = rectShape;
 				}
 
-				if (player.TriggerInfo.Top && player.TriggerInfo.Mid && player.TriggerInfo.Low)
+				if (player.TriggerInfo.WallTop && player.TriggerInfo.WallMid && player.TriggerInfo.WallLow)
 				{
 					return;
 				}
