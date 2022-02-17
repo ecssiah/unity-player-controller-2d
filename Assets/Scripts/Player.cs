@@ -56,7 +56,7 @@ namespace C0
 
 			animator = GetComponent<Animator>();
 
-			BodyRectShape = GetComponent<RectShape>();
+			BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
 			WallTopRectShape = transform.Find("WallTop").GetComponent<RectShape>();
 			WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
 			WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
@@ -197,7 +197,7 @@ namespace C0
 		{
 			yield return null;
 
-			BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+			BoxCollider2D boxCollider2D = transform.Find("Body").GetComponent<BoxCollider2D>();
 
 			Vector2 startPosition = boxCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;

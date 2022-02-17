@@ -19,7 +19,7 @@ namespace C0
 		{
 			DebugDraw = false;
 
-			targetRectShape = GameObject.Find("Player").GetComponent<RectShape>();
+			targetRectShape = GameObject.Find("Player/Body").GetComponent<RectShape>();
 
 			smoothVelocityTime = 0.05f;
 
