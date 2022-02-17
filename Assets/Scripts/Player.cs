@@ -5,7 +5,7 @@ public class Player : MonoBehaviour
 {
 	public bool DebugDraw;
 
-	public Vector2 Position;
+	public Vector2 Position => transform.position;
 	public Vector2 Velocity;
 
 	public float CurrentHorizontalSpeed;
@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
 
 		gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
-		Position = transform.position;
 		Velocity = Vector2.zero;
 
 		Facing = 1;
@@ -65,8 +64,6 @@ public class Player : MonoBehaviour
 	public void SetPosition(float x, float y)
 	{
 		transform.position = new Vector2(x, y);
-
-		Position = transform.position;
 	}
 
 	public void SetPosition(Vector2 position)
