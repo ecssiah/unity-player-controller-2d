@@ -9,8 +9,7 @@ public class CameraFollow : MonoBehaviour
 	private Vector2 smoothVelocity;
 	private float smoothVelocityTime;
 
-	private float verticalOffset;
-	private Vector2 focusAreaSize;
+	private Vector2 offset;
 
 	private FocusArea focusArea;
 
@@ -22,9 +21,8 @@ public class CameraFollow : MonoBehaviour
 		
 		smoothVelocityTime = 0.05f;
 
-		verticalOffset = 0;
-		focusAreaSize = new Vector2(3, 5);
-		focusArea = new FocusArea(targetRectShape, focusAreaSize);
+		offset = Vector2.zero;
+		focusArea = new FocusArea(targetRectShape, new Vector2(3, 5));
 
 		UpdateCameraPosition();
 	}
@@ -38,7 +36,7 @@ public class CameraFollow : MonoBehaviour
 	{
 		focusArea.UpdatePosition();
 
-		Vector2 focusPosition = focusArea.Center + verticalOffset * Vector2.up;
+		Vector2 focusPosition = focusArea.Center + offset;
 
 		focusPosition = Vector2.SmoothDamp(
 			transform.position, focusPosition, ref smoothVelocity, smoothVelocityTime
@@ -53,7 +51,7 @@ public class CameraFollow : MonoBehaviour
 		{
 			Gizmos.color = new Color(1, 0, 1, 0.1f);
 
-			Gizmos.DrawWireCube(focusArea.Center, focusArea.Size);
+			Gizmos.DrawWireCube(focusArea.Center + offset, focusArea.Size);
 		}
 	}
 }
