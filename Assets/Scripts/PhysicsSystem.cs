@@ -77,6 +77,11 @@ namespace C0
 		{
 			Vector2 newVelocity = player.Velocity;
 
+			if (player.Velocity.x == 0)
+			{
+				playerSmoothDampVelocityX = 0;
+			}
+
 			if (player.Climbing)
 			{
 				ApplyClimbForces(ref newVelocity);
@@ -88,11 +93,6 @@ namespace C0
 			else if (!player.Hanging)
 			{
 				ApplyGeneralForces(ref newVelocity);
-			}
-
-			if (player.Velocity.x == 0)
-			{
-				playerSmoothDampVelocityX = 0;
 			}
 
 			player.SetVelocity(newVelocity);
@@ -162,7 +162,14 @@ namespace C0
 
 					if (resolutionVector.y != 0)
 					{
-						player.SetVelocity(player.Velocity.x, 0);
+						if (player.Velocity.y > 0)
+						{
+							player.SetVelocity(0.5f * player.Velocity.x, 0);
+						}
+						else
+						{
+							player.SetVelocity(player.Velocity.x, 0);
+						}
 					}
 				}
 			}
