@@ -315,7 +315,7 @@ namespace C0
 				}
 				else if (InputInfo.Direction.x != WallSliding)
 				{
-					UpdateWallSlide();
+					UpdateWallSlideTimer();
 				}
 			}
 		}
@@ -333,7 +333,7 @@ namespace C0
 			}
 		}
 
-		private void UpdateWallSlide()
+		private void UpdateWallSlideTimer()
 		{
 			wallSlideTimer -= Time.deltaTime;
 
