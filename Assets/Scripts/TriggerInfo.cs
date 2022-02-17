@@ -9,8 +9,8 @@ namespace C0
 		public RectShape Mid;
 		public RectShape Low;
 
-		public bool Grounded;
-		public bool Climbable;
+		public RectShape Grounded;
+		public RectShape Climbable;
 		public bool Ledge => !Top && Mid;
 		public bool Wall => Top && Mid && Low;
 
@@ -20,8 +20,8 @@ namespace C0
 			Mid = null;
 			Low = null;
 
-			Grounded = false;
-			Climbable = false;
+			Grounded = null;
+			Climbable = null;
 		}
 	}
 }

@@ -196,7 +196,7 @@ namespace C0
 			{
 				if (SeparatingAxisTheorem.CheckForCollision(player.GroundRectShape, rectShape))
 				{
-					player.TriggerInfo.Grounded = true;
+					player.TriggerInfo.Grounded = rectShape;
 					return;
 				}
 			}
@@ -208,7 +208,7 @@ namespace C0
 			{
 				if (SeparatingAxisTheorem.CheckForCollision(player.BodyRectShape, rectShape))
 				{
-					player.TriggerInfo.Climbable = true;
+					player.TriggerInfo.Climbable = rectShape;
 					return;
 				}
 			}
