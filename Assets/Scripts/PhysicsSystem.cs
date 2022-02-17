@@ -124,10 +124,10 @@ public class PhysicsSystem : MonoBehaviour
 	{
 		player.CollisionInfo.Reset();
 
-		foreach (RectShape surface in surfaces)
+		foreach (RectShape rectShape in surfaces)
 		{
 			Vector2 resolutionVector = SeparatingAxisTheorem.CheckForCollisionResolution(
-				player.BodyRectShape, surface
+				player.BodyRectShape, rectShape
 			);
 
 			if (resolutionVector != Vector2.zero)

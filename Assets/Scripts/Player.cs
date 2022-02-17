@@ -209,27 +209,19 @@ public class Player : MonoBehaviour
 	{
 		if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
 		{
-			bool climbLedgeAnimationFinished = animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1;
-
-			if (climbLedgeAnimationFinished)
+			if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
 			{
 				SetAnimation("Idle");
 
 				ClimbingLedge = false;
 
-				Vector2 climbLedgePosition = new Vector2(
-					gameSettings.ClimbLedgeOffset.x,
-					gameSettings.ClimbLedgeOffset.y
-				);
-
 				if (Facing == 1)
 				{
-					Move(climbLedgePosition);
+					Move(gameSettings.ClimbLedgeOffset);
 				}
 				else if (Facing == -1)
 				{
-					climbLedgePosition.x = -climbLedgePosition.x;
-					Move(climbLedgePosition);
+					Move(Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
 				}
 			}
 		}
