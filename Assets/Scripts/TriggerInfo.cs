@@ -6,9 +6,9 @@ namespace C0
 	public struct TriggerInfo
 	{
 		public RectShape Grounded;
-		
+
 		public RectShape Climbable;
-		
+
 		public RectShape WallTop;
 		public RectShape WallMid;
 		public RectShape WallLow;

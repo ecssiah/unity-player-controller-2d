@@ -234,7 +234,7 @@ namespace C0
 				Move(Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
 			}
 		}
-		
+
 		public void UpdateState()
 		{
 			HangUpdate();
@@ -339,7 +339,6 @@ namespace C0
 				SetWallSlide(0);
 			}
 		}
-
 
 		private void SetAnimation(string stateName)
 		{
