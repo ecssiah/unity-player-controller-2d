@@ -7,13 +7,14 @@ namespace C0
 	{
 		[Space]
 		public float Gravity = -9.8f;
-		public float MinSpeed = 0.1f;
 		public float MaxFallSpeed = -53f;
-		public float GroundDamping = 0.86f;
-		public float GroundSpeedSmoothTime = 0.24f;
-		public float AirSpeedSmoothTime = 0.05f;
+
+		[Space]
+		public float MinSpeed = 0.1f;
 		public float MinRunSpeed = 1f;
 		public float RunSpeed = 8f;
+		public float GroundSpeedSmoothTime = 0.24f;
+		public float AirSpeedSmoothTime = 0.1f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 		[Space]
