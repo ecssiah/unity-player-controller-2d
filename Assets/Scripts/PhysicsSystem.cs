@@ -31,6 +31,11 @@ namespace C0
 
 		public void UpdateSystem()
 		{
+			if (player.ClimbingLedge)
+			{
+				return;
+			}
+
 			if (waitFrames > 0)
 			{
 				waitFrames--;
@@ -38,10 +43,6 @@ namespace C0
 			else if (player.Hanging)
 			{
 				player.ClimbLedgeCheck();
-			}
-			else if (player.ClimbingLedge)
-			{
-				player.ClimbLedgeUpdate();
 			}
 			else
 			{

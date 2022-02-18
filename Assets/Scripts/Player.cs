@@ -192,7 +192,7 @@ namespace C0
 
 					SetAnimation("ClimbLedge");
 
-					StartCoroutine(TrackClimbLedgeAction());
+					StartCoroutine(RunClimbLedgeAction());
 				}
 			}
 			else
@@ -201,7 +201,7 @@ namespace C0
 			}
 		}
 
-		private IEnumerator TrackClimbLedgeAction()
+		private IEnumerator RunClimbLedgeAction()
 		{
 			yield return null;
 
@@ -210,7 +210,7 @@ namespace C0
 			Vector2 startPosition = boxCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
-			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
 				boxCollider2D.offset = Vector2.Lerp(
 					startPosition,
@@ -222,32 +222,19 @@ namespace C0
 			}
 
 			SetAnimation("Idle");
-
+			ClimbingLedge = false;
 			boxCollider2D.offset = startPosition;
-		}
 
-		public void ClimbLedgeUpdate()
-		{
-			if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-ClimbLedge"))
+			if (Facing == 1)
 			{
-				if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
-				{
-					SetAnimation("Idle");
-
-					ClimbingLedge = false;
-
-					if (Facing == 1)
-					{
-						Move(gameSettings.ClimbLedgeOffset);
-					}
-					else if (Facing == -1)
-					{
-						Move(Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
-					}
-				}
+				Move(gameSettings.ClimbLedgeOffset);
+			}
+			else if (Facing == -1)
+			{
+				Move(Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
 			}
 		}
-
+		
 		public void UpdateState()
 		{
 			HangUpdate();
