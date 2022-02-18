@@ -32,7 +32,7 @@ namespace C0
 
 		void Awake()
 		{
-			Static = false;
+			Static = true;
 
 			boxCollider2D = GetComponent<BoxCollider2D>();
 

@@ -60,6 +60,12 @@ namespace C0
 			WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
 			WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
 			GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
+
+			BodyRectShape.Static = false;
+			WallTopRectShape.Static = false;
+			WallMidRectShape.Static = false;
+			WallLowRectShape.Static = false;
+			GroundRectShape.Static = false;
 		}
 
 		public void SetPosition(float x, float y)
@@ -214,6 +220,8 @@ namespace C0
 
 				yield return null;
 			}
+
+			SetAnimation("Idle");
 
 			boxCollider2D.offset = startPosition;
 		}
