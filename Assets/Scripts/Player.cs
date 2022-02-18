@@ -216,19 +216,18 @@ namespace C0
 			Vector2 startPosition = boxCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
-			do
-			{
-				yield return null;
+			yield return null;
 
+			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
+			{
 				boxCollider2D.offset = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
-			}
-			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1);
 
-			yield return null;
+				yield return null;
+			}
 
 			SetAnimation("Idle");
 			ClimbingLedge = false;
