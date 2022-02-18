@@ -184,9 +184,9 @@ namespace C0
 
 					hangTimer = gameSettings.HangTime;
 
-					SetAnimation("LedgeClimb");
+					SetAnimation("ClimbLedge");
 
-					StartCoroutine(FollowLedgeClimb());
+					StartCoroutine(TrackClimbLedgeAction());
 				}
 			}
 			else
@@ -195,7 +195,7 @@ namespace C0
 			}
 		}
 
-		private IEnumerator FollowLedgeClimb()
+		private IEnumerator TrackClimbLedgeAction()
 		{
 			yield return null;
 
@@ -222,7 +222,7 @@ namespace C0
 
 		public void ClimbLedgeUpdate()
 		{
-			if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-LedgeClimb"))
+			if (animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Player-ClimbLedge"))
 			{
 				if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
 				{
