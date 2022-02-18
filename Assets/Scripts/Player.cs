@@ -216,8 +216,6 @@ namespace C0
 			}
 
 			boxCollider2D.offset = startPosition;
-
-			SetVelocity(0, 0);
 		}
 
 		public void ClimbLedgeUpdate()
