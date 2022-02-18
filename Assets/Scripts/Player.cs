@@ -55,6 +55,14 @@ namespace C0
 
 			animator = GetComponent<Animator>();
 
+			foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+			{
+				if (clip.name == "Player-ClimbLedge")
+				{
+					clip.wrapMode = WrapMode.Once;
+				}
+			}
+
 			BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
 			WallTopRectShape = transform.Find("WallTop").GetComponent<RectShape>();
 			WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
@@ -203,23 +211,24 @@ namespace C0
 
 		private IEnumerator RunClimbLedgeAction()
 		{
-			yield return null;
-
 			BoxCollider2D boxCollider2D = transform.Find("Body").GetComponent<BoxCollider2D>();
 
 			Vector2 startPosition = boxCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
-			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
+			do
 			{
+				yield return null;
+
 				boxCollider2D.offset = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
-
-				yield return null;
 			}
+			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1);
+
+			print(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 
 			SetAnimation("Idle");
 			ClimbingLedge = false;
