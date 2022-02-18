@@ -45,7 +45,7 @@ namespace C0
 			if (waitFrames > 0)
 			{
 				waitFrames--;
-			} 
+			}
 			else if (player.Hanging)
 			{
 				player.ClimbLedgeCheck();
@@ -116,8 +116,8 @@ namespace C0
 				newVelocity = Vector2.zero;
 
 				return;
-			} 
-		
+			}
+
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,

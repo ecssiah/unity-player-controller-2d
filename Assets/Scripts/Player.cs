@@ -43,13 +43,15 @@ namespace C0
 			Velocity = Vector2.zero;
 
 			Facing = 1;
-			WallSliding = 0;
 
 			hangTimer = gameSettings.HangTime;
 			Hanging = false;
 
 			Climbing = false;
 			ClimbingLedge = false;
+
+			wallSlideTimer = gameSettings.WallSlideHoldTime;
+			WallSliding = 0;
 
 			animator = GetComponent<Animator>();
 

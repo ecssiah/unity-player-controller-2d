@@ -13,20 +13,17 @@ namespace C0
 		private InputAction jumpAction;
 
 		private Vector2 previousMoveInput;
-		private Vector2 currentMoveInput;
 
 		public void AwakeSystem()
 		{
 			player = GameObject.Find("Player").GetComponent<Player>();
-			
+
 			playerInputActions = new PlayerInputActions();
 
 			moveAction = playerInputActions.Player.Move;
+			jumpAction = playerInputActions.Player.Jump;
 
 			previousMoveInput = Vector2.zero;
-			currentMoveInput = Vector2.zero;
-			
-			jumpAction = playerInputActions.Player.Jump;
 
 			jumpAction.started += OnJumpStart;
 			jumpAction.canceled += OnJumpCancel;
@@ -39,7 +36,7 @@ namespace C0
 
 		private void PollMoveInput()
 		{
-			currentMoveInput = moveAction.ReadValue<Vector2>();
+			Vector2 currentMoveInput = moveAction.ReadValue<Vector2>();
 
 			if (currentMoveInput.x > 0 && previousMoveInput.x <= 0)
 			{
