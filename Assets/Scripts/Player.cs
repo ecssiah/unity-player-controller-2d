@@ -228,7 +228,7 @@ namespace C0
 			}
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1);
 
-			print(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+			yield return null;
 
 			SetAnimation("Idle");
 			ClimbingLedge = false;

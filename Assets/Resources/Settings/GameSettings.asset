@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   Gravity: -50
-  MinSpeed: 0.01
   MaxFallSpeed: -30
-  GroundDamping: 0.96
-  GroundSpeedSmoothTime: 0.2
-  AirSpeedSmoothTime: 0.1
+  MinSpeed: 0.01
   MinRunSpeed: 1
   RunSpeed: 8
+  GroundSpeedSmoothTime: 0.2
+  AirSpeedSmoothTime: 0.1
   ClimbSpeed: {x: 1.8, y: 3.2}
   MinJumpSpeed: 6
   JumpVelocity: {x: 0, y: 20}
@@ -28,5 +27,5 @@ MonoBehaviour:
   WallSlideDamping: 0.16
   MaxWallSlideSpeed: 4.2
   HangTime: 0.2
-  HangPositionOffset: {x: -0.19, y: -1.38}
+  HangPositionOffset: {x: -0.185, y: -1.38}
   ClimbLedgeOffset: {x: 0.62, y: 1.38}
