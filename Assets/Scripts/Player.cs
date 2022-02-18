@@ -182,8 +182,6 @@ namespace C0
 					Hanging = false;
 					ClimbingLedge = true;
 
-					hangTimer = gameSettings.HangTime;
-
 					SetAnimation("ClimbLedge");
 
 					StartCoroutine(TrackClimbLedgeAction());
@@ -254,7 +252,9 @@ namespace C0
 		{
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
+				hangTimer = gameSettings.HangTime;
 				Hanging = true;
+
 				Climbing = false;
 
 				Vector2 position = Position;

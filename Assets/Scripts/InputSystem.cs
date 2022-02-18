@@ -32,10 +32,6 @@ namespace C0
 			jumpAction.canceled += OnJumpCancel;
 		}
 
-		public void StartSystem()
-		{
-		}
-
 		public void UpdateSystem()
 		{
 			PollMoveInput();

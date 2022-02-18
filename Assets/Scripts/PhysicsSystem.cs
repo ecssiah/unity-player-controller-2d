@@ -36,10 +36,7 @@ namespace C0
 			{
 				rectShape.Static = true;
 			}
-		}
 
-		public void StartSystem()
-		{
 			waitFrames = 8;
 		}
 
@@ -48,10 +45,8 @@ namespace C0
 			if (waitFrames > 0)
 			{
 				waitFrames--;
-				return;
-			}
-
-			if (player.Hanging)
+			} 
+			else if (player.Hanging)
 			{
 				player.ClimbLedgeCheck();
 			}
@@ -106,12 +101,23 @@ namespace C0
 		private void ApplyWallSlideForces(ref Vector2 newVelocity)
 		{
 			newVelocity.x = 0;
+
 			newVelocity.y += gameSettings.WallSlideDamping * Time.deltaTime * gameSettings.Gravity;
 			newVelocity.y = Mathf.Max(newVelocity.y, -gameSettings.MaxWallSlideSpeed);
 		}
 
 		private void ApplyGeneralForces(ref Vector2 newVelocity)
 		{
+			if (player.Position.y < -30)
+			{
+				waitFrames = 100;
+
+				player.SetPosition(0, 3);
+				newVelocity = Vector2.zero;
+
+				return;
+			} 
+		
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
@@ -126,14 +132,6 @@ namespace C0
 
 			newVelocity.y += Time.deltaTime * gameSettings.Gravity;
 			newVelocity.y = Mathf.Max(newVelocity.y, gameSettings.MaxFallSpeed);
-
-			if (player.Position.y < -30)
-			{
-				waitFrames = 100;
-
-				player.SetPosition(0, 3);
-				newVelocity = Vector2.zero;
-			}
 		}
 
 		private void ResolveCollisions()

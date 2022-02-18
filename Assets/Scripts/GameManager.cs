@@ -16,12 +16,6 @@ namespace C0
 			physicsSystem.AwakeSystem();
 		}
 
-		void Start()
-		{
-			inputSystem.StartSystem();
-			physicsSystem.StartSystem();
-		}
-
 		void Update()
 		{
 			inputSystem.UpdateSystem();
