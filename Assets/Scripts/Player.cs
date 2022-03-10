@@ -272,7 +272,7 @@ namespace C0
 				else if (Facing == -1)
 				{
 					position = TriggerInfo.WallMid.TopRight;
-					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1)); ;
+					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1));
 				}
 
 				SetPosition(position);
