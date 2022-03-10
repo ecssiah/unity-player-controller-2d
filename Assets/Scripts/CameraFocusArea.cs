@@ -12,9 +12,9 @@ namespace C0
 		public Vector2 Size => rect.size;
 		public Vector2 Velocity;
 
-		public FocusArea(RectShape _targetRectShape, Vector2 size)
+		public FocusArea(RectShape targetRectShape, Vector2 size)
 		{
-			targetRectShape = _targetRectShape;
+			this.targetRectShape = targetRectShape;
 
 			rect = new Rect(targetRectShape.Center, size);
 
