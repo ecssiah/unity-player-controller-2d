@@ -195,11 +195,6 @@ namespace C0
 			{
 				if (InputInfo.Direction.y > 0)
 				{
-					Hanging = false;
-					ClimbingLedge = true;
-
-					SetAnimation("ClimbLedge");
-
 					StartCoroutine(RunClimbLedgeAction());
 				}
 			}
@@ -211,6 +206,11 @@ namespace C0
 
 		private IEnumerator RunClimbLedgeAction()
 		{
+			Hanging = false;
+			ClimbingLedge = true;
+
+			SetAnimation("ClimbLedge");
+
 			BoxCollider2D boxCollider2D = transform.Find("Body").GetComponent<BoxCollider2D>();
 
 			Vector2 startPosition = boxCollider2D.offset;
