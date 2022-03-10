@@ -257,8 +257,8 @@ namespace C0
 		{
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
-				hangTimer = gameSettings.HangTime;
 				Hanging = true;
+				hangTimer = gameSettings.HangTime;
 
 				Climbing = false;
 
@@ -379,13 +379,13 @@ namespace C0
 
 		private void UpdateOrientation()
 		{
-			if (Velocity.x > 0 && Facing != 1)
+			if (Facing != 1 && Velocity.x > 0)
 			{
 				Facing = 1;
 
 				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
-			else if (Velocity.x < 0 && Facing != -1)
+			else if (Facing != -1 && Velocity.x < 0)
 			{
 				Facing = -1;
 
