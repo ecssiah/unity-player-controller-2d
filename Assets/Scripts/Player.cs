@@ -146,8 +146,6 @@ namespace C0
 				return;
 			}
 
-			Vector2 jumpForce = Vector2.zero;
-
 			if (jumpInput == 1)
 			{
 				if (WallSliding != 0)
@@ -155,23 +153,23 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
-						jumpForce = Vector2.Scale(gameSettings.WallJumpVelocity, new Vector2(-1, 1));
+						Velocity += Vector2.Scale(gameSettings.WallJumpVelocity, new Vector2(-1, 1));
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
-						jumpForce = gameSettings.WallJumpVelocity;
+						Velocity += gameSettings.WallJumpVelocity;
 					}
 				}
 				else if (Climbing)
 				{
 					Climbing = false;
 
-					jumpForce = 0.8f * gameSettings.JumpVelocity;
+					Velocity += 0.8f * gameSettings.JumpVelocity;
 				}
 				else if (TriggerInfo.Grounded)
 				{
-					jumpForce = gameSettings.JumpVelocity;
+					Velocity += gameSettings.JumpVelocity;
 				}
 			}
 			else
@@ -181,8 +179,6 @@ namespace C0
 					Velocity.y = gameSettings.MinJumpSpeed;
 				}
 			}
-
-			Velocity += jumpForce;
 		}
 
 		public void ClimbLedgeCheck()

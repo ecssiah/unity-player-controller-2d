@@ -21,33 +21,6 @@ namespace C0
 			return true;
 		}
 
-		public static bool IsSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
-		{
-			float min1 = float.PositiveInfinity;
-			float max1 = float.NegativeInfinity;
-
-			float min2 = float.PositiveInfinity;
-			float max2 = float.NegativeInfinity;
-
-			foreach (Vector2 vertex in rect1.Vertices)
-			{
-				float projection = Vector2.Dot(vertex, normal);
-
-				min1 = Mathf.Min(min1, projection);
-				max1 = Mathf.Max(max1, projection);
-			}
-
-			foreach (Vector2 vertex in rect2.Vertices)
-			{
-				float projection = Vector2.Dot(vertex, normal);
-
-				min2 = Mathf.Min(min2, projection);
-				max2 = Mathf.Max(max2, projection);
-			}
-
-			return !(max1 >= min2 && max2 >= min1);
-		}
-
 		public static Vector2 CheckForCollisionResolution(RectShape rectResolve, RectShape rectCollide)
 		{
 			List<Vector2> resolutionVectors = new List<Vector2>();
@@ -80,7 +53,7 @@ namespace C0
 			return minResolutionVector;
 		}
 
-		public static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
+		private static Vector2 CalculateMinResolutionVector(List<Vector2> resolutionVectors)
 		{
 			Vector2 minResolutionVector = Vector2.positiveInfinity;
 			float minMagnitudeSquared = float.PositiveInfinity;
@@ -99,7 +72,34 @@ namespace C0
 			return minResolutionVector;
 		}
 
-		public static Vector2 FindSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
+		private static bool IsSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
+		{
+			float min1 = float.PositiveInfinity;
+			float max1 = float.NegativeInfinity;
+
+			float min2 = float.PositiveInfinity;
+			float max2 = float.NegativeInfinity;
+
+			foreach (Vector2 vertex in rect1.Vertices)
+			{
+				float projection = Vector2.Dot(vertex, normal);
+
+				min1 = Mathf.Min(min1, projection);
+				max1 = Mathf.Max(max1, projection);
+			}
+
+			foreach (Vector2 vertex in rect2.Vertices)
+			{
+				float projection = Vector2.Dot(vertex, normal);
+
+				min2 = Mathf.Min(min2, projection);
+				max2 = Mathf.Max(max2, projection);
+			}
+
+			return !(max1 >= min2 && max2 >= min1);
+		}
+
+		private static Vector2 FindSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
 		{
 			float min1 = float.PositiveInfinity;
 			float max1 = float.NegativeInfinity;
