@@ -8,9 +8,9 @@ namespace C0
 		public Vector2 Center => isStatic ? staticCenter : GetCenter();
 		public Vector2 Size => isStatic ? staticSize : GetSize();
 		public Vector2 Extents => isStatic ? staticExtents : GetExtents();
-
 		public List<Vector2> Vertices => isStatic ? staticVertices : GetVertices();
-		public List<Vector2> Normals => isStatic ? staticNormals : GetNormals();
+
+		public List<Vector2> Normals => normals;
 
 		public Vector2 BottomLeft => isStatic ? staticVertices[0] : new Vector2(Center.x - Extents.x, Center.y - Extents.y);
 		public Vector2 TopLeft => isStatic ? staticVertices[1] : new Vector2(Center.x - Extents.x, Center.y + Extents.y);
@@ -28,13 +28,16 @@ namespace C0
 		private Vector2 staticSize;
 		private Vector2 staticExtents;
 		private List<Vector2> staticVertices;
-		private List<Vector2> staticNormals;
+
+		private List<Vector2> normals;
 
 		void Awake()
 		{
 			boxCollider2D = GetComponent<BoxCollider2D>();
 
 			SetStatic(true);
+		
+			normals = GetNormals();
 		}
 
 		public void SetStatic(bool isStatic)
@@ -47,7 +50,6 @@ namespace C0
 				staticSize = GetSize();
 				staticExtents = GetExtents();
 				staticVertices = GetVertices();
-				staticNormals = GetNormals();
 			}
 		}
 
@@ -80,6 +82,7 @@ namespace C0
 		private List<Vector2> GetNormals()
 		{
 			List<Vector2> vertices = GetVertices();
+
 			List<Vector2> edges = new List<Vector2>();
 
 			for (int i = 0; i < vertices.Count; i++)
