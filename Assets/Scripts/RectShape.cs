@@ -5,24 +5,24 @@ namespace C0
 {
 	public class RectShape : MonoBehaviour
 	{
-		public bool Static;
+		public Vector2 Center => isStatic ? staticCenter : GetCenter();
+		public Vector2 Size => isStatic ? staticSize : GetSize();
+		public Vector2 Extents => isStatic ? staticExtents : GetExtents();
 
-		public Vector2 Center => Static ? staticCenter : GetCenter();
-		public Vector2 Size => Static ? staticSize : GetSize();
-		public Vector2 Extents => Static ? staticExtents : GetExtents();
+		public List<Vector2> Vertices => isStatic ? staticVertices : GetVertices();
+		public List<Vector2> Normals => isStatic ? staticNormals : GetNormals();
 
-		public List<Vector2> Vertices => Static ? staticVertices : GetVertices();
-		public List<Vector2> Normals => Static ? staticNormals : GetNormals();
-
-		public Vector2 BottomLeft => Static ? staticVertices[0] : new Vector2(Center.x - Extents.x, Center.y - Extents.y);
-		public Vector2 TopLeft => Static ? staticVertices[1] : new Vector2(Center.x - Extents.x, Center.y + Extents.y);
-		public Vector2 TopRight => Static ? staticVertices[2] : new Vector2(Center.x + Extents.x, Center.y + Extents.y);
-		public Vector2 BottomRight => Static ? staticVertices[3] : new Vector2(Center.x + Extents.x, Center.y - Extents.y);
+		public Vector2 BottomLeft => isStatic ? staticVertices[0] : new Vector2(Center.x - Extents.x, Center.y - Extents.y);
+		public Vector2 TopLeft => isStatic ? staticVertices[1] : new Vector2(Center.x - Extents.x, Center.y + Extents.y);
+		public Vector2 TopRight => isStatic ? staticVertices[2] : new Vector2(Center.x + Extents.x, Center.y + Extents.y);
+		public Vector2 BottomRight => isStatic ? staticVertices[3] : new Vector2(Center.x + Extents.x, Center.y - Extents.y);
 
 		public Vector2 Min => BottomLeft;
 		public Vector2 Max => TopRight;
 
 		private BoxCollider2D boxCollider2D;
+
+		private bool isStatic;
 
 		private Vector2 staticCenter;
 		private Vector2 staticSize;
@@ -32,15 +32,23 @@ namespace C0
 
 		void Awake()
 		{
-			Static = true;
-
 			boxCollider2D = GetComponent<BoxCollider2D>();
 
-			staticCenter = GetCenter();
-			staticSize = GetSize();
-			staticExtents = GetExtents();
-			staticVertices = GetVertices();
-			staticNormals = GetNormals();
+			SetStatic(true);
+		}
+
+		public void SetStatic(bool isStatic)
+		{
+			this.isStatic = isStatic;
+
+			if (isStatic)
+			{
+				staticCenter = GetCenter();
+				staticSize = GetSize();
+				staticExtents = GetExtents();
+				staticVertices = GetVertices();
+				staticNormals = GetNormals();
+			}
 		}
 
 		private Vector2 GetCenter()

@@ -65,11 +65,11 @@ namespace C0
 			WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
 			GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
 
-			BodyRectShape.Static = false;
-			WallTopRectShape.Static = false;
-			WallMidRectShape.Static = false;
-			WallLowRectShape.Static = false;
-			GroundRectShape.Static = false;
+			BodyRectShape.SetStatic(false);
+			WallTopRectShape.SetStatic(false);
+			WallMidRectShape.SetStatic(false);
+			WallLowRectShape.SetStatic(false);
+			GroundRectShape.SetStatic(false);
 		}
 
 		public void SetPosition(float x, float y)
