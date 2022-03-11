@@ -5,8 +5,6 @@ namespace C0
 {
 	public class Player : MonoBehaviour
 	{
-		public bool DebugDraw;
-
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity;
 
@@ -36,8 +34,6 @@ namespace C0
 
 		void Awake()
 		{
-			DebugDraw = false;
-
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			Velocity = Vector2.zero;
@@ -390,20 +386,6 @@ namespace C0
 				Facing = -1;
 
 				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-			}
-		}
-
-		void OnDrawGizmos()
-		{
-			if (DebugDraw)
-			{
-				Gizmos.color = new Color(1.0f, 0.0f, 1.0f, 0.2f);
-
-				Gizmos.DrawWireCube(BodyRectShape.Center, BodyRectShape.Size);
-				Gizmos.DrawWireCube(WallTopRectShape.Center, WallTopRectShape.Size);
-				Gizmos.DrawWireCube(WallMidRectShape.Center, WallMidRectShape.Size);
-				Gizmos.DrawWireCube(WallLowRectShape.Center, WallLowRectShape.Size);
-				Gizmos.DrawWireCube(GroundRectShape.Center, GroundRectShape.Size);
 			}
 		}
 	}
