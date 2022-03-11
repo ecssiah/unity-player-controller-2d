@@ -71,13 +71,13 @@ namespace C0
 			{
 				ApplyClimbForces(ref newVelocity);
 			}
-			else if (player.WallSliding != 0)
-			{
-				ApplyWallSlideForces(ref newVelocity);
-			}
 			else if (!player.Hanging)
 			{
 				ApplyGeneralForces(ref newVelocity);
+			}
+			else if (player.WallSliding != 0)
+			{
+				ApplyWallSlideForces(ref newVelocity);
 			}
 
 			player.SetVelocity(newVelocity);

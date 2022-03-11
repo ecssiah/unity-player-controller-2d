@@ -99,7 +99,7 @@ namespace C0
 			return !(max1 >= min2 && max2 >= min1);
 		}
 
-		private static Vector2 FindSeparatingAxis(Vector2 normal, RectShape rect1, RectShape rect2)
+		private static Vector2 FindSeparatingAxis(Vector2 normal, RectShape rectResolve, RectShape rectCollide)
 		{
 			float min1 = float.PositiveInfinity;
 			float max1 = float.NegativeInfinity;
@@ -107,7 +107,7 @@ namespace C0
 			float min2 = float.PositiveInfinity;
 			float max2 = float.NegativeInfinity;
 
-			foreach (Vector2 vertex in rect1.Vertices)
+			foreach (Vector2 vertex in rectResolve.Vertices)
 			{
 				float projection = Vector2.Dot(vertex, normal);
 
@@ -115,7 +115,7 @@ namespace C0
 				max1 = Mathf.Max(max1, projection);
 			}
 
-			foreach (Vector2 vertex in rect2.Vertices)
+			foreach (Vector2 vertex in rectCollide.Vertices)
 			{
 				float projection = Vector2.Dot(vertex, normal);
 
