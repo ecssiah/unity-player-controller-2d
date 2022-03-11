@@ -25,8 +25,6 @@ namespace C0
 
 			offset = Vector2.zero;
 			focusArea = new FocusArea(targetRectShape, new Vector2(3, 5));
-
-			UpdateCameraPosition();
 		}
 
 		void LateUpdate()
