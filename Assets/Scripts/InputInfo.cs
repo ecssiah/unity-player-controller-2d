@@ -6,5 +6,6 @@ namespace C0
 	public struct InputInfo
 	{
 		public Vector2 Direction;
+		public float Jump;
 	}
 }

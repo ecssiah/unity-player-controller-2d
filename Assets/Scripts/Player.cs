@@ -109,6 +109,8 @@ namespace C0
 
 		public void SetJumpInput(float jumpInput)
 		{
+			InputInfo.Jump = jumpInput;
+
 			if (ClimbingLedge)
 			{
 				return;
@@ -357,13 +359,13 @@ namespace C0
 
 		private void UpdateOrientation()
 		{
-			if (Facing != 1 && rigidBody2D.velocity.x > 0)
+			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinSpeed)
 			{
 				Facing = 1;
 
 				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
-			else if (Facing != -1 && rigidBody2D.velocity.x < 0)
+			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinSpeed)
 			{
 				Facing = -1;
 

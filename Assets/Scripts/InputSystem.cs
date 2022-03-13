@@ -13,6 +13,7 @@ namespace C0
 		private InputAction jumpAction;
 
 		private Vector2 previousMoveInput;
+		private float previousJumpInput;
 
 		public void AwakeSystem()
 		{
@@ -24,14 +25,13 @@ namespace C0
 			jumpAction = playerInputActions.Player.Jump;
 
 			previousMoveInput = Vector2.zero;
-
-			jumpAction.started += OnJumpStart;
-			jumpAction.canceled += OnJumpCancel;
+			previousJumpInput = 0;
 		}
 
 		public void UpdateSystem()
 		{
 			PollMoveInput();
+			PollJumpInput();
 		}
 
 		private void PollMoveInput()
@@ -67,6 +67,18 @@ namespace C0
 			previousMoveInput = currentMoveInput;
 		}
 
+		private void PollJumpInput()
+		{
+			float currentJumpInput = jumpAction.ReadValue<float>();
+
+			if (currentJumpInput != previousJumpInput)
+			{
+				player.SetJumpInput(currentJumpInput);
+			}
+
+			previousJumpInput = currentJumpInput;
+		}
+
 		void OnEnable()
 		{
 			moveAction.Enable();
@@ -77,16 +89,6 @@ namespace C0
 		{
 			moveAction.Disable();
 			jumpAction.Disable();
-		}
-
-		private void OnJumpStart(InputAction.CallbackContext context)
-		{
-			player.SetJumpInput(context.ReadValue<float>());
-		}
-
-		private void OnJumpCancel(InputAction.CallbackContext context)
-		{
-			player.SetJumpInput(context.ReadValue<float>());
 		}
 	}
 }
