@@ -26,12 +26,6 @@ namespace C0
 
 		private Animator animator;
 
-		public RectShape BodyRectShape { get; private set; }
-		public RectShape WallTopRectShape { get; private set; }
-		public RectShape WallMidRectShape { get; private set; }
-		public RectShape WallLowRectShape { get; private set; }
-		public RectShape GroundRectShape { get; private set; }
-
 		void Awake()
 		{
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
@@ -58,18 +52,6 @@ namespace C0
 					clip.wrapMode = WrapMode.Once;
 				}
 			}
-
-			BodyRectShape = transform.Find("Body").GetComponent<RectShape>();
-			WallTopRectShape = transform.Find("WallTop").GetComponent<RectShape>();
-			WallMidRectShape = transform.Find("WallMid").GetComponent<RectShape>();
-			WallLowRectShape = transform.Find("WallLow").GetComponent<RectShape>();
-			GroundRectShape = transform.Find("Ground").GetComponent<RectShape>();
-
-			BodyRectShape.SetStatic(false);
-			WallTopRectShape.SetStatic(false);
-			WallMidRectShape.SetStatic(false);
-			WallLowRectShape.SetStatic(false);
-			GroundRectShape.SetStatic(false);
 		}
 
 		public void SetPosition(float x, float y)
@@ -80,16 +62,6 @@ namespace C0
 		public void SetPosition(Vector2 position)
 		{
 			SetPosition(position.x, position.y);
-		}
-
-		public void Move(float dx, float dy)
-		{
-			SetPosition(Position.x + dx, Position.y + dy);
-		}
-
-		public void Move(Vector2 displacement)
-		{
-			SetPosition(Position + displacement);
 		}
 
 		public void SetVelocity(float vx, float vy)
@@ -124,7 +96,7 @@ namespace C0
 			{
 				Climbing = true;
 
-				Move(0, 0.03f);
+				SetPosition(Position + new Vector2(0, 0.03f));
 				SetAnimation("Climb");
 			}
 			else if (TriggerInfo.Climbable && inputValue != 0)
@@ -227,11 +199,11 @@ namespace C0
 
 			if (Facing == 1)
 			{
-				Move(gameSettings.ClimbLedgeOffset);
+				SetPosition(Position + gameSettings.ClimbLedgeOffset);
 			}
 			else if (Facing == -1)
 			{
-				Move(Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
+				SetPosition(Position + Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
 			}
 		}
 
@@ -258,12 +230,18 @@ namespace C0
 
 				if (Facing == 1)
 				{
-					position = TriggerInfo.WallMid.TopLeft;
+					position = new Vector2(
+						TriggerInfo.WallMid.bounds.center.x - TriggerInfo.WallMid.bounds.extents.x, 
+						TriggerInfo.WallMid.bounds.center.y + TriggerInfo.WallMid.bounds.extents.y
+					);
 					position += gameSettings.HangPositionOffset;
 				}
 				else if (Facing == -1)
 				{
-					position = TriggerInfo.WallMid.TopRight;
+					position = new Vector2(
+						TriggerInfo.WallMid.bounds.center.x + TriggerInfo.WallMid.bounds.extents.x,
+						TriggerInfo.WallMid.bounds.center.y + TriggerInfo.WallMid.bounds.extents.y
+					);
 					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1));
 				}
 

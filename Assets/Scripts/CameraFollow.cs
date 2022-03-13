@@ -6,7 +6,7 @@ namespace C0
 	{
 		public bool DebugDraw;
 
-		private RectShape targetRectShape;
+		private BoxCollider2D targetCollider;
 
 		private Vector3 smoothDampVelocity;
 		private float smoothDampTime;
@@ -19,12 +19,12 @@ namespace C0
 		{
 			DebugDraw = false;
 
-			targetRectShape = GameObject.Find("Player/Body").GetComponent<RectShape>();
+			targetCollider = GameObject.Find("Player").GetComponent<BoxCollider2D>();
 
 			smoothDampTime = 0.05f;
 
 			offset = Vector2.zero;
-			focusArea = new FocusArea(targetRectShape, new Vector2(3, 5));
+			focusArea = new FocusArea(targetCollider, new Vector2(3, 5));
 		}
 
 		void LateUpdate()

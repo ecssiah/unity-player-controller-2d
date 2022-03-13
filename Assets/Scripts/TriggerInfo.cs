@@ -5,13 +5,13 @@ namespace C0
 	[System.Serializable]
 	public struct TriggerInfo
 	{
-		public RectShape Grounded;
+		public BoxCollider2D Grounded;
 
-		public RectShape Climbable;
+		public BoxCollider2D Climbable;
 
-		public RectShape WallTop;
-		public RectShape WallMid;
-		public RectShape WallLow;
+		public BoxCollider2D WallTop;
+		public BoxCollider2D WallMid;
+		public BoxCollider2D WallLow;
 
 		public bool Ledge => !WallTop && WallMid;
 		public bool Wall => WallTop && WallMid && WallLow;

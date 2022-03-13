@@ -4,7 +4,7 @@ namespace C0
 {
 	public class FocusArea
 	{
-		private readonly RectShape targetRectShape;
+		private readonly BoxCollider2D targetCollider;
 
 		private Rect rect;
 
@@ -12,11 +12,11 @@ namespace C0
 		public Vector2 Size => rect.size;
 		public Vector2 Velocity;
 
-		public FocusArea(RectShape targetRectShape, Vector2 size)
+		public FocusArea(BoxCollider2D targetCollider, Vector2 size)
 		{
-			this.targetRectShape = targetRectShape;
+			this.targetCollider = targetCollider;
 
-			rect = new Rect(targetRectShape.Center, size);
+			rect = new Rect(targetCollider.bounds.center, size);
 
 			Velocity = Vector2.zero;
 		}
@@ -25,22 +25,22 @@ namespace C0
 		{
 			Velocity = Vector2.zero;
 
-			if (targetRectShape.Min.x < rect.min.x)
+			if (targetCollider.bounds.min.x < rect.min.x)
 			{
-				Velocity.x = targetRectShape.Min.x - rect.min.x;
+				Velocity.x = targetCollider.bounds.min.x - rect.min.x;
 			}
-			else if (targetRectShape.Max.x > rect.max.x)
+			else if (targetCollider.bounds.max.x > rect.max.x)
 			{
-				Velocity.x = targetRectShape.Max.x - rect.max.x;
+				Velocity.x = targetCollider.bounds.max.x - rect.max.x;
 			}
 
-			if (targetRectShape.Min.y < rect.min.y)
+			if (targetCollider.bounds.min.y < rect.min.y)
 			{
-				Velocity.y = targetRectShape.Min.y - rect.min.y;
+				Velocity.y = targetCollider.bounds.min.y - rect.min.y;
 			}
-			else if (targetRectShape.Max.y > rect.max.y)
+			else if (targetCollider.bounds.max.y > rect.max.y)
 			{
-				Velocity.y = targetRectShape.Max.y - rect.max.y;
+				Velocity.y = targetCollider.bounds.max.y - rect.max.y;
 			}
 
 			rect.center += Velocity;
