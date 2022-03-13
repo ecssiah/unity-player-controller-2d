@@ -26,6 +26,10 @@ namespace C0
 		private Animator animator;
 		private Rigidbody2D rigidBody2D;
 
+		public Rigidbody2D RigidBody2D => rigidBody2D;
+
+		private LayerMask surfaceLayerMask;
+
 		void Awake()
 		{
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
@@ -52,6 +56,8 @@ namespace C0
 			}
 
 			rigidBody2D = GetComponent<Rigidbody2D>();
+
+			surfaceLayerMask = LayerMask.GetMask("Surface");
 		}
 
 		public void SetPosition(float x, float y)
@@ -194,7 +200,9 @@ namespace C0
 				transform.position, 
 				new Vector2(boxCollider2D.bounds.size.x - 0.01f, 0.1f),
 				0f,
-				Vector2.down
+				Vector2.down,
+				0.05f,
+				surfaceLayerMask
 			);
 
 			print(hit.collider);
@@ -328,15 +336,15 @@ namespace C0
 		{
 			if (!Hanging && !Climbing && WallSliding == 0)
 			{
-				if (rigidBody2D.velocity.y > 0)
+				if (rigidBody2D.velocity.y > gameSettings.MinSpeed)
 				{
 					SetAnimation("Jump");
 				}
-				else if (rigidBody2D.velocity.y < 0)
+				else if (rigidBody2D.velocity.y < -gameSettings.MinSpeed)
 				{
 					SetAnimation("Fall");
 				}
-				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
+				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinSpeed)
 				{
 					SetAnimation("Run");
 				}

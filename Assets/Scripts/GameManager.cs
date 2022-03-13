@@ -21,5 +21,10 @@ namespace C0
 			inputSystem.UpdateSystem();
 			physicsSystem.UpdateSystem();
 		}
+
+		void FixedUpdate()
+		{
+			physicsSystem.FixedUpdateSystem();
+		}
 	}
 }

@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 1095988527}
   - component: {fileID: 1095988526}
   - component: {fileID: 1095988525}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Climbable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1163,7 +1163,7 @@ GameObject:
   - component: {fileID: 1332583965}
   - component: {fileID: 1332583964}
   - component: {fileID: 1332583963}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Surface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3063,6 +3063,10 @@ PrefabInstance:
     - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_Constraints
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8382774985025562348, guid: e94491416da31d94bac4c96896921032, type: 3}

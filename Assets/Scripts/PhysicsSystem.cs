@@ -33,5 +33,18 @@ namespace C0
 				player.UpdateState();
 			}
 		}
+
+		public void FixedUpdateSystem()
+		{
+			if (player.ClimbingLedge)
+			{
+				return;
+			}
+
+			if (!player.Hanging)
+			{
+				player.RigidBody2D.AddForce(player.InputInfo.Direction * gameSettings.RunSpeed);
+			}
+		}
 	}
 }
