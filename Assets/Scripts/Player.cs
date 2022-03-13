@@ -6,7 +6,6 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
-		public Vector2 Velocity;
 
 		public int Facing;
 
@@ -25,12 +24,11 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Animator animator;
+		private Rigidbody2D rigidBody2D;
 
 		void Awake()
 		{
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
-
-			Velocity = Vector2.zero;
 
 			Facing = 1;
 
@@ -52,6 +50,8 @@ namespace C0
 					clip.wrapMode = WrapMode.Once;
 				}
 			}
+
+			rigidBody2D = GetComponent<Rigidbody2D>();
 		}
 
 		public void SetPosition(float x, float y)
@@ -62,16 +62,6 @@ namespace C0
 		public void SetPosition(Vector2 position)
 		{
 			SetPosition(position.x, position.y);
-		}
-
-		public void SetVelocity(float vx, float vy)
-		{
-			Velocity = new Vector2(vx, vy);
-		}
-
-		public void SetVelocity(Vector2 velocity)
-		{
-			SetVelocity(velocity.x, velocity.y);
 		}
 
 		public void SetHorizontalInput(float inputValue)
@@ -125,30 +115,19 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
-						Velocity += Vector2.Scale(gameSettings.WallJumpVelocity, new Vector2(-1, 1));
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
-						Velocity += gameSettings.WallJumpVelocity;
 					}
 				}
 				else if (Climbing)
 				{
 					Climbing = false;
-
-					Velocity += 0.8f * gameSettings.JumpVelocity;
 				}
-				else if (TriggerInfo.Grounded)
+				else if (IsGrounded())
 				{
-					Velocity += gameSettings.JumpVelocity;
-				}
-			}
-			else
-			{
-				if (Velocity.y > gameSettings.MinJumpSpeed)
-				{
-					Velocity.y = gameSettings.MinJumpSpeed;
+					rigidBody2D.AddForce(gameSettings.JumpForce, ForceMode2D.Impulse);
 				}
 			}
 		}
@@ -175,7 +154,7 @@ namespace C0
 
 			SetAnimation("ClimbLedge");
 
-			BoxCollider2D boxCollider2D = transform.Find("Body").GetComponent<BoxCollider2D>();
+			BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
 			Vector2 startPosition = boxCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
@@ -204,6 +183,29 @@ namespace C0
 			else if (Facing == -1)
 			{
 				SetPosition(Position + Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
+			}
+		}
+
+		private bool IsGrounded()
+		{
+			BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+
+			RaycastHit2D hit = Physics2D.BoxCast(
+				transform.position, 
+				new Vector2(boxCollider2D.bounds.size.x - 0.01f, 0.1f),
+				0f,
+				Vector2.down
+			);
+
+			print(hit.collider);
+
+			if (hit.collider != null)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -246,7 +248,6 @@ namespace C0
 				}
 
 				SetPosition(position);
-				SetVelocity(0, 0);
 				SetAnimation("Hang");
 			}
 		}
@@ -303,7 +304,6 @@ namespace C0
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
-				SetVelocity(0, 0);
 				SetAnimation("Slide");
 			}
 		}
@@ -328,15 +328,15 @@ namespace C0
 		{
 			if (!Hanging && !Climbing && WallSliding == 0)
 			{
-				if (Velocity.y > 0)
+				if (rigidBody2D.velocity.y > 0)
 				{
 					SetAnimation("Jump");
 				}
-				else if (Velocity.y < 0)
+				else if (rigidBody2D.velocity.y < 0)
 				{
 					SetAnimation("Fall");
 				}
-				else if (Mathf.Abs(Velocity.x) > gameSettings.MinRunSpeed)
+				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
 				{
 					SetAnimation("Run");
 				}
@@ -349,13 +349,13 @@ namespace C0
 
 		private void UpdateOrientation()
 		{
-			if (Facing != 1 && Velocity.x > 0)
+			if (Facing != 1 && rigidBody2D.velocity.x > 0)
 			{
 				Facing = 1;
 
 				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
-			else if (Facing != -1 && Velocity.x < 0)
+			else if (Facing != -1 && rigidBody2D.velocity.x < 0)
 			{
 				Facing = -1;
 
