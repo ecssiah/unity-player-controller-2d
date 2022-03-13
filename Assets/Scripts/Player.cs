@@ -24,6 +24,7 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Animator animator;
+		private BoxCollider2D boxCollider2D;
 		private Rigidbody2D rigidBody2D;
 
 		public Rigidbody2D RigidBody2D => rigidBody2D;
@@ -55,6 +56,7 @@ namespace C0
 				}
 			}
 
+			boxCollider2D = GetComponent<BoxCollider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
@@ -196,20 +198,17 @@ namespace C0
 
 		private bool IsGrounded()
 		{
-			BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-
-			RaycastHit2D hit = Physics2D.BoxCast(
-				transform.position, 
+			Collider2D colliderHit = Physics2D.OverlapBox
+			(
+				transform.position + 0.05f * Vector3.down,
 				new Vector2(boxCollider2D.bounds.size.x - 0.01f, 0.1f),
 				0f,
-				Vector2.down,
-				0.05f,
 				surfaceLayerMask
 			);
 
-			print(hit.collider);
+			print(colliderHit);
 
-			if (hit.collider != null)
+			if (colliderHit != null)
 			{
 				return true;
 			}

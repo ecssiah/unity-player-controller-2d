@@ -16,12 +16,12 @@ MonoBehaviour:
   MaxFallSpeed: -30
   MinSpeed: 0.01
   MinRunSpeed: 1
-  RunSpeed: 8
+  RunSpeed: 12
   GroundSpeedSmoothTime: 0.2
   AirSpeedSmoothTime: 0.1
   ClimbSpeed: {x: 1.8, y: 3.2}
   MinJumpSpeed: 6
-  JumpForce: {x: 0, y: 8}
+  JumpForce: {x: 0, y: 12}
   WallJumpForce: {x: 10, y: 16}
   WallSlideHoldTime: 0.3
   WallSlideDamping: 0.16
