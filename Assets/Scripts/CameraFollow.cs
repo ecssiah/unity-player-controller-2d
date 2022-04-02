@@ -6,7 +6,7 @@ namespace C0
 	{
 		public bool DebugDraw;
 
-		private BoxCollider2D targetCollider;
+		private CapsuleCollider2D targetCollider;
 
 		private Vector3 smoothDampVelocity;
 		private float smoothDampTime;
@@ -19,7 +19,7 @@ namespace C0
 		{
 			DebugDraw = false;
 
-			targetCollider = GameObject.Find("Player").GetComponent<BoxCollider2D>();
+			targetCollider = GameObject.Find("Player").GetComponent<CapsuleCollider2D>();
 
 			smoothDampTime = 0.05f;
 

@@ -3045,8 +3045,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_LinearDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_AngularDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_CollisionDetection
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8825290119240793825, guid: e94491416da31d94bac4c96896921032, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e94491416da31d94bac4c96896921032, type: 3}

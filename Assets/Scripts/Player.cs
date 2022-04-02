@@ -6,6 +6,7 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
+		public Vector2 Velocity;
 
 		public int Facing;
 
@@ -24,7 +25,7 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Animator animator;
-		private BoxCollider2D boxCollider2D;
+		private CapsuleCollider2D capsuleCollider2D;
 		private Rigidbody2D rigidBody2D;
 
 		public Rigidbody2D RigidBody2D => rigidBody2D;
@@ -56,7 +57,7 @@ namespace C0
 				}
 			}
 
-			boxCollider2D = GetComponent<BoxCollider2D>();
+			capsuleCollider2D = GetComponent<CapsuleCollider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
@@ -161,19 +162,16 @@ namespace C0
 		{
 			Hanging = false;
 			ClimbingLedge = true;
-
 			SetAnimation("ClimbLedge");
 
-			BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
-
-			Vector2 startPosition = boxCollider2D.offset;
+			Vector2 startPosition = capsuleCollider2D.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
 			yield return null;
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
-				boxCollider2D.offset = Vector2.Lerp(
+				capsuleCollider2D.offset = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -182,9 +180,9 @@ namespace C0
 				yield return null;
 			}
 
-			SetAnimation("Idle");
 			ClimbingLedge = false;
-			boxCollider2D.offset = startPosition;
+			capsuleCollider2D.offset = startPosition;
+			SetAnimation("Idle");
 
 			if (Facing == 1)
 			{
@@ -201,21 +199,12 @@ namespace C0
 			Collider2D colliderHit = Physics2D.OverlapBox
 			(
 				transform.position + 0.05f * Vector3.down,
-				new Vector2(boxCollider2D.bounds.size.x - 0.01f, 0.1f),
+				new Vector2(capsuleCollider2D.bounds.size.x - 0.01f, 0.1f),
 				0f,
 				surfaceLayerMask
 			);
 
-			print(colliderHit);
-
-			if (colliderHit != null)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return colliderHit != null;
 		}
 
 		public void UpdateState()
@@ -242,7 +231,7 @@ namespace C0
 				if (Facing == 1)
 				{
 					position = new Vector2(
-						TriggerInfo.WallMid.bounds.center.x - TriggerInfo.WallMid.bounds.extents.x, 
+						TriggerInfo.WallMid.bounds.center.x - TriggerInfo.WallMid.bounds.extents.x,
 						TriggerInfo.WallMid.bounds.center.y + TriggerInfo.WallMid.bounds.extents.y
 					);
 					position += gameSettings.HangPositionOffset;

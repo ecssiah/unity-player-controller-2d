@@ -30,21 +30,19 @@ namespace C0
 			}
 			else
 			{
+				Vector2 targetVelocity = new Vector2(
+					player.InputInfo.Direction.x * gameSettings.RunSpeed, 
+					player.RigidBody2D.velocity.y
+				);
+
+				player.RigidBody2D.velocity = Vector2.SmoothDamp(player.RigidBody2D.velocity, targetVelocity, ref player.Velocity, 0.05f);
+
 				player.UpdateState();
 			}
 		}
 
 		public void FixedUpdateSystem()
 		{
-			if (player.ClimbingLedge)
-			{
-				return;
-			}
-
-			if (!player.Hanging)
-			{
-				player.RigidBody2D.AddForce(player.InputInfo.Direction * gameSettings.RunSpeed);
-			}
 		}
 	}
 }
