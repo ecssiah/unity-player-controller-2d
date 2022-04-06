@@ -10,7 +10,7 @@ namespace C0
 		public float MaxFallSpeed = -53f;
 
 		[Space]
-		public float MinSpeed = 0.1f;
+		public float MinSpeed = 0.5f;
 		public float MinRunSpeed = 1f;
 		public float RunSpeed = 32f;
 		public float GroundSpeedSmoothTime = 0.24f;

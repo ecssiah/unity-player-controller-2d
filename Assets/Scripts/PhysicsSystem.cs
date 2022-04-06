@@ -9,6 +9,7 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Player player;
+		private float playerDampedVelocityX;
 
 		public void AwakeSystem()
 		{
@@ -30,19 +31,39 @@ namespace C0
 			}
 			else
 			{
-				Vector2 targetVelocity = new Vector2(
-					player.InputInfo.Direction.x * gameSettings.RunSpeed, 
-					player.RigidBody2D.velocity.y
-				);
-
-				player.RigidBody2D.velocity = Vector2.SmoothDamp(player.RigidBody2D.velocity, targetVelocity, ref player.Velocity, 0.05f);
-
 				player.UpdateState();
 			}
 		}
 
 		public void FixedUpdateSystem()
 		{
+			if (player.ClimbingLedge)
+			{
+				return;
+			}
+
+			if (player.Hanging)
+			{
+			}
+			else
+			{
+				float targetVelocityX = player.InputInfo.Direction.x * gameSettings.RunSpeed;
+
+				float newVelocityX = Mathf.SmoothDamp(
+					player.RigidBody2D.velocity.x,
+					targetVelocityX,
+					ref playerDampedVelocityX,
+					0.25f
+				);
+
+				if (Mathf.Abs(newVelocityX) < 0.11f)
+				{
+					newVelocityX = 0;
+				}
+
+				player.RigidBody2D.velocity = new Vector2(newVelocityX, player.RigidBody2D.velocity.y);
+				player.Velocity = player.RigidBody2D.velocity;
+			}
 		}
 	}
 }

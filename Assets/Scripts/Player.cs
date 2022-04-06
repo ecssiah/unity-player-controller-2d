@@ -25,7 +25,7 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Animator animator;
-		private CapsuleCollider2D capsuleCollider2D;
+		private Collider2D bodyCollider;
 		private Rigidbody2D rigidBody2D;
 
 		public Rigidbody2D RigidBody2D => rigidBody2D;
@@ -57,7 +57,7 @@ namespace C0
 				}
 			}
 
-			capsuleCollider2D = GetComponent<CapsuleCollider2D>();
+			bodyCollider = GetComponent<Collider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
@@ -164,14 +164,14 @@ namespace C0
 			ClimbingLedge = true;
 			SetAnimation("ClimbLedge");
 
-			Vector2 startPosition = capsuleCollider2D.offset;
+			Vector2 startPosition = bodyCollider.offset;
 			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
 
 			yield return null;
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
-				capsuleCollider2D.offset = Vector2.Lerp(
+				bodyCollider.offset = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -181,7 +181,7 @@ namespace C0
 			}
 
 			ClimbingLedge = false;
-			capsuleCollider2D.offset = startPosition;
+			bodyCollider.offset = startPosition;
 			SetAnimation("Idle");
 
 			if (Facing == 1)
@@ -199,7 +199,7 @@ namespace C0
 			Collider2D colliderHit = Physics2D.OverlapBox
 			(
 				transform.position + 0.05f * Vector3.down,
-				new Vector2(capsuleCollider2D.bounds.size.x - 0.01f, 0.1f),
+				new Vector2(bodyCollider.bounds.size.x - 0.01f, 0.1f),
 				0f,
 				surfaceLayerMask
 			);

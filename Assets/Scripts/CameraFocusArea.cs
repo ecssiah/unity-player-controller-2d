@@ -4,7 +4,7 @@ namespace C0
 {
 	public class FocusArea
 	{
-		private readonly CapsuleCollider2D targetCollider;
+		private readonly Collider2D targetCollider;
 
 		private Rect rect;
 
@@ -12,7 +12,7 @@ namespace C0
 		public Vector2 Size => rect.size;
 		public Vector2 Velocity;
 
-		public FocusArea(CapsuleCollider2D targetCollider, Vector2 size)
+		public FocusArea(Collider2D targetCollider, Vector2 size)
 		{
 			this.targetCollider = targetCollider;
 
