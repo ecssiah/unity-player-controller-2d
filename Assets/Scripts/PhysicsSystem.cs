@@ -53,7 +53,7 @@ namespace C0
 					player.RigidBody2D.velocity.x,
 					targetVelocityX,
 					ref playerDampedVelocityX,
-					0.25f
+					0.15f
 				);
 
 				if (Mathf.Abs(newVelocityX) < 0.11f)
