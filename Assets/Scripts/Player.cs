@@ -92,6 +92,7 @@ namespace C0
 			if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
+				rigidBody2D.gravityScale = 2f;
 			}
 			else if (TriggerInfo.Climb && TriggerInfo.Ground && InputInfo.Direction.y == 1)
 			{
@@ -186,6 +187,8 @@ namespace C0
 			ClimbingLedge = false;
 			bodyCollider.offset = startPosition;
 
+			rigidBody2D.gravityScale = 2f;
+
 			SetAnimation("Idle");
 
 			if (Facing == 1)
@@ -223,6 +226,16 @@ namespace C0
 				transform.position + 1.0f * Vector3.up,
 				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.5f)
 			);
+			
+			TriggerInfo.Ground = Physics2D.OverlapBox
+			(
+				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
+			);
+
+			TriggerInfo.Climb = Physics2D.OverlapBox
+			(
+				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
+			);
 
 			float wallTriggerXOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
 			Vector2 wallTriggerSize = new Vector2(0.1f, 0.2f);
@@ -241,17 +254,7 @@ namespace C0
 				transform.position + new Vector3(wallTriggerXOffset, 0.6f * bodyCollider.bounds.size.y),
 				wallTriggerSize
 			);
-
-			TriggerInfo.Ground = Physics2D.OverlapBox
-			(
-				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
-			);
-
-			TriggerInfo.Climb = Physics2D.OverlapBox
-			(
-				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
-			);
-
+			
 			TriggerInfo.WallTop = Physics2D.OverlapBox
 			(
 				TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
@@ -262,7 +265,7 @@ namespace C0
 				TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
 			);
 
-			TriggerInfo.WallTop = Physics2D.OverlapBox
+			TriggerInfo.WallLow = Physics2D.OverlapBox
 			(
 				TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size, 0f, surfaceLayerMask
 			);
@@ -278,22 +281,20 @@ namespace C0
 
 				Climbing = false;
 
-				Vector2 position = Position;
+				rigidBody2D.gravityScale = 0;
+				rigidBody2D.velocity = Vector2.zero;
+
+				Vector2 position = new Vector2(
+					Mathf.Round(TriggerInfo.WallMidBounds.center.x),
+					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
+				);
 
 				if (Facing == 1)
 				{
-					position = new Vector2(
-						TriggerInfo.WallMid.bounds.center.x - TriggerInfo.WallMid.bounds.extents.x,
-						TriggerInfo.WallMid.bounds.center.y + TriggerInfo.WallMid.bounds.extents.y
-					);
 					position += gameSettings.HangPositionOffset;
 				}
 				else if (Facing == -1)
 				{
-					position = new Vector2(
-						TriggerInfo.WallMid.bounds.center.x + TriggerInfo.WallMid.bounds.extents.x,
-						TriggerInfo.WallMid.bounds.center.y + TriggerInfo.WallMid.bounds.extents.y
-					);
 					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1));
 				}
 
