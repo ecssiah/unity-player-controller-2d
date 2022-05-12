@@ -5,21 +5,27 @@ namespace C0
 	[System.Serializable]
 	public struct TriggerInfo
 	{
-		public BoxCollider2D Grounded;
+		public Collider2D Ground;
 
-		public BoxCollider2D Climbable;
+		public Collider2D Climb;
 
-		public BoxCollider2D WallTop;
-		public BoxCollider2D WallMid;
-		public BoxCollider2D WallLow;
+		public Collider2D WallTop;
+		public Collider2D WallMid;
+		public Collider2D WallLow;
+
+		public Bounds GroundBounds;
+		public Bounds ClimbBounds;
+		public Bounds WallTopBounds;
+		public Bounds WallMidBounds;
+		public Bounds WallLowBounds;
 
 		public bool Ledge => !WallTop && WallMid;
 		public bool Wall => WallTop && WallMid && WallLow;
 
 		public void Reset()
 		{
-			Grounded = null;
-			Climbable = null;
+			Ground = null;
+			Climb = null;
 
 			WallTop = null;
 			WallMid = null;

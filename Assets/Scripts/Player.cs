@@ -31,6 +31,7 @@ namespace C0
 		public Rigidbody2D RigidBody2D => rigidBody2D;
 
 		private LayerMask surfaceLayerMask;
+		private LayerMask climbableLayerMask;
 
 		void Awake()
 		{
@@ -61,6 +62,7 @@ namespace C0
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
+			climbableLayerMask = LayerMask.GetMask("Climbable");
 		}
 
 		public void SetPosition(float x, float y)
@@ -87,18 +89,18 @@ namespace C0
 				return;
 			}
 
-			if (Hanging && inputValue < 0)
+			if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
 			}
-			else if (TriggerInfo.Climbable && TriggerInfo.Grounded && inputValue == 1)
+			else if (TriggerInfo.Climb && TriggerInfo.Ground && InputInfo.Direction.y == 1)
 			{
 				Climbing = true;
 
-				SetPosition(Position + new Vector2(0, 0.03f));
 				SetAnimation("Climb");
+				SetPosition(Position + new Vector2(0, 0.03f));
 			}
-			else if (TriggerInfo.Climbable && inputValue != 0)
+			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
 				Climbing = true;
 
@@ -119,7 +121,7 @@ namespace C0
 				return;
 			}
 
-			if (jumpInput == 1)
+			if (InputInfo.Jump == 1)
 			{
 				if (WallSliding != 0)
 				{
@@ -136,7 +138,7 @@ namespace C0
 				{
 					Climbing = false;
 				}
-				else if (IsGrounded())
+				else if (TriggerInfo.Ground)
 				{
 					rigidBody2D.AddForce(gameSettings.JumpForce, ForceMode2D.Impulse);
 				}
@@ -162,6 +164,7 @@ namespace C0
 		{
 			Hanging = false;
 			ClimbingLedge = true;
+
 			SetAnimation("ClimbLedge");
 
 			Vector2 startPosition = bodyCollider.offset;
@@ -182,6 +185,7 @@ namespace C0
 
 			ClimbingLedge = false;
 			bodyCollider.offset = startPosition;
+
 			SetAnimation("Idle");
 
 			if (Facing == 1)
@@ -194,21 +198,10 @@ namespace C0
 			}
 		}
 
-		private bool IsGrounded()
-		{
-			Collider2D colliderHit = Physics2D.OverlapBox
-			(
-				transform.position + 0.05f * Vector3.down,
-				new Vector2(bodyCollider.bounds.size.x - 0.01f, 0.1f),
-				0f,
-				surfaceLayerMask
-			);
-
-			return colliderHit != null;
-		}
-
 		public void UpdateState()
 		{
+			CheckTriggers();
+
 			HangUpdate();
 			ClimbUpdate();
 			WallSlideUpdate();
@@ -216,6 +209,77 @@ namespace C0
 			UpdateAnimation();
 			UpdateOrientation();
 		}
+
+		private void CheckTriggers()
+		{
+			TriggerInfo.Reset();
+
+			TriggerInfo.GroundBounds = new Bounds(
+				transform.position + 0.05f * Vector3.down, 
+				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.1f)
+			);
+
+			TriggerInfo.Ground = Physics2D.OverlapBox
+			(
+				TriggerInfo.GroundBounds.center,
+				TriggerInfo.GroundBounds.size,
+				0f,
+				surfaceLayerMask
+			);
+
+			TriggerInfo.ClimbBounds = new Bounds(
+				transform.position + 1.0f * Vector3.up,
+				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.5f)
+			);
+
+			TriggerInfo.Climb = Physics2D.OverlapBox
+			(
+				TriggerInfo.ClimbBounds.center,
+				TriggerInfo.ClimbBounds.size,
+				0f,
+				climbableLayerMask
+			);
+
+			TriggerInfo.WallTopBounds = new Bounds(
+				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), bodyCollider.bounds.size.y),
+				new Vector2(0.1f, 0.2f)
+			);
+
+			TriggerInfo.WallTop = Physics2D.OverlapBox
+			(
+				TriggerInfo.WallTopBounds.center,
+				TriggerInfo.WallTopBounds.size,
+				0f,
+				surfaceLayerMask
+			);
+
+			TriggerInfo.WallMidBounds = new Bounds(
+				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), 0.8f * bodyCollider.bounds.size.y),
+				new Vector2(0.1f, 0.2f)
+			);
+
+			TriggerInfo.WallMid = Physics2D.OverlapBox
+			(
+				TriggerInfo.WallMidBounds.center,
+				TriggerInfo.WallMidBounds.size,
+				0f,
+				surfaceLayerMask
+			);
+
+			TriggerInfo.WallLowBounds = new Bounds(
+				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), 0.6f * bodyCollider.bounds.size.y),
+				new Vector2(0.1f, 0.2f)
+			);
+
+			TriggerInfo.WallTop = Physics2D.OverlapBox
+			(
+				TriggerInfo.WallLowBounds.center,
+				TriggerInfo.WallLowBounds.size,
+				0f,
+				surfaceLayerMask
+			);
+		}
+
 
 		private void HangUpdate()
 		{
@@ -257,11 +321,11 @@ namespace C0
 				return;
 			}
 
-			if (!TriggerInfo.Climbable)
+			if (!TriggerInfo.Climb)
 			{
 				Climbing = false;
 			}
-			else if (TriggerInfo.Grounded)
+			else if (TriggerInfo.Ground)
 			{
 				Climbing = false;
 			}
@@ -276,14 +340,14 @@ namespace C0
 
 			if (WallSliding == 0)
 			{
-				if (!TriggerInfo.Grounded && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
+				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
 				{
 					SetWallSlide((int)InputInfo.Direction.x);
 				}
 			}
 			else
 			{
-				if (TriggerInfo.Grounded || !TriggerInfo.Wall)
+				if (TriggerInfo.Ground || !TriggerInfo.Wall)
 				{
 					SetWallSlide(0);
 				}
@@ -359,6 +423,17 @@ namespace C0
 
 				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 			}
+		}
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.color = new Color(1, 0, 1, 0.4f);
+			Gizmos.DrawWireCube(TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size);
+			Gizmos.DrawWireCube(TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size);
+
+			Gizmos.DrawWireCube(TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size);
+			Gizmos.DrawWireCube(TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size);
+			Gizmos.DrawWireCube(TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size);
 		}
 	}
 }
