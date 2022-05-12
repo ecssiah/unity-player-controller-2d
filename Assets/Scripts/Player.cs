@@ -219,64 +219,52 @@ namespace C0
 				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.1f)
 			);
 
-			TriggerInfo.Ground = Physics2D.OverlapBox
-			(
-				TriggerInfo.GroundBounds.center,
-				TriggerInfo.GroundBounds.size,
-				0f,
-				surfaceLayerMask
-			);
-
 			TriggerInfo.ClimbBounds = new Bounds(
 				transform.position + 1.0f * Vector3.up,
 				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.5f)
 			);
 
-			TriggerInfo.Climb = Physics2D.OverlapBox
-			(
-				TriggerInfo.ClimbBounds.center,
-				TriggerInfo.ClimbBounds.size,
-				0f,
-				climbableLayerMask
-			);
+			float wallTriggerXOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
+			Vector2 wallTriggerSize = new Vector2(0.1f, 0.2f);
 
 			TriggerInfo.WallTopBounds = new Bounds(
-				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), bodyCollider.bounds.size.y),
-				new Vector2(0.1f, 0.2f)
+				transform.position + new Vector3(wallTriggerXOffset, 1.0f * bodyCollider.bounds.size.y),
+				wallTriggerSize
+			);
+
+			TriggerInfo.WallMidBounds = new Bounds(
+				transform.position + new Vector3(wallTriggerXOffset, 0.8f * bodyCollider.bounds.size.y),
+				wallTriggerSize
+			);
+
+			TriggerInfo.WallLowBounds = new Bounds(
+				transform.position + new Vector3(wallTriggerXOffset, 0.6f * bodyCollider.bounds.size.y),
+				wallTriggerSize
+			);
+
+			TriggerInfo.Ground = Physics2D.OverlapBox
+			(
+				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
+			);
+
+			TriggerInfo.Climb = Physics2D.OverlapBox
+			(
+				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
 			);
 
 			TriggerInfo.WallTop = Physics2D.OverlapBox
 			(
-				TriggerInfo.WallTopBounds.center,
-				TriggerInfo.WallTopBounds.size,
-				0f,
-				surfaceLayerMask
-			);
-
-			TriggerInfo.WallMidBounds = new Bounds(
-				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), 0.8f * bodyCollider.bounds.size.y),
-				new Vector2(0.1f, 0.2f)
+				TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
 			);
 
 			TriggerInfo.WallMid = Physics2D.OverlapBox
 			(
-				TriggerInfo.WallMidBounds.center,
-				TriggerInfo.WallMidBounds.size,
-				0f,
-				surfaceLayerMask
-			);
-
-			TriggerInfo.WallLowBounds = new Bounds(
-				transform.position + new Vector3(Facing * (bodyCollider.bounds.extents.x + 0.05f), 0.6f * bodyCollider.bounds.size.y),
-				new Vector2(0.1f, 0.2f)
+				TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
 			);
 
 			TriggerInfo.WallTop = Physics2D.OverlapBox
 			(
-				TriggerInfo.WallLowBounds.center,
-				TriggerInfo.WallLowBounds.size,
-				0f,
-				surfaceLayerMask
+				TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size, 0f, surfaceLayerMask
 			);
 		}
 
