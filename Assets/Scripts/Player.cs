@@ -8,6 +8,8 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity;
 
+		public Vector2 CameraTarget;
+
 		public int Facing;
 
 		private float hangTimer;
@@ -168,14 +170,25 @@ namespace C0
 
 			SetAnimation("ClimbLedge");
 
-			Vector2 startPosition = bodyCollider.offset;
-			Vector2 endPosition = startPosition + gameSettings.ClimbLedgeOffset;
+			bodyCollider.enabled = false;
+
+			Vector2 startPosition = transform.position;
+			Vector2 endPosition = startPosition;
+
+			if (Facing == 1)
+			{
+				endPosition += gameSettings.ClimbLedgeOffsetRight;
+			}
+			else if (Facing == -1)
+			{
+				endPosition += gameSettings.ClimbLedgeOffsetLeft;
+			}
 
 			yield return null;
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
-				bodyCollider.offset = Vector2.Lerp(
+				transform.position = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -185,20 +198,11 @@ namespace C0
 			}
 
 			ClimbingLedge = false;
-			bodyCollider.offset = startPosition;
-
+			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = 2f;
 
 			SetAnimation("Idle");
-
-			if (Facing == 1)
-			{
-				SetPosition(Position + gameSettings.ClimbLedgeOffset);
-			}
-			else if (Facing == -1)
-			{
-				SetPosition(Position + Vector2.Scale(gameSettings.ClimbLedgeOffset, new Vector2(-1, 1)));
-			}
+			SetPosition(endPosition);
 		}
 
 		public void UpdateState()
@@ -208,6 +212,8 @@ namespace C0
 			HangUpdate();
 			ClimbUpdate();
 			WallSlideUpdate();
+
+			Velocity = rigidBody2D.velocity;
 
 			UpdateAnimation();
 			UpdateOrientation();
@@ -251,7 +257,7 @@ namespace C0
 			);
 
 			TriggerInfo.WallLowBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 0.6f * bodyCollider.bounds.size.y),
+				transform.position + new Vector3(wallTriggerXOffset, 0.1f * bodyCollider.bounds.size.y),
 				wallTriggerSize
 			);
 			

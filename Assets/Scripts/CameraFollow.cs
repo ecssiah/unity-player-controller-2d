@@ -6,25 +6,25 @@ namespace C0
 	{
 		public bool DebugDraw;
 
-		private Collider2D targetCollider;
+		private GameObject targetObject;
 
 		private Vector3 smoothDampVelocity;
 		private float smoothDampTime;
 
-		private Vector2 offset;
+		private Vector3 offset;
 
 		private FocusArea focusArea;
 
 		void Start()
 		{
-			DebugDraw = false;
+			DebugDraw = true;
 
-			targetCollider = GameObject.Find("Player").GetComponent<Collider2D>();
+			targetObject = GameObject.Find("Player");
 
 			smoothDampTime = 0.05f;
 
-			offset = Vector2.zero;
-			focusArea = new FocusArea(targetCollider, new Vector2(3, 5));
+			offset = Vector3.zero;
+			focusArea = new FocusArea(targetObject.transform);
 		}
 
 		void LateUpdate()
@@ -52,7 +52,8 @@ namespace C0
 			{
 				Gizmos.color = new Color(1, 0, 1, 0.1f);
 
-				Gizmos.DrawWireCube(focusArea.Center + offset, focusArea.Size);
+				Gizmos.DrawWireCube(focusArea.TargetCenter, focusArea.TargetSize);
+				Gizmos.DrawWireCube(focusArea.Center + offset, focusArea.FocusSize);
 			}
 		}
 	}

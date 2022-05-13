@@ -60,7 +60,6 @@ namespace C0
 				}
 
 				player.RigidBody2D.velocity = new Vector2(newVelocityX, player.RigidBody2D.velocity.y);
-				player.Velocity = player.RigidBody2D.velocity;
 			}
 		}
 	}

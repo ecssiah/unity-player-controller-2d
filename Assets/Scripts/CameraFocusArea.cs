@@ -4,19 +4,36 @@ namespace C0
 {
 	public class FocusArea
 	{
-		private readonly Collider2D targetCollider;
+		private readonly Transform targetTransform;
 
-		private Rect rect;
+		private Rect targetRect;
+		public Vector3 TargetCenter => targetRect.center;
+		public Vector3 TargetSize => targetRect.size;
 
-		public Vector2 Center => rect.center;
-		public Vector2 Size => rect.size;
+		private Rect focusRect;
+		public Vector3 Center => focusRect.center;
+		public Vector3 FocusSize => focusRect.size;
+
 		public Vector2 Velocity;
 
-		public FocusArea(Collider2D targetCollider, Vector2 size)
+		public FocusArea(Transform targetTransform)
 		{
-			this.targetCollider = targetCollider;
+			this.targetTransform = targetTransform;
 
-			rect = new Rect(targetCollider.bounds.center, size);
+			targetRect = new Rect
+			{
+				center = new Vector2(
+					targetTransform.position.x,
+					targetTransform.position.y + TargetSize.y / 2
+				),
+				size = new Vector3(0.5f, 1.6f)
+			};
+
+			focusRect = new Rect(Vector2.zero, new Vector3(3, 5));
+			focusRect.position = new Vector2(
+				targetTransform.position.x - focusRect.size.x / 2,
+				targetTransform.position.y
+			);
 
 			Velocity = Vector2.zero;
 		}
@@ -25,25 +42,30 @@ namespace C0
 		{
 			Velocity = Vector2.zero;
 
-			if (targetCollider.bounds.min.x < rect.min.x)
+			targetRect.center = new Vector2(
+				targetTransform.position.x, 
+				targetTransform.position.y + TargetSize.y / 2
+			);
+
+			if (targetRect.xMin < focusRect.xMin)
 			{
-				Velocity.x = targetCollider.bounds.min.x - rect.min.x;
+				Velocity.x = targetRect.xMin - focusRect.xMin;
 			}
-			else if (targetCollider.bounds.max.x > rect.max.x)
+			else if (targetRect.xMax > focusRect.xMax)
 			{
-				Velocity.x = targetCollider.bounds.max.x - rect.max.x;
+				Velocity.x = targetRect.xMax - focusRect.xMax;
 			}
 
-			if (targetCollider.bounds.min.y < rect.min.y)
+			if (targetRect.yMin < focusRect.yMin)
 			{
-				Velocity.y = targetCollider.bounds.min.y - rect.min.y;
+				Velocity.y = targetRect.yMin - focusRect.yMin;
 			}
-			else if (targetCollider.bounds.max.y > rect.max.y)
+			else if (targetRect.yMax > focusRect.yMax)
 			{
-				Velocity.y = targetCollider.bounds.max.y - rect.max.y;
+				Velocity.y = targetRect.yMax - focusRect.yMax;
 			}
 
-			rect.center += Velocity;
+			focusRect.center += Velocity;
 		}
 	}
 }

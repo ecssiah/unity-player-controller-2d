@@ -32,6 +32,7 @@ namespace C0
 		public Vector2 HangPositionOffset = new Vector2(0.19f, -1.38f);
 
 		[Space]
-		public Vector2 ClimbLedgeOffset = new Vector2(0.62f, 1.18f);
+		public Vector2 ClimbLedgeOffsetRight = new Vector2(0.62f, 1.18f);
+		public Vector2 ClimbLedgeOffsetLeft = new Vector2(-0.62f, 1.18f);
 	}
 }
