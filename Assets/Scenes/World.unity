@@ -979,7 +979,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -3017,6 +3017,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1235955713687024209, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1462099927545901324, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3084,6 +3088,10 @@ PrefabInstance:
     - target: {fileID: 1610686785997142707, guid: e94491416da31d94bac4c96896921032, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4790047226210415071, guid: e94491416da31d94bac4c96896921032, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8825290119240793825, guid: e94491416da31d94bac4c96896921032, type: 3}

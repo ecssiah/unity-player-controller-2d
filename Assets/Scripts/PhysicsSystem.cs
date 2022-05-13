@@ -40,7 +40,7 @@ namespace C0
 				return;
 			}
 
-			if (player.Hanging)
+			if (player.Hanging || player.WallSliding != 0)
 			{
 			}
 			else

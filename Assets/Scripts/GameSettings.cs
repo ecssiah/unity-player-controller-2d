@@ -19,7 +19,7 @@ namespace C0
 
 		[Space]
 		public float MinJumpSpeed = 6f;
-		public Vector2 JumpForce = new Vector2(0, 36f);
+		public Vector2 JumpForce = new Vector2(0, 16f);
 		public Vector2 WallJumpForce = new Vector2(10f, 16f);
 
 		[Space]

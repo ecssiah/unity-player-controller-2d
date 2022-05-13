@@ -21,11 +21,12 @@ MonoBehaviour:
   AirSpeedSmoothTime: 0.1
   ClimbSpeed: {x: 1.8, y: 3.2}
   MinJumpSpeed: 6
-  JumpForce: {x: 0, y: 12}
+  JumpForce: {x: 0, y: 16}
   WallJumpForce: {x: 10, y: 16}
   WallSlideHoldTime: 0.3
   WallSlideDamping: 0.16
   MaxWallSlideSpeed: 4.2
   HangTime: 0.2
-  HangPositionOffset: {x: -0.185, y: -1.38}
-  ClimbLedgeOffset: {x: 0.62, y: 1.38}
+  HangPositionOffset: {x: -0.185, y: -1.37}
+  ClimbLedgeOffsetRight: {x: 0.62, y: 1.37}
+  ClimbLedgeOffsetLeft: {x: -0.62, y: 1.37}

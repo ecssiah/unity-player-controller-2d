@@ -131,10 +131,15 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
+						rigidBody2D.AddForce(gameSettings.WallJumpForce, ForceMode2D.Impulse);
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
+						rigidBody2D.AddForce(
+							Vector2.Scale(gameSettings.WallJumpForce, new Vector2(-1, 1)), 
+							ForceMode2D.Impulse
+						);
 					}
 				}
 				else if (Climbing)
@@ -212,8 +217,8 @@ namespace C0
 		public void UpdateState()
 		{
 			CheckTriggers();
-
-			HangUpdate();
+			CheckHang();
+			
 			ClimbUpdate();
 			WallSlideUpdate();
 
@@ -282,7 +287,7 @@ namespace C0
 		}
 
 
-		private void HangUpdate()
+		private void CheckHang()
 		{
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
@@ -354,6 +359,8 @@ namespace C0
 				{
 					UpdateWallSlideTimer();
 				}
+
+				rigidBody2D.AddForce(new Vector2(0, 1.2f));
 			}
 		}
 
@@ -365,6 +372,7 @@ namespace C0
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
+				rigidBody2D.velocity = Vector2.zero;
 				SetAnimation("Slide");
 			}
 		}
