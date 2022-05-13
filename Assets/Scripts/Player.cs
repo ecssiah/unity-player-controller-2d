@@ -86,11 +86,6 @@ namespace C0
 		{
 			InputInfo.Direction.y = inputValue;
 
-			if (ClimbingLedge)
-			{
-				return;
-			}
-
 			if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
@@ -99,7 +94,6 @@ namespace C0
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
 				Climbing = true;
-
 				SetAnimation("Climb");
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
@@ -112,11 +106,6 @@ namespace C0
 		{
 			InputInfo.Jump = jumpInput;
 
-			if (ClimbingLedge)
-			{
-				return;
-			}
-
 			if (InputInfo.Jump == 1)
 			{
 				if (WallSliding != 0)
@@ -124,15 +113,12 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.AddForce(gameSettings.WallJumpForce, ForceMode2D.Impulse);
+						rigidBody2D.AddForce(gameSettings.WallJumpForceRight, ForceMode2D.Impulse);
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.AddForce(
-							Vector2.Scale(gameSettings.WallJumpForce, new Vector2(-1, 1)), 
-							ForceMode2D.Impulse
-						);
+						rigidBody2D.AddForce(gameSettings.WallJumpForceLeft, ForceMode2D.Impulse);
 					}
 				}
 				else if (Climbing)
@@ -149,16 +135,13 @@ namespace C0
 
 		public void ClimbLedgeCheck()
 		{
-			if (hangTimer <= 0)
-			{
-				if (InputInfo.Direction.y > 0)
-				{
-					StartCoroutine(RunClimbLedgeAction());
-				}
-			}
-			else
+			if (hangTimer > 0)
 			{
 				hangTimer -= Time.deltaTime;
+			}
+			else if (InputInfo.Direction.y > 0)
+			{
+				StartCoroutine(RunClimbLedgeAction());
 			}
 		}
 
@@ -198,11 +181,14 @@ namespace C0
 				yield return null;
 			}
 
+			targetTransform.position = startPosition;
+			
 			ClimbingLedge = false;
 			bodyCollider.enabled = true;
-			rigidBody2D.gravityScale = 2f;
 
-			targetTransform.position = startPosition;
+			rigidBody2D.gravityScale = 2f;
+			InputInfo.Direction = Vector2.zero;
+
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);
@@ -210,47 +196,62 @@ namespace C0
 
 		public void UpdateState()
 		{
-			CheckTriggers();
-			CheckHang();
-			
-			ClimbUpdate();
-			WallSlideUpdate();
+			if (Hanging)
+			{
+				ClimbLedgeCheck();
+			} 
+			else
+			{
+				TriggerUpdate();
 
-			Velocity = rigidBody2D.velocity;
+				HangUpdate();
+				ClimbUpdate();
+				WallSlideUpdate();
 
-			UpdateAnimation();
-			UpdateOrientation();
+				Velocity = rigidBody2D.velocity;
+
+				UpdateAnimation();
+				UpdateOrientation();
+			}
 		}
 
-		private void CheckTriggers()
+		private void TriggerUpdate()
 		{
-			if (ClimbingLedge)
-			{
-				return;
-			}
-
 			TriggerInfo.Reset();
 
+			GroundCheck();
+			ClimbCheck();
+			WallCheck();
+		}
+
+		private void GroundCheck()
+		{
 			TriggerInfo.GroundBounds = new Bounds(
-				transform.position + 0.025f * Vector3.down, 
+				transform.position + 0.025f * Vector3.down,
 				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.05f)
 			);
 
-			TriggerInfo.ClimbBounds = new Bounds(
-				transform.position + 0.6f * Vector3.up,
-				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.4f)
-			);
-			
 			TriggerInfo.Ground = Physics2D.OverlapBox
 			(
 				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
+			);
+		}
+
+		private void ClimbCheck()
+		{
+			TriggerInfo.ClimbBounds = new Bounds(
+				transform.position + 0.6f * Vector3.up,
+				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.4f)
 			);
 
 			TriggerInfo.Climb = Physics2D.OverlapBox
 			(
 				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
 			);
+		}
 
+		private void WallCheck()
+		{
 			float wallTriggerXOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
 			Vector2 wallTriggerSize = new Vector2(0.1f, 0.2f);
 
@@ -259,24 +260,24 @@ namespace C0
 				wallTriggerSize
 			);
 
-			TriggerInfo.WallMidBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 0.8f * bodyCollider.bounds.size.y),
-				wallTriggerSize
-			);
-
-			TriggerInfo.WallLowBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 0.1f * bodyCollider.bounds.size.y),
-				wallTriggerSize
-			);
-			
 			TriggerInfo.WallTop = Physics2D.OverlapBox
 			(
 				TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
 			);
 
+			TriggerInfo.WallMidBounds = new Bounds(
+				transform.position + new Vector3(wallTriggerXOffset, 0.8f * bodyCollider.bounds.size.y),
+				wallTriggerSize
+			);
+
 			TriggerInfo.WallMid = Physics2D.OverlapBox
 			(
 				TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
+			);
+
+			TriggerInfo.WallLowBounds = new Bounds(
+				transform.position + new Vector3(wallTriggerXOffset, 0.1f * bodyCollider.bounds.size.y),
+				wallTriggerSize
 			);
 
 			TriggerInfo.WallLow = Physics2D.OverlapBox
@@ -285,15 +286,14 @@ namespace C0
 			);
 		}
 
-
-		private void CheckHang()
+		private void HangUpdate()
 		{
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
 				Hanging = true;
-				hangTimer = gameSettings.HangTime;
-
 				Climbing = false;
+
+				hangTimer = gameSettings.HangTime;
 
 				rigidBody2D.gravityScale = 0;
 				rigidBody2D.velocity = Vector2.zero;
@@ -312,8 +312,8 @@ namespace C0
 					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1));
 				}
 
-				SetPosition(position);
 				SetAnimation("Hang");
+				SetPosition(position);
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace C0
 					UpdateWallSlideTimer();
 				}
 
-				rigidBody2D.AddForce(new Vector2(0, 1.2f));
+				rigidBody2D.AddForce(new Vector2(0, 1.4f));
 			}
 		}
 

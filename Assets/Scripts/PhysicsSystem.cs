@@ -23,14 +23,7 @@ namespace C0
 				return;
 			}
 
-			if (player.Hanging)
-			{
-				player.ClimbLedgeCheck();
-			}
-			else
-			{
-				player.UpdateState();
-			}
+			player.UpdateState();
 		}
 
 		public void FixedUpdateSystem()
@@ -42,7 +35,7 @@ namespace C0
 
 			if (player.Hanging || player.WallSliding != 0)
 			{
-			}
+			} 
 			else if (player.Climbing)
 			{
 				player.RigidBody2D.gravityScale = 0f;

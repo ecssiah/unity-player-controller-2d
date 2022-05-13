@@ -30,6 +30,11 @@ namespace C0
 
 		public void UpdateSystem()
 		{
+			if (player.ClimbingLedge)
+			{
+				return;
+			}
+
 			PollMoveInput();
 			PollJumpInput();
 		}
