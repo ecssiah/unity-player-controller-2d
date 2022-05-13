@@ -172,7 +172,9 @@ namespace C0
 
 			bodyCollider.enabled = false;
 
-			Vector2 startPosition = transform.position;
+			Transform targetTransform = transform.Find("Target").gameObject.transform;
+
+			Vector2 startPosition = targetTransform.position;
 			Vector2 endPosition = startPosition;
 
 			if (Facing == 1)
@@ -188,7 +190,7 @@ namespace C0
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
-				transform.position = Vector2.Lerp(
+				targetTransform.position = Vector2.Lerp(
 					startPosition,
 					endPosition,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
@@ -200,6 +202,8 @@ namespace C0
 			ClimbingLedge = false;
 			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = 2f;
+
+			targetTransform.position = startPosition;
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);

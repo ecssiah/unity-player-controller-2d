@@ -19,7 +19,7 @@ namespace C0
 		{
 			DebugDraw = true;
 
-			targetObject = GameObject.Find("Player");
+			targetObject = GameObject.Find("Player/Target");
 
 			smoothDampTime = 0.05f;
 
