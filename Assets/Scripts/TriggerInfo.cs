@@ -6,9 +6,7 @@ namespace C0
 	public struct TriggerInfo
 	{
 		public Collider2D Ground;
-
 		public Collider2D Climb;
-
 		public Collider2D WallTop;
 		public Collider2D WallMid;
 		public Collider2D WallLow;
@@ -26,7 +24,6 @@ namespace C0
 		{
 			Ground = null;
 			Climb = null;
-
 			WallTop = null;
 			WallMid = null;
 			WallLow = null;

@@ -96,13 +96,6 @@ namespace C0
 				Hanging = false;
 				rigidBody2D.gravityScale = 2f;
 			}
-			else if (TriggerInfo.Climb && TriggerInfo.Ground && InputInfo.Direction.y == 1)
-			{
-				Climbing = true;
-
-				SetAnimation("Climb");
-				SetPosition(Position + new Vector2(0, 0.03f));
-			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
 				Climbing = true;
@@ -145,6 +138,7 @@ namespace C0
 				else if (Climbing)
 				{
 					Climbing = false;
+					rigidBody2D.AddForce(gameSettings.JumpForce, ForceMode2D.Impulse);
 				}
 				else if (TriggerInfo.Ground)
 				{
@@ -230,16 +224,21 @@ namespace C0
 
 		private void CheckTriggers()
 		{
+			if (ClimbingLedge)
+			{
+				return;
+			}
+
 			TriggerInfo.Reset();
 
 			TriggerInfo.GroundBounds = new Bounds(
-				transform.position + 0.05f * Vector3.down, 
-				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.1f)
+				transform.position + 0.025f * Vector3.down, 
+				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.05f)
 			);
 
 			TriggerInfo.ClimbBounds = new Bounds(
-				transform.position + 1.0f * Vector3.up,
-				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.5f)
+				transform.position + 0.6f * Vector3.up,
+				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.4f)
 			);
 			
 			TriggerInfo.Ground = Physics2D.OverlapBox
@@ -329,7 +328,7 @@ namespace C0
 			{
 				Climbing = false;
 			}
-			else if (TriggerInfo.Ground)
+			else if (TriggerInfo.Ground && rigidBody2D.velocity.y < 0)
 			{
 				Climbing = false;
 			}

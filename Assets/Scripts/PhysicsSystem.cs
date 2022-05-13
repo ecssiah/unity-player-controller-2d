@@ -43,8 +43,15 @@ namespace C0
 			if (player.Hanging || player.WallSliding != 0)
 			{
 			}
+			else if (player.Climbing)
+			{
+				player.RigidBody2D.gravityScale = 0f;
+				player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
+			}
 			else
 			{
+				player.RigidBody2D.gravityScale = 2.0f;
+
 				float targetVelocityX = player.InputInfo.Direction.x * gameSettings.RunSpeed;
 
 				float newVelocityX = Mathf.SmoothDamp(
