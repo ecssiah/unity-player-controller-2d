@@ -89,7 +89,7 @@ namespace C0
 			if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
-				rigidBody2D.gravityScale = 2f;
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
@@ -113,22 +113,22 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.AddForce(gameSettings.WallJumpForceRight, ForceMode2D.Impulse);
+						rigidBody2D.velocity = gameSettings.WallJumpForceRight;
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.AddForce(gameSettings.WallJumpForceLeft, ForceMode2D.Impulse);
+						rigidBody2D.velocity = gameSettings.WallJumpForceLeft;
 					}
 				}
 				else if (Climbing)
 				{
 					Climbing = false;
-					rigidBody2D.AddForce(gameSettings.JumpForce, ForceMode2D.Impulse);
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce.y);
 				}
 				else if (TriggerInfo.Ground)
 				{
-					rigidBody2D.AddForce(gameSettings.JumpForce, ForceMode2D.Impulse);
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce.y);
 				}
 			}
 		}
@@ -186,9 +186,8 @@ namespace C0
 			ClimbingLedge = false;
 			bodyCollider.enabled = true;
 
-			rigidBody2D.gravityScale = 2f;
+			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			InputInfo.Direction = Vector2.zero;
-
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);
@@ -359,7 +358,7 @@ namespace C0
 					UpdateWallSlideTimer();
 				}
 
-				rigidBody2D.AddForce(new Vector2(0, 1.4f));
+				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
 			}
 		}
 
@@ -371,6 +370,7 @@ namespace C0
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 				rigidBody2D.velocity = Vector2.zero;
 				SetAnimation("Slide");
 			}
@@ -396,15 +396,15 @@ namespace C0
 		{
 			if (!Hanging && !Climbing && WallSliding == 0)
 			{
-				if (rigidBody2D.velocity.y > gameSettings.MinSpeed)
+				if (rigidBody2D.velocity.y > gameSettings.MinJumpSpeed)
 				{
 					SetAnimation("Jump");
 				}
-				else if (rigidBody2D.velocity.y < -gameSettings.MinSpeed)
+				else if (rigidBody2D.velocity.y < -gameSettings.MinFallSpeed)
 				{
 					SetAnimation("Fall");
 				}
-				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinSpeed)
+				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
 				{
 					SetAnimation("Run");
 				}
@@ -417,13 +417,13 @@ namespace C0
 
 		private void UpdateOrientation()
 		{
-			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinSpeed)
+			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinRunSpeed)
 			{
 				Facing = 1;
 
 				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
-			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinSpeed)
+			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinRunSpeed)
 			{
 				Facing = -1;
 

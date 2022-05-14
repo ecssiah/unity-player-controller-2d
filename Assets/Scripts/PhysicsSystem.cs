@@ -43,23 +43,39 @@ namespace C0
 			}
 			else
 			{
-				player.RigidBody2D.gravityScale = 2.0f;
+				Vector2 newVelocity;
 
 				float targetVelocityX = player.InputInfo.Direction.x * gameSettings.RunSpeed;
 
-				float newVelocityX = Mathf.SmoothDamp(
+				newVelocity.x = Mathf.SmoothDamp(
 					player.RigidBody2D.velocity.x,
 					targetVelocityX,
 					ref playerDampedVelocityX,
-					0.15f
+					gameSettings.HorizontalDamping
 				);
 
-				if (Mathf.Abs(newVelocityX) < 0.11f)
+				if (Mathf.Abs(newVelocity.x) < gameSettings.MinHorizontalMovementSpeed)
 				{
-					newVelocityX = 0;
+					newVelocity.x = 0;
 				}
 
-				player.RigidBody2D.velocity = new Vector2(newVelocityX, player.RigidBody2D.velocity.y);
+				newVelocity.y = player.RigidBody2D.velocity.y;
+
+				if (newVelocity.y < gameSettings.TerminalVelocity)
+				{
+					newVelocity.y = gameSettings.TerminalVelocity;
+				}
+
+				player.RigidBody2D.velocity = newVelocity;
+
+				if (player.RigidBody2D.velocity.y < 0)
+				{
+					player.RigidBody2D.gravityScale = gameSettings.FallingGravityScale;
+				}
+				else
+				{
+					player.RigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				}
 			}
 		}
 	}
