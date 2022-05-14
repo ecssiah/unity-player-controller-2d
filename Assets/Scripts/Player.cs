@@ -267,7 +267,7 @@ namespace C0
 			Vector2 wallTriggerSize = new Vector2(0.1f, 0.2f);
 
 			TriggerInfo.WallTopBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 1.0f * bodyCollider.bounds.size.y),
+				transform.position + new Vector3(wallTriggerXOffset, 1.1f * bodyCollider.bounds.size.y),
 				wallTriggerSize
 			);
 

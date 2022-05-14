@@ -124,6 +124,7 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   CameraTarget: {x: 0, y: 0}
   Facing: 0
+  Ducking: 0
   Hanging: 0
   Climbing: 0
   ClimbingLedge: 0
@@ -137,21 +138,6 @@ MonoBehaviour:
     WallTop: {fileID: 0}
     WallMid: {fileID: 0}
     WallLow: {fileID: 0}
-    GroundBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    ClimbBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    WallTopBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    WallMidBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    WallLowBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
 --- !u!50 &1610686785997142707
 Rigidbody2D:
   serializedVersion: 4
@@ -186,7 +172,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00020314753, y: 0.6904194}
+  m_Offset: {x: 0.000011667609, y: 0.6973257}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -197,7 +183,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.37671116, y: 1.3808388}
+  m_Size: {x: 0.37494132, y: 1.355228}
   m_EdgeRadius: 0
 --- !u!1 &5772331157541941066
 GameObject:
