@@ -29,7 +29,8 @@ namespace C0
 
 		[Space]
 		public float HangTime = 0.2f;
-		public Vector2 HangPositionOffset = new Vector2(-0.185f, -1.37f);
+		public Vector2 HangPositionOffsetRight = new Vector2(-0.185f, -1.37f);
+		public Vector2 HangPositionOffsetLeft = new Vector2(0.185f, -1.37f);
 
 		[Space]
 		public Vector2 ClimbLedgeOffsetRight = new Vector2(0.62f, 1.37f);

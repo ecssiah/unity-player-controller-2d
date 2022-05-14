@@ -90,12 +90,7 @@ namespace C0
 		{
 			InputInfo.Direction.y = inputValue;
 
-			if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
-			{
-				Ducking = true;
-				SetAnimation("Duck");
-			}
-			else if (Ducking && InputInfo.Direction.y == 0)
+			if (Ducking && InputInfo.Direction.y == 0)
 			{
 				Ducking = false;
 			}
@@ -299,9 +294,21 @@ namespace C0
 
 		private void DuckUpdate()
 		{
-			if (Ducking && !TriggerInfo.Ground)
+			if (Ducking)
 			{
-				Ducking = false;
+				if (!TriggerInfo.Ground)
+				{
+					Ducking = false;
+				}
+			}
+			else
+			{
+				if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
+				{
+					Ducking = true;
+					SetAnimation("Duck");
+					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				}
 			}
 		}
 
@@ -329,11 +336,11 @@ namespace C0
 
 				if (Facing == 1)
 				{
-					position += gameSettings.HangPositionOffset;
+					position += gameSettings.HangPositionOffsetRight;
 				}
 				else if (Facing == -1)
 				{
-					position += Vector2.Scale(gameSettings.HangPositionOffset, new Vector2(-1, 1));
+					position += gameSettings.HangPositionOffsetLeft;
 				}
 
 				SetAnimation("Hang");
