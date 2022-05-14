@@ -5,8 +5,8 @@ namespace C0
 	[CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings")]
 	public class GameSettings : ScriptableObject
 	{
-		public float DefaultGravityScale = 2.2f;
-		public float FallingGravityScale = 4.0f;
+		public float DefaultGravityScale = 4.0f;
+		public float FallingGravityScale = 7.0f;
 		public float WallSlideGravityScale = 0.4f;
 		public float TerminalVelocity = -30f;
 
@@ -16,13 +16,13 @@ namespace C0
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
 		public float RunSpeed = 12f;
-		public float HorizontalDamping = 0.21f;
+		public float HorizontalDamping = 0.27f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 		[Space]
-		public Vector2 JumpForce = new Vector2(0, 16f);
-		public Vector2 WallJumpForceRight = new Vector2(6f, 12f);
-		public Vector2 WallJumpForceLeft = new Vector2(-6f, 12f);
+		public Vector2 JumpForce = new Vector2(0, 18f);
+		public Vector2 WallJumpForceRight = new Vector2(960f, 16f);
+		public Vector2 WallJumpForceLeft = new Vector2(-960f, 16f);
 
 		[Space]
 		public float WallSlideHoldTime = 0.3f;
