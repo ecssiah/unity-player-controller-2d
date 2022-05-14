@@ -124,11 +124,11 @@ namespace C0
 				else if (Climbing)
 				{
 					Climbing = false;
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce.y);
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce);
 				}
 				else if (TriggerInfo.Ground)
 				{
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce.y);
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce);
 				}
 			}
 		}
@@ -180,14 +180,12 @@ namespace C0
 
 				yield return null;
 			}
-
-			targetTransform.position = startPosition;
 			
 			ClimbingLedge = false;
-			bodyCollider.enabled = true;
 
+			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			InputInfo.Direction = Vector2.zero;
+			targetTransform.position = startPosition;
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);

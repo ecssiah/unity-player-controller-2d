@@ -11,11 +11,11 @@ namespace C0
 		public Collider2D WallMid;
 		public Collider2D WallLow;
 
-		public Bounds GroundBounds;
-		public Bounds ClimbBounds;
-		public Bounds WallTopBounds;
-		public Bounds WallMidBounds;
-		public Bounds WallLowBounds;
+		public Bounds GroundBounds { get; set; }
+		public Bounds ClimbBounds { get; set; }
+		public Bounds WallTopBounds { get; set; }
+		public Bounds WallMidBounds { get; set; }
+		public Bounds WallLowBounds { get; set; }
 
 		public bool Ledge => !WallTop && WallMid;
 		public bool Wall => WallTop && WallMid && WallLow;

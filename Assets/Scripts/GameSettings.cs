@@ -20,7 +20,7 @@ namespace C0
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 		[Space]
-		public Vector2 JumpForce = new Vector2(0, 18f);
+		public float JumpForce = 18f;
 		public Vector2 WallJumpForceRight = new Vector2(960f, 16f);
 		public Vector2 WallJumpForceLeft = new Vector2(-960f, 16f);
 
