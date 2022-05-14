@@ -12,20 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  Gravity: -50
-  MaxFallSpeed: -30
-  MinSpeed: 0.01
-  MinRunSpeed: 1
+  DefaultGravityScale: 4
+  FallingGravityScale: 7
+  WallSlideGravityScale: 0.4
+  TerminalVelocity: -30
+  MinHorizontalMovementSpeed: 0.11
+  MinRunSpeed: 1.2
+  MinJumpSpeed: 0.01
+  MinFallSpeed: 0.01
   RunSpeed: 12
-  GroundSpeedSmoothTime: 0.2
-  AirSpeedSmoothTime: 0.1
+  HorizontalDamping: 0.27
   ClimbSpeed: {x: 1.8, y: 3.2}
-  MinJumpSpeed: 6
-  JumpForce: {x: 0, y: 16}
-  WallJumpForce: {x: 10, y: 16}
+  JumpForce: 18
+  WallJumpForceRight: {x: 1000, y: 16}
+  WallJumpForceLeft: {x: -1000, y: 16}
   WallSlideHoldTime: 0.3
-  WallSlideDamping: 0.16
-  MaxWallSlideSpeed: 4.2
   HangTime: 0.2
   HangPositionOffset: {x: -0.185, y: -1.37}
   ClimbLedgeOffsetRight: {x: 0.62, y: 1.37}

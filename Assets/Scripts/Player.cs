@@ -12,6 +12,8 @@ namespace C0
 
 		public int Facing;
 
+		public bool Ducking;
+
 		private float hangTimer;
 		public bool Hanging;
 
@@ -40,6 +42,8 @@ namespace C0
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			Facing = 1;
+
+			Ducking = false;
 
 			hangTimer = gameSettings.HangTime;
 			Hanging = false;
@@ -86,7 +90,16 @@ namespace C0
 		{
 			InputInfo.Direction.y = inputValue;
 
-			if (Hanging && InputInfo.Direction.y < 0)
+			if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
+			{
+				Ducking = true;
+				SetAnimation("Duck");
+			}
+			else if (Ducking && InputInfo.Direction.y == 0)
+			{
+				Ducking = false;
+			}
+			else if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -201,6 +214,7 @@ namespace C0
 			{
 				TriggerUpdate();
 
+				DuckUpdate();
 				HangUpdate();
 				ClimbUpdate();
 				WallSlideUpdate();
@@ -283,8 +297,21 @@ namespace C0
 			);
 		}
 
+		private void DuckUpdate()
+		{
+			if (Ducking && !TriggerInfo.Ground)
+			{
+				Ducking = false;
+			}
+		}
+
 		private void HangUpdate()
 		{
+			if (Ducking)
+			{
+				return;
+			}
+
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
 				Hanging = true;
@@ -333,7 +360,7 @@ namespace C0
 
 		private void WallSlideUpdate()
 		{
-			if (Hanging || Climbing)
+			if (Ducking || Hanging || Climbing)
 			{
 				return;
 			}
@@ -392,7 +419,7 @@ namespace C0
 
 		private void UpdateAnimation()
 		{
-			if (!Hanging && !Climbing && WallSliding == 0)
+			if (!Ducking && !Hanging && !Climbing && WallSliding == 0)
 			{
 				if (rigidBody2D.velocity.y > gameSettings.MinJumpSpeed)
 				{

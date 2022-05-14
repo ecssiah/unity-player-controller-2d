@@ -35,7 +35,25 @@ namespace C0
 
 			if (player.Hanging || player.WallSliding != 0)
 			{
+				return;
 			} 
+			
+			if (player.Ducking)
+			{
+				float newVelocityX = Mathf.SmoothDamp(
+					player.RigidBody2D.velocity.x,
+					0,
+					ref playerDampedVelocityX,
+					gameSettings.HorizontalDamping
+				);
+
+				if (Mathf.Abs(newVelocityX) < gameSettings.MinHorizontalMovementSpeed)
+				{
+					newVelocityX = 0;
+				}
+
+				player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
+			}
 			else if (player.Climbing)
 			{
 				player.RigidBody2D.gravityScale = 0f;
@@ -75,6 +93,12 @@ namespace C0
 				else
 				{
 					player.RigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				}
+
+				if (player.Position.y < -20)
+				{
+					player.SetPosition(0, 4);
+					player.RigidBody2D.velocity = Vector2.zero;
 				}
 			}
 		}
