@@ -461,20 +461,18 @@ namespace C0
 			}
 		}
 
-		private void UpdateOrientation()
+		private void UpdateOrientation() 
 		{
 			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinRunSpeed)
 			{
 				Facing = 1;
-
-				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
 			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinRunSpeed)
 			{
 				Facing = -1;
-
-				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 			}
+		
+			transform.localScale = new Vector3(Facing, transform.localScale.y, transform.localScale.z);
 		}
 
 		private void OnDrawGizmos()
