@@ -385,14 +385,7 @@ namespace C0
 				return;
 			}
 
-			if (!WallSliding)
-			{
-				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
-				{
-					SetWallSlide(true);
-				}
-			}
-			else
+			if (WallSliding)
 			{
 				if (TriggerInfo.Ground || !TriggerInfo.Wall)
 				{
@@ -402,8 +395,13 @@ namespace C0
 				{
 					UpdateWallSlideTimer();
 				}
-
-				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
+			}
+			else
+			{
+				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
+				{
+					SetWallSlide(true);
+				}
 			}
 		}
 
@@ -416,7 +414,7 @@ namespace C0
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
 				rigidBody2D.velocity = Vector2.zero;
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
 
 				SetAnimation("Slide");
 			}
@@ -461,7 +459,7 @@ namespace C0
 			}
 		}
 
-		private void UpdateOrientation() 
+		private void UpdateOrientation()
 		{
 			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinRunSpeed)
 			{
@@ -471,7 +469,7 @@ namespace C0
 			{
 				Facing = -1;
 			}
-		
+
 			transform.localScale = new Vector3(Facing, transform.localScale.y, transform.localScale.z);
 		}
 
