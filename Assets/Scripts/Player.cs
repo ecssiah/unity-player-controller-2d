@@ -203,7 +203,7 @@ namespace C0
 
 			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			
+
 			targetTransform.position = startPosition;
 
 			SetAnimation("Idle");
@@ -217,7 +217,7 @@ namespace C0
 			if (Hanging)
 			{
 				ClimbLedgeCheck();
-			} 
+			}
 			else
 			{
 				TriggerUpdate();

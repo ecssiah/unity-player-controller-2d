@@ -36,8 +36,8 @@ namespace C0
 			if (player.Hanging || player.WallSliding)
 			{
 				return;
-			} 
-			
+			}
+
 			if (player.Ducking)
 			{
 				UpdateDuckMovement();
@@ -69,7 +69,7 @@ namespace C0
 			player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
 		}
 
-		private void UpdateClimbMovement() 
+		private void UpdateClimbMovement()
 		{
 			player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
 		}

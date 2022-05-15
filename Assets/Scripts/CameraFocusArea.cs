@@ -50,7 +50,7 @@ namespace C0
 			Velocity = Vector2.zero;
 
 			targetRect.center = new Vector2(
-				targetTransform.position.x, 
+				targetTransform.position.x,
 				targetTransform.position.y + TargetSize.y / 2
 			);
 
