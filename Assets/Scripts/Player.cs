@@ -103,6 +103,7 @@ namespace C0
 			{
 				Climbing = true;
 				SetAnimation("Climb");
+				rigidBody2D.gravityScale = 0;
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
 			{
@@ -121,22 +122,32 @@ namespace C0
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.velocity = gameSettings.WallJumpForceRight;
+						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+						rigidBody2D.velocity = gameSettings.WallJumpVelocityRight;
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
 						SetWallSlide(0);
-						rigidBody2D.velocity = gameSettings.WallJumpForceLeft;
+						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+						rigidBody2D.velocity = gameSettings.WallJumpVelocityLeft;
 					}
 				}
 				else if (Climbing)
 				{
 					Climbing = false;
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce);
+					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
 				}
 				else if (TriggerInfo.Ground)
 				{
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpForce);
+					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
+				}
+			}
+			else if (InputInfo.Jump == 0)
+			{
+				if (!Climbing && rigidBody2D.velocity.y > 0)
+				{
+					rigidBody2D.gravityScale = gameSettings.FallingGravityScale;
 				}
 			}
 		}
@@ -155,11 +166,10 @@ namespace C0
 
 		private IEnumerator RunClimbLedgeAction()
 		{
-			Hanging = false;
 			ClimbingLedge = true;
 
+			Hanging = false;
 			SetAnimation("ClimbLedge");
-
 			bodyCollider.enabled = false;
 
 			Transform targetTransform = transform.Find("Target").gameObject.transform;
@@ -188,15 +198,18 @@ namespace C0
 
 				yield return null;
 			}
-			
-			ClimbingLedge = false;
 
 			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			
 			targetTransform.position = startPosition;
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);
+
+			yield return null;
+
+			ClimbingLedge = false;
 		}
 
 		public void UpdateState()
@@ -358,10 +371,12 @@ namespace C0
 			if (!TriggerInfo.Climb)
 			{
 				Climbing = false;
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
 			else if (TriggerInfo.Ground && rigidBody2D.velocity.y < 0)
 			{
 				Climbing = false;
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
 		}
 
@@ -436,7 +451,7 @@ namespace C0
 				{
 					SetAnimation("Fall");
 				}
-				else if (Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
+				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
 				{
 					SetAnimation("Run");
 				}
