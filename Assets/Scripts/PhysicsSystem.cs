@@ -94,7 +94,7 @@ namespace C0
 
 				if (player.Position.y < -20)
 				{
-					player.SetPosition(0, 4);
+					player.SetPosition(gameSettings.StartPosition);
 					player.RigidBody2D.velocity = Vector2.zero;
 				}
 			}

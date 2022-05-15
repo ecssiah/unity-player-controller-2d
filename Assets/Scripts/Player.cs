@@ -69,6 +69,8 @@ namespace C0
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
 			climbableLayerMask = LayerMask.GetMask("Climbable");
+
+			SetPosition(gameSettings.StartPosition);
 		}
 
 		public void SetPosition(float x, float y)
@@ -373,7 +375,7 @@ namespace C0
 				Climbing = false;
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
-			else if (TriggerInfo.Ground && rigidBody2D.velocity.y < 0)
+			else if (TriggerInfo.Ground && rigidBody2D.velocity.y == -gameSettings.ClimbSpeed.y)
 			{
 				Climbing = false;
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -451,7 +453,7 @@ namespace C0
 				{
 					SetAnimation("Fall");
 				}
-				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
+				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > 0)
 				{
 					SetAnimation("Run");
 				}
@@ -481,6 +483,7 @@ namespace C0
 		private void OnDrawGizmos()
 		{
 			Gizmos.color = new Color(1, 0, 1, 0.4f);
+
 			Gizmos.DrawWireCube(TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size);
 			Gizmos.DrawWireCube(TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size);
 
