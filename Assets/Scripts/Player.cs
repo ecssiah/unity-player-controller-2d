@@ -6,9 +6,6 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
-		public Vector2 Velocity;
-
-		public Vector2 CameraTargetSize;
 
 		public int Facing;
 
@@ -21,7 +18,7 @@ namespace C0
 		public bool ClimbingLedge;
 
 		private float wallSlideTimer;
-		public int WallSliding;
+		public bool WallSliding;
 
 		public InputInfo InputInfo;
 		public TriggerInfo TriggerInfo;
@@ -52,7 +49,7 @@ namespace C0
 			ClimbingLedge = false;
 
 			wallSlideTimer = gameSettings.WallSlideHoldTime;
-			WallSliding = 0;
+			WallSliding = false;
 
 			animator = GetComponent<Animator>();
 
@@ -119,26 +116,29 @@ namespace C0
 
 			if (InputInfo.Jump == 1)
 			{
-				if (WallSliding != 0)
+				if (WallSliding)
 				{
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
-						SetWallSlide(0);
-						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 						rigidBody2D.velocity = gameSettings.WallJumpVelocityRight;
+						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+
+						SetWallSlide(false);
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
-						SetWallSlide(0);
-						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 						rigidBody2D.velocity = gameSettings.WallJumpVelocityLeft;
+						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+
+						SetWallSlide(false);
 					}
 				}
 				else if (Climbing)
 				{
 					Climbing = false;
-					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+
 					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
+					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 				}
 				else if (TriggerInfo.Ground)
 				{
@@ -226,8 +226,6 @@ namespace C0
 				HangUpdate();
 				ClimbUpdate();
 				WallSlideUpdate();
-
-				Velocity = rigidBody2D.velocity;
 
 				UpdateAnimation();
 				UpdateOrientation();
@@ -387,20 +385,20 @@ namespace C0
 				return;
 			}
 
-			if (WallSliding == 0)
+			if (!WallSliding)
 			{
 				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
 				{
-					SetWallSlide((int)InputInfo.Direction.x);
+					SetWallSlide(true);
 				}
 			}
 			else
 			{
 				if (TriggerInfo.Ground || !TriggerInfo.Wall)
 				{
-					SetWallSlide(0);
+					SetWallSlide(false);
 				}
-				else if (InputInfo.Direction.x != WallSliding)
+				else if (InputInfo.Direction.x != Facing)
 				{
 					UpdateWallSlideTimer();
 				}
@@ -409,11 +407,11 @@ namespace C0
 			}
 		}
 
-		private void SetWallSlide(int slideDirection)
+		private void SetWallSlide(bool wallSliding)
 		{
-			WallSliding = slideDirection;
+			WallSliding = wallSliding;
 
-			if (WallSliding != 0)
+			if (WallSliding)
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
@@ -430,7 +428,7 @@ namespace C0
 
 			if (wallSlideTimer <= 0)
 			{
-				SetWallSlide(0);
+				SetWallSlide(false);
 			}
 		}
 
@@ -442,7 +440,7 @@ namespace C0
 
 		private void UpdateAnimation()
 		{
-			if (!Ducking && !Hanging && !Climbing && WallSliding == 0)
+			if (!Ducking && !Hanging && !Climbing && !WallSliding)
 			{
 				if (rigidBody2D.velocity.y > gameSettings.MinJumpSpeed)
 				{

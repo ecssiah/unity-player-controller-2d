@@ -33,7 +33,7 @@ namespace C0
 				return;
 			}
 
-			if (player.Hanging || player.WallSliding != 0)
+			if (player.Hanging || player.WallSliding)
 			{
 				return;
 			} 
