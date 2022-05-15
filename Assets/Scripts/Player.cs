@@ -8,7 +8,7 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity;
 
-		public Vector2 CameraTarget;
+		public Vector2 CameraTargetSize;
 
 		public int Facing;
 
@@ -208,8 +208,6 @@ namespace C0
 
 			SetAnimation("Idle");
 			SetPosition(endPosition);
-
-			yield return null;
 
 			ClimbingLedge = false;
 		}
@@ -419,8 +417,9 @@ namespace C0
 			{
 				wallSlideTimer = gameSettings.WallSlideHoldTime;
 
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 				rigidBody2D.velocity = Vector2.zero;
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+
 				SetAnimation("Slide");
 			}
 		}

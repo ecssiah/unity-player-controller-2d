@@ -11,8 +11,6 @@ namespace C0
 		private Vector3 smoothDampVelocity;
 		private float smoothDampTime;
 
-		private Vector3 offset;
-
 		private FocusArea focusArea;
 
 		void Start()
@@ -23,7 +21,6 @@ namespace C0
 
 			smoothDampTime = 0.05f;
 
-			offset = Vector3.zero;
 			focusArea = new FocusArea(targetObject.transform);
 		}
 
@@ -38,7 +35,7 @@ namespace C0
 
 			Vector3 focusPosition = Vector3.SmoothDamp(
 				transform.position,
-				focusArea.Center + offset,
+				focusArea.FocusCenter,
 				ref smoothDampVelocity,
 				smoothDampTime
 			);
@@ -53,7 +50,7 @@ namespace C0
 				Gizmos.color = new Color(1, 0, 1, 0.1f);
 
 				Gizmos.DrawWireCube(focusArea.TargetCenter, focusArea.TargetSize);
-				Gizmos.DrawWireCube(focusArea.Center + offset, focusArea.FocusSize);
+				Gizmos.DrawWireCube(focusArea.FocusCenter, focusArea.FocusSize);
 			}
 		}
 	}

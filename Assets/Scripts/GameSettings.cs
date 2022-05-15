@@ -39,5 +39,9 @@ namespace C0
 		[Space]
 		public Vector2 ClimbLedgeOffsetRight = new Vector2(0.62f, 1.37f);
 		public Vector2 ClimbLedgeOffsetLeft = new Vector2(-0.62f, 1.37f);
+
+		[Space]
+		public Vector2 CameraTargetSize = new Vector3(0.5f, 1.6f);
+		public Vector2 FocusTargetSize = new Vector3(3, 5);
 	}
 }

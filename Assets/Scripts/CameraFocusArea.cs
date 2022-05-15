@@ -6,19 +6,23 @@ namespace C0
 	{
 		private readonly Transform targetTransform;
 
+		private readonly GameSettings gameSettings;
+
+		public Vector2 Velocity;
+
 		private Rect targetRect;
 		public Vector3 TargetCenter => targetRect.center;
 		public Vector3 TargetSize => targetRect.size;
 
 		private Rect focusRect;
-		public Vector3 Center => focusRect.center;
+		public Vector3 FocusCenter => focusRect.center;
 		public Vector3 FocusSize => focusRect.size;
-
-		public Vector2 Velocity;
 
 		public FocusArea(Transform targetTransform)
 		{
 			this.targetTransform = targetTransform;
+
+			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			targetRect = new Rect
 			{
@@ -26,14 +30,17 @@ namespace C0
 					targetTransform.position.x,
 					targetTransform.position.y + TargetSize.y / 2
 				),
-				size = new Vector3(0.5f, 1.6f)
+				size = gameSettings.CameraTargetSize
 			};
 
-			focusRect = new Rect(Vector2.zero, new Vector3(3, 5));
-			focusRect.position = new Vector2(
-				targetTransform.position.x - focusRect.size.x / 2,
-				targetTransform.position.y
-			);
+			focusRect = new Rect
+			{
+				center = new Vector2(
+					targetTransform.position.x - gameSettings.FocusTargetSize.x / 2,
+					targetTransform.position.y
+				),
+				size = gameSettings.FocusTargetSize
+			};
 
 			Velocity = Vector2.zero;
 		}

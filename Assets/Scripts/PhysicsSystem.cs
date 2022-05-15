@@ -40,63 +40,78 @@ namespace C0
 			
 			if (player.Ducking)
 			{
-				float newVelocityX = Mathf.SmoothDamp(
-					player.RigidBody2D.velocity.x,
-					0,
-					ref playerDampedVelocityX,
-					gameSettings.GroundSpeedSmoothTime
-				);
-
-				if (Mathf.Abs(newVelocityX) < gameSettings.MinHorizontalMovementSpeed)
-				{
-					newVelocityX = 0;
-				}
-
-				player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
+				UpdateDuckMovement();
 			}
 			else if (player.Climbing)
 			{
-				player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
+				UpdateClimbMovement();
 			}
 			else
 			{
-				Vector2 newVelocity;
+				UpdateRunMovement();
+			}
+		}
 
-				newVelocity.x = Mathf.SmoothDamp(
-					player.RigidBody2D.velocity.x,
-					player.InputInfo.Direction.x * gameSettings.RunSpeed,
-					ref playerDampedVelocityX,
-					player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
-				);
+		private void UpdateDuckMovement()
+		{
+			float newVelocityX = Mathf.SmoothDamp(
+				player.RigidBody2D.velocity.x,
+				0,
+				ref playerDampedVelocityX,
+				gameSettings.GroundSpeedSmoothTime
+			);
 
-				if (Mathf.Abs(newVelocity.x) < gameSettings.MinHorizontalMovementSpeed)
-				{
-					newVelocity.x = 0;
-				}
+			if (Mathf.Abs(newVelocityX) < gameSettings.MinHorizontalMovementSpeed)
+			{
+				newVelocityX = 0;
+			}
 
-				newVelocity.y = player.RigidBody2D.velocity.y;
+			player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
+		}
 
-				if (newVelocity.y < gameSettings.TerminalVelocity)
-				{
-					newVelocity.y = gameSettings.TerminalVelocity;
-				}
+		private void UpdateClimbMovement() 
+		{
+			player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
+		}
 
-				player.RigidBody2D.velocity = newVelocity;
+		private void UpdateRunMovement()
+		{
+			Vector2 newVelocity;
 
-				if (player.TriggerInfo.Ground)
-				{
-					player.RigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-				}
-				else if (player.RigidBody2D.velocity.y < -gameSettings.MinFallSpeed)
-				{
-					player.RigidBody2D.gravityScale = gameSettings.FallingGravityScale;
-				}
+			newVelocity.x = Mathf.SmoothDamp(
+				player.RigidBody2D.velocity.x,
+				player.InputInfo.Direction.x * gameSettings.RunSpeed,
+				ref playerDampedVelocityX,
+				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
+			);
 
-				if (player.Position.y < -20)
-				{
-					player.SetPosition(gameSettings.StartPosition);
-					player.RigidBody2D.velocity = Vector2.zero;
-				}
+			if (Mathf.Abs(newVelocity.x) < gameSettings.MinHorizontalMovementSpeed)
+			{
+				newVelocity.x = 0;
+			}
+
+			newVelocity.y = player.RigidBody2D.velocity.y;
+
+			if (newVelocity.y < gameSettings.TerminalVelocity)
+			{
+				newVelocity.y = gameSettings.TerminalVelocity;
+			}
+
+			player.RigidBody2D.velocity = newVelocity;
+
+			if (player.TriggerInfo.Ground)
+			{
+				player.RigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			}
+			else if (player.RigidBody2D.velocity.y < -gameSettings.MinFallSpeed)
+			{
+				player.RigidBody2D.gravityScale = gameSettings.FallingGravityScale;
+			}
+
+			if (player.Position.y < -20)
+			{
+				player.SetPosition(gameSettings.StartPosition);
+				player.RigidBody2D.velocity = Vector2.zero;
 			}
 		}
 	}
