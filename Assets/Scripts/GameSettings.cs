@@ -14,20 +14,18 @@ namespace C0
 		public float TerminalVelocity = -30f;
 
 		[Space]
-		public float RunSpeed = 12f;
+		public float RunSpeed = 10f;
 		public float MinMoveSpeed = 0.01f;
 		public float MinRunSpeed = 1.2f;
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
-		public float GroundSpeedSmoothTime = 0.14f;
+		public float GroundSpeedSmoothTime = 0.11f;
 		public float AirSpeedSmoothTime = 0.27f;
 
 		[Space]
-		public float JumpVelocity = 18f;
+		public float JumpVelocity = 22f;
 		public Vector2 WallJumpVelocity = new Vector2(1200f, 18f);
-
-		[Space]
 		public float WallSlideHoldTime = 0.3f;
 
 		[Space]
