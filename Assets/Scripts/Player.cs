@@ -7,7 +7,7 @@ namespace C0
 	{
 		public Vector2 Position => transform.position;
 
-		public int Facing;
+		public float Facing => transform.localScale.x;
 
 		public bool Ducking;
 
@@ -40,8 +40,6 @@ namespace C0
 		void Awake()
 		{
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
-
-			Facing = 1;
 
 			Ducking = false;
 
@@ -118,14 +116,14 @@ namespace C0
 				{
 					if (Facing == 1 && InputInfo.Direction.x == -1)
 					{
-						rigidBody2D.velocity = gameSettings.WallJumpVelocityRight;
+						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 
 						SetWallSlide(false);
 					}
 					else if (Facing == -1 && InputInfo.Direction.x == 1)
 					{
-						rigidBody2D.velocity = gameSettings.WallJumpVelocityLeft;
+						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 
 						SetWallSlide(false);
@@ -179,7 +177,7 @@ namespace C0
 			{
 				cameraTarget.transform.localPosition = Vector2.Lerp(
 					Vector2.zero,
-					gameSettings.ClimbLedgeOffsetRight,
+					gameSettings.ClimbLedgeOffset,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
 
@@ -193,15 +191,8 @@ namespace C0
 
 			SetAnimation("Idle");
 
-			if (Facing == 1)
-			{
-				transform.Translate(gameSettings.ClimbLedgeOffsetRight);
-			}
-			else if (Facing == -1)
-			{
-				transform.Translate(gameSettings.ClimbLedgeOffsetLeft);
-			}
-
+			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
+			
 			ClimbingLedge = false;
 		}
 
@@ -338,14 +329,7 @@ namespace C0
 					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
 				);
 
-				if (Facing == 1)
-				{
-					position += gameSettings.HangPositionOffsetRight;
-				}
-				else if (Facing == -1)
-				{
-					position += gameSettings.HangPositionOffsetLeft;
-				}
+				position += transform.localScale * gameSettings.HangOffset;
 
 				SetAnimation("Hang");
 				SetPosition(position);
@@ -456,14 +440,12 @@ namespace C0
 		{
 			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinRunSpeed)
 			{
-				Facing = 1;
+				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
 			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinRunSpeed)
 			{
-				Facing = -1;
+				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 			}
-
-			transform.localScale = new Vector3(Facing, transform.localScale.y, transform.localScale.z);
 		}
 
 		private void OnDrawGizmos()

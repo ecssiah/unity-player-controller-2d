@@ -61,7 +61,7 @@ namespace C0
 				gameSettings.GroundSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocityX) < gameSettings.MinHorizontalMovementSpeed)
+			if (Mathf.Abs(newVelocityX) < gameSettings.MinMoveSpeed)
 			{
 				newVelocityX = 0;
 			}
@@ -85,7 +85,7 @@ namespace C0
 				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocity.x) < gameSettings.MinHorizontalMovementSpeed)
+			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
 			}
