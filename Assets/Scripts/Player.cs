@@ -93,13 +93,16 @@ namespace C0
 			else if (Hanging && InputInfo.Direction.y < 0)
 			{
 				Hanging = false;
+
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
 				Climbing = true;
-				SetAnimation("Climb");
+
 				rigidBody2D.gravityScale = 0;
+				
+				SetAnimation("Climb");
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
 			{
@@ -115,14 +118,7 @@ namespace C0
 			{
 				if (WallSliding)
 				{
-					if (Facing == 1 && InputInfo.Direction.x == -1)
-					{
-						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
-						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-
-						SetWallSlide(false);
-					}
-					else if (Facing == -1 && InputInfo.Direction.x == 1)
+					if (InputInfo.Direction.x == -Facing)
 					{
 						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -373,7 +369,12 @@ namespace C0
 				}
 				else if (InputInfo.Direction.x != Facing)
 				{
-					UpdateWallSlideTimer();
+					wallSlideTimer -= Time.deltaTime;
+
+					if (wallSlideTimer <= 0)
+					{
+						SetWallSlide(false);
+					}
 				}
 			}
 			else
@@ -397,16 +398,6 @@ namespace C0
 				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
 
 				SetAnimation("Slide");
-			}
-		}
-
-		private void UpdateWallSlideTimer()
-		{
-			wallSlideTimer -= Time.deltaTime;
-
-			if (wallSlideTimer <= 0)
-			{
-				SetWallSlide(false);
 			}
 		}
 
