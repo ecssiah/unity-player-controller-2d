@@ -15,10 +15,11 @@ namespace C0
 		public bool Hanging;
 
 		public bool Climbing;
-		public bool ClimbingLedge;
 
 		private float wallSlideTimer;
 		public bool WallSliding;
+		
+		public bool ClimbingLedge;
 
 		public InputInfo InputInfo;
 		public TriggerInfo TriggerInfo;
@@ -48,20 +49,13 @@ namespace C0
 			Hanging = false;
 
 			Climbing = false;
-			ClimbingLedge = false;
 
 			wallSlideTimer = gameSettings.WallSlideHoldTime;
 			WallSliding = false;
 
-			animator = GetComponent<Animator>();
+			ClimbingLedge = false;
 
-			foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
-			{
-				if (clip.name == "Player-ClimbLedge")
-				{
-					clip.wrapMode = WrapMode.Once;
-				}
-			}
+			animator = GetComponent<Animator>();
 
 			bodyCollider = GetComponent<Collider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
@@ -179,24 +173,13 @@ namespace C0
 			Hanging = false;
 			bodyCollider.enabled = false;
 
-			Vector2 climbOffset = Vector2.zero;
-
-			if (Facing == 1)
-			{
-				climbOffset = gameSettings.ClimbLedgeOffsetRight;
-			}
-			else if (Facing == -1)
-			{
-				climbOffset = gameSettings.ClimbLedgeOffsetLeft;
-			}
-
 			yield return null;
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
 				cameraTarget.transform.localPosition = Vector2.Lerp(
 					Vector2.zero,
-					climbOffset,
+					gameSettings.ClimbLedgeOffsetRight,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
 
@@ -209,7 +192,15 @@ namespace C0
 			cameraTarget.transform.localPosition = Vector2.zero;
 
 			SetAnimation("Idle");
-			SetPosition(Position + climbOffset);
+
+			if (Facing == 1)
+			{
+				transform.Translate(gameSettings.ClimbLedgeOffsetRight);
+			}
+			else if (Facing == -1)
+			{
+				transform.Translate(gameSettings.ClimbLedgeOffsetLeft);
+			}
 
 			ClimbingLedge = false;
 		}
