@@ -53,20 +53,22 @@ namespace C0
 
 		private void UpdateDuckMovement()
 		{
-			float newVelocityX = Mathf.SmoothDamp(
+			Vector2 newVelocity = Vector2.zero;
+
+			newVelocity.x = Mathf.SmoothDamp(
 				player.RigidBody2D.velocity.x,
 				0,
-				ref player.DampedVelocityX,
+				ref player.DampingVelocity,
 				gameSettings.GroundSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocityX) < gameSettings.MinMoveSpeed)
+			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
 			{
-				newVelocityX = 0;
-				player.DampedVelocityX = 0;
+				newVelocity.x = 0;
+				player.DampingVelocity = 0;
 			}
 
-			player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
+			player.RigidBody2D.velocity = newVelocity;
 		}
 
 		private void UpdateClimbMovement()
@@ -81,7 +83,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
-				ref player.DampedVelocityX,
+				ref player.DampingVelocity,
 				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 

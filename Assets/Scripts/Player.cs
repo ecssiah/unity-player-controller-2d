@@ -6,7 +6,7 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
-		public float DampedVelocityX;
+		public float DampingVelocity;
 
 		public float Facing => transform.localScale.x;
 
@@ -190,7 +190,7 @@ namespace C0
 
 			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
 			rigidBody2D.velocity = Vector2.zero;
-			DampedVelocityX = 0;
+			DampingVelocity = 0;
 			
 			ClimbingLedge = false;
 		}
@@ -300,6 +300,7 @@ namespace C0
 				if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
 				{
 					Ducking = true;
+
 					SetAnimation("Duck");
 					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 				}
@@ -315,23 +316,21 @@ namespace C0
 
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
-				Hanging = true;
 				Climbing = false;
 
+				Hanging = true;
+				SetAnimation("Hang");
 				hangTimer = gameSettings.HangTime;
 
 				rigidBody2D.gravityScale = 0;
 				rigidBody2D.velocity = Vector2.zero;
 
-				Vector2 position = new Vector2(
+				Vector2 ledgePosition = new Vector2(
 					Mathf.Round(TriggerInfo.WallMidBounds.center.x),
 					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
 				);
 
-				position += transform.localScale * gameSettings.HangOffset;
-
-				SetAnimation("Hang");
-				SetPosition(position);
+				SetPosition(ledgePosition + transform.localScale * gameSettings.HangOffset);
 			}
 		}
 
@@ -347,7 +346,7 @@ namespace C0
 				Climbing = false;
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
-			else if (TriggerInfo.Ground && rigidBody2D.velocity.y == -gameSettings.ClimbSpeed.y)
+			else if (TriggerInfo.Ground && Mathf.Approximately(rigidBody2D.velocity.y, -gameSettings.ClimbSpeed.y))
 			{
 				Climbing = false;
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;

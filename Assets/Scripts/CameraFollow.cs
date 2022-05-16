@@ -8,10 +8,10 @@ namespace C0
 
 		private GameObject targetObject;
 
+		private FocusArea focusArea;
+
 		private Vector3 smoothDampVelocity;
 		private float smoothDampTime;
-
-		private FocusArea focusArea;
 
 		void Start()
 		{
