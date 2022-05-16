@@ -31,6 +31,8 @@ namespace C0
 
 		public Rigidbody2D RigidBody2D => rigidBody2D;
 
+		private GameObject cameraTarget;
+
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
 
@@ -63,6 +65,8 @@ namespace C0
 
 			bodyCollider = GetComponent<Collider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
+
+			cameraTarget = transform.Find("Target").gameObject;
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
 			climbableLayerMask = LayerMask.GetMask("Climbable");
@@ -170,31 +174,29 @@ namespace C0
 		{
 			ClimbingLedge = true;
 
-			Hanging = false;
 			SetAnimation("ClimbLedge");
+			
+			Hanging = false;
 			bodyCollider.enabled = false;
 
-			Transform targetTransform = transform.Find("Target").gameObject.transform;
-
-			Vector2 startPosition = targetTransform.position;
-			Vector2 endPosition = startPosition;
+			Vector2 climbOffset = Vector2.zero;
 
 			if (Facing == 1)
 			{
-				endPosition += gameSettings.ClimbLedgeOffsetRight;
+				climbOffset = gameSettings.ClimbLedgeOffsetRight;
 			}
 			else if (Facing == -1)
 			{
-				endPosition += gameSettings.ClimbLedgeOffsetLeft;
+				climbOffset = gameSettings.ClimbLedgeOffsetLeft;
 			}
 
 			yield return null;
 
 			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
-				targetTransform.position = Vector2.Lerp(
-					startPosition,
-					endPosition,
+				cameraTarget.transform.localPosition = Vector2.Lerp(
+					Vector2.zero,
+					climbOffset,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
 
@@ -204,10 +206,10 @@ namespace C0
 			bodyCollider.enabled = true;
 			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 
-			targetTransform.position = startPosition;
+			cameraTarget.transform.localPosition = Vector2.zero;
 
 			SetAnimation("Idle");
-			SetPosition(endPosition);
+			SetPosition(Position + climbOffset);
 
 			ClimbingLedge = false;
 		}
