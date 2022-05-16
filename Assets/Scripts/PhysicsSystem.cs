@@ -71,7 +71,7 @@ namespace C0
 			player.RigidBody2D.velocity = newVelocity;
 		}
 
-		private void UpdateClimbMovement()
+		private void UpdateClimbMovement()   
 		{
 			player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
 		}
