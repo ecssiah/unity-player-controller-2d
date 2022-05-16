@@ -7,7 +7,6 @@ namespace C0
 		private GameSettings gameSettings;
 
 		private Player player;
-		private float playerDampedVelocityX;
 
 		public void AwakeSystem()
 		{
@@ -57,13 +56,14 @@ namespace C0
 			float newVelocityX = Mathf.SmoothDamp(
 				player.RigidBody2D.velocity.x,
 				0,
-				ref playerDampedVelocityX,
+				ref player.DampedVelocityX,
 				gameSettings.GroundSpeedSmoothTime
 			);
 
 			if (Mathf.Abs(newVelocityX) < gameSettings.MinMoveSpeed)
 			{
 				newVelocityX = 0;
+				player.DampedVelocityX = 0;
 			}
 
 			player.RigidBody2D.velocity = new Vector2(newVelocityX, 0);
@@ -76,21 +76,20 @@ namespace C0
 
 		private void UpdateRunMovement()
 		{
-			Vector2 newVelocity;
+			Vector2 newVelocity = player.RigidBody2D.velocity;
 
 			newVelocity.x = Mathf.SmoothDamp(
-				player.RigidBody2D.velocity.x,
+				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
-				ref playerDampedVelocityX,
+				ref player.DampedVelocityX,
 				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 
 			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
+				player.DampedVelocityX = 0;
 			}
-
-			newVelocity.y = player.RigidBody2D.velocity.y;
 
 			if (newVelocity.y < gameSettings.TerminalVelocity)
 			{

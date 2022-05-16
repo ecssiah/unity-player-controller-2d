@@ -6,6 +6,7 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
+		public float DampedVelocityX;
 
 		public float Facing => transform.localScale.x;
 
@@ -192,6 +193,8 @@ namespace C0
 			SetAnimation("Idle");
 
 			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
+			rigidBody2D.velocity = Vector2.zero;
+			DampedVelocityX = 0;
 			
 			ClimbingLedge = false;
 		}
