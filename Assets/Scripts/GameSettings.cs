@@ -15,7 +15,7 @@ namespace C0
 
 		[Space]
 		public float RunSpeed = 12f;
-		public float MinMoveSpeed = 0.11f;
+		public float MinMoveSpeed = 0.01f;
 		public float MinRunSpeed = 1.2f;
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;

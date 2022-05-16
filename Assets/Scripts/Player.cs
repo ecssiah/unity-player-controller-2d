@@ -428,7 +428,7 @@ namespace C0
 				{
 					SetAnimation("Fall");
 				}
-				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > 0)
+				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
 				{
 					SetAnimation("Run");
 				}

@@ -88,7 +88,6 @@ namespace C0
 			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
-				player.DampedVelocityX = 0;
 			}
 
 			if (newVelocity.y < gameSettings.TerminalVelocity)
