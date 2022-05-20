@@ -12,7 +12,7 @@ namespace C0
 
 		public bool Ducking;
 
-		private float hangTimer;
+		private float nextHangTime;
 		public bool Hanging;
 
 		public bool Climbing;
@@ -44,7 +44,7 @@ namespace C0
 
 			Ducking = false;
 
-			hangTimer = gameSettings.HangTime;
+			nextHangTime = gameSettings.HangTime;
 			Hanging = false;
 
 			Climbing = false;
@@ -149,12 +149,10 @@ namespace C0
 
 		public void ClimbLedgeCheck()
 		{
-			if (hangTimer > 0)
+			if (Time.time >= nextHangTime && InputInfo.Direction.y > 0)
 			{
-				hangTimer -= Time.deltaTime;
-			}
-			else if (InputInfo.Direction.y > 0)
-			{
+				nextHangTime = Time.time + gameSettings.HangTime;
+
 				StartCoroutine(RunClimbLedgeAction());
 			}
 		}
@@ -320,7 +318,7 @@ namespace C0
 
 				Hanging = true;
 				SetAnimation("Hang");
-				hangTimer = gameSettings.HangTime;
+				nextHangTime = Time.time + gameSettings.HangTime;
 
 				rigidBody2D.gravityScale = 0;
 				rigidBody2D.velocity = Vector2.zero;

@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
+  StartPosition: {x: -41, y: 2}
   DefaultGravityScale: 6
   FallingGravityScale: 8.6
   WallSlideGravityScale: 0.4
   TerminalVelocity: -30
-  MinHorizontalMovementSpeed: 0.11
+  RunSpeed: 10
+  MinMoveSpeed: 0.01
   MinRunSpeed: 1.2
   MinJumpSpeed: 0.01
   MinFallSpeed: 0.01
-  RunSpeed: 10
   ClimbSpeed: {x: 1.8, y: 3.2}
   GroundSpeedSmoothTime: 0.11
   AirSpeedSmoothTime: 0.27
   JumpVelocity: 22
-  WallJumpVelocityRight: {x: 1300, y: 18}
-  WallJumpVelocityLeft: {x: -1300, y: 18}
+  WallJumpVelocity: {x: 1200, y: 18}
   WallSlideHoldTime: 0.3
   HangTime: 0.2
-  HangPositionOffsetRight: {x: -0.185, y: -1.37}
-  HangPositionOffsetLeft: {x: 0.185, y: -1.37}
-  ClimbLedgeOffsetRight: {x: 0.62, y: 1.37}
-  ClimbLedgeOffsetLeft: {x: -0.62, y: 1.37}
+  HangOffset: {x: -0.185, y: -1.37}
+  ClimbLedgeOffset: {x: 0.62, y: 1.37}
+  CameraTargetSize: {x: 0.5, y: 1.6}
+  FocusTargetSize: {x: 3, y: 5}
