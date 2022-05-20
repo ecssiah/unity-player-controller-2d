@@ -83,7 +83,7 @@ namespace C0
 			{
 				SetHanging(false);
 			}
-			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
+			else if (TriggerInfo.Ledge && InputInfo.Direction.y != 0)
 			{
 				SetClimbing(true);
 			}
@@ -184,28 +184,28 @@ namespace C0
 			}
 			else
 			{
-				TriggerUpdate();
+				UpdateTriggers();
 
-				DuckUpdate();
-				HangUpdate();
-				ClimbUpdate();
-				WallSlideUpdate();
+				UpdateDuck();
+				UpdateHang();
+				UpdateClimb();
+				UpdateWallSlide();
 
 				UpdateAnimation();
 				UpdateOrientation();
 			}
 		}
 
-		private void TriggerUpdate()
+		private void UpdateTriggers()
 		{
 			TriggerInfo.Reset();
 
-			GroundCheck();
-			ClimbCheck();
-			WallCheck();
+			UpdateGroundTrigger();
+			UpdateLedgeTrigger();
+			UpdateWallTriggers();
 		}
 
-		private void GroundCheck()
+		private void UpdateGroundTrigger()
 		{
 			TriggerInfo.GroundBounds = new Bounds(
 				transform.position + 0.025f * Vector3.down,
@@ -218,7 +218,7 @@ namespace C0
 			);
 		}
 
-		private void ClimbCheck()
+		private void UpdateLedgeTrigger()
 		{
 			TriggerInfo.ClimbBounds = new Bounds(
 				transform.position + 0.6f * Vector3.up,
@@ -231,7 +231,7 @@ namespace C0
 			);
 		}
 
-		private void WallCheck()
+		private void UpdateWallTriggers()
 		{
 			float horizontalOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
 
@@ -266,7 +266,7 @@ namespace C0
 			);
 		}
 
-		private void DuckUpdate()
+		private void UpdateDuck()
 		{
 			if (Ducking)
 			{
@@ -284,7 +284,7 @@ namespace C0
 			}
 		}
 
-		private void HangUpdate()
+		private void UpdateHang()
 		{
 			if (Ducking)
 			{
@@ -298,24 +298,24 @@ namespace C0
 			}
 		}
 
-		private void ClimbUpdate()
+		private void UpdateClimb()
 		{
 			if (!Climbing)
 			{
 				return;
 			}
 
-			if (!TriggerInfo.Climb)
+			if (!TriggerInfo.Ledge)
 			{
 				SetClimbing(false);
 			}
-			else if (TriggerInfo.Ground && Mathf.Approximately(rigidBody2D.velocity.y, -gameSettings.ClimbSpeed.y))
+			else if (TriggerInfo.Ground && rigidBody2D.velocity.y < 0)
 			{
 				SetClimbing(false);
 			}
 		}
 
-		private void WallSlideUpdate()
+		private void UpdateWallSlide()
 		{
 			if (Ducking || Hanging || Climbing)
 			{
@@ -395,6 +395,7 @@ namespace C0
 				SetAnimation("Climb");
 
 				rigidBody2D.gravityScale = 0;
+				CurrentDampedVelocity = 0;
 			}
 			else
 			{
