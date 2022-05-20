@@ -58,14 +58,14 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.RigidBody2D.velocity.x,
 				0,
-				ref player.DampingVelocity,
+				ref player.CurrentDampedVelocity,
 				gameSettings.GroundSpeedSmoothTime
 			);
 
 			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
-				player.DampingVelocity = 0;
+				player.CurrentDampedVelocity = 0;
 			}
 
 			player.RigidBody2D.velocity = newVelocity;
@@ -83,7 +83,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				newVelocity.x,
 				player.InputInfo.Direction.x * gameSettings.RunSpeed,
-				ref player.DampingVelocity,
+				ref player.CurrentDampedVelocity,
 				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 

@@ -6,20 +6,15 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public Vector2 Position => transform.position;
-		public float DampingVelocity;
-
 		public float Facing => transform.localScale.x;
+		public Rigidbody2D RigidBody2D => rigidBody2D;
+
+		public float CurrentDampedVelocity;
 
 		public bool Ducking;
-
-		private float nextHangTime;
 		public bool Hanging;
-
 		public bool Climbing;
-
-		private float wallSlideTimer;
 		public bool WallSliding;
-		
 		public bool ClimbingLedge;
 
 		public InputInfo InputInfo;
@@ -31,31 +26,25 @@ namespace C0
 		private Collider2D bodyCollider;
 		private Rigidbody2D rigidBody2D;
 
-		public Rigidbody2D RigidBody2D => rigidBody2D;
-
 		private GameObject cameraTarget;
 
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
+
+		private float nextClimbUpTime;
+		private float wallSlideFallOffTime;
 
 		void Awake()
 		{
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			Ducking = false;
-
-			nextHangTime = gameSettings.HangTime;
 			Hanging = false;
-
 			Climbing = false;
-
-			wallSlideTimer = gameSettings.WallSlideHoldTime;
 			WallSliding = false;
-
 			ClimbingLedge = false;
 
 			animator = GetComponent<Animator>();
-
 			bodyCollider = GetComponent<Collider2D>();
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
@@ -88,21 +77,15 @@ namespace C0
 
 			if (Ducking && InputInfo.Direction.y == 0)
 			{
-				Ducking = false;
+				SetDucking(false);
 			}
 			else if (Hanging && InputInfo.Direction.y < 0)
 			{
-				Hanging = false;
-
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				SetHanging(false);
 			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
-				Climbing = true;
-
-				rigidBody2D.gravityScale = 0;
-				
-				SetAnimation("Climb");
+				SetClimbing(true);
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
 			{
@@ -120,15 +103,15 @@ namespace C0
 				{
 					if (InputInfo.Direction.x == -Facing)
 					{
+						SetWallSlide(false);
+					
 						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-
-						SetWallSlide(false);
 					}
 				}
 				else if (Climbing)
 				{
-					Climbing = false;
+					SetClimbing(false);
 
 					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
 					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -149,9 +132,9 @@ namespace C0
 
 		public void ClimbLedgeCheck()
 		{
-			if (Time.time >= nextHangTime && InputInfo.Direction.y > 0)
+			if (InputInfo.Direction.y > 0 && Time.time >= nextClimbUpTime)
 			{
-				nextHangTime = Time.time + gameSettings.HangTime;
+				nextClimbUpTime = Time.time + gameSettings.HangTimeBeforeClimb;
 
 				StartCoroutine(RunClimbLedgeAction());
 			}
@@ -161,10 +144,9 @@ namespace C0
 		{
 			ClimbingLedge = true;
 
-			SetAnimation("ClimbLedge");
-			
-			Hanging = false;
 			bodyCollider.enabled = false;
+
+			SetAnimation("ClimbLedge");
 
 			yield return null;
 
@@ -179,16 +161,17 @@ namespace C0
 				yield return null;
 			}
 
-			bodyCollider.enabled = true;
-			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-
-			cameraTarget.transform.localPosition = Vector2.zero;
-
+			SetHanging(false);
 			SetAnimation("Idle");
 
-			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
+			bodyCollider.enabled = true;
 			rigidBody2D.velocity = Vector2.zero;
-			DampingVelocity = 0;
+			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+
+			CurrentDampedVelocity = 0;
+			
+			cameraTarget.transform.localPosition = Vector2.zero;
+			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
 			
 			ClimbingLedge = false;
 		}
@@ -250,12 +233,11 @@ namespace C0
 
 		private void WallCheck()
 		{
-			float wallTriggerXOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
-			Vector2 wallTriggerSize = new Vector2(0.1f, 0.2f);
+			float horizontalOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
 
 			TriggerInfo.WallTopBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 1.1f * bodyCollider.bounds.size.y),
-				wallTriggerSize
+				transform.position + new Vector3(horizontalOffset, 1.1f * bodyCollider.bounds.size.y),
+				gameSettings.WallTriggerSize
 			);
 
 			TriggerInfo.WallTop = Physics2D.OverlapBox
@@ -264,8 +246,8 @@ namespace C0
 			);
 
 			TriggerInfo.WallMidBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 0.8f * bodyCollider.bounds.size.y),
-				wallTriggerSize
+				transform.position + new Vector3(horizontalOffset, 0.8f * bodyCollider.bounds.size.y),
+				gameSettings.WallTriggerSize
 			);
 
 			TriggerInfo.WallMid = Physics2D.OverlapBox
@@ -274,8 +256,8 @@ namespace C0
 			);
 
 			TriggerInfo.WallLowBounds = new Bounds(
-				transform.position + new Vector3(wallTriggerXOffset, 0.1f * bodyCollider.bounds.size.y),
-				wallTriggerSize
+				transform.position + new Vector3(horizontalOffset, 0.1f * bodyCollider.bounds.size.y),
+				gameSettings.WallTriggerSize
 			);
 
 			TriggerInfo.WallLow = Physics2D.OverlapBox
@@ -290,17 +272,14 @@ namespace C0
 			{
 				if (!TriggerInfo.Ground)
 				{
-					Ducking = false;
+					SetDucking(false);
 				}
 			}
 			else
 			{
 				if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
 				{
-					Ducking = true;
-
-					SetAnimation("Duck");
-					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+					SetDucking(true);
 				}
 			}
 		}
@@ -314,21 +293,8 @@ namespace C0
 
 			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
 			{
-				Climbing = false;
-
-				Hanging = true;
-				SetAnimation("Hang");
-				nextHangTime = Time.time + gameSettings.HangTime;
-
-				rigidBody2D.gravityScale = 0;
-				rigidBody2D.velocity = Vector2.zero;
-
-				Vector2 ledgePosition = new Vector2(
-					Mathf.Round(TriggerInfo.WallMidBounds.center.x),
-					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
-				);
-
-				SetPosition(ledgePosition + transform.localScale * gameSettings.HangOffset);
+				SetClimbing(false);
+				SetHanging(true);
 			}
 		}
 
@@ -341,13 +307,11 @@ namespace C0
 
 			if (!TriggerInfo.Climb)
 			{
-				Climbing = false;
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				SetClimbing(false);
 			}
 			else if (TriggerInfo.Ground && Mathf.Approximately(rigidBody2D.velocity.y, -gameSettings.ClimbSpeed.y))
 			{
-				Climbing = false;
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+				SetClimbing(false);
 			}
 		}
 
@@ -364,14 +328,14 @@ namespace C0
 				{
 					SetWallSlide(false);
 				}
-				else if (InputInfo.Direction.x != Facing)
-				{
-					wallSlideTimer -= Time.deltaTime;
 
-					if (wallSlideTimer <= 0)
-					{
-						SetWallSlide(false);
-					}
+				if (InputInfo.Direction.x == Facing)
+				{
+					wallSlideFallOffTime = Time.time + gameSettings.WallSlideHoldTime;
+				}
+				else if (InputInfo.Direction.x != Facing && Time.time >= wallSlideFallOffTime)
+				{
+					SetWallSlide(false);
 				}
 			}
 			else
@@ -383,13 +347,68 @@ namespace C0
 			}
 		}
 
+		private void SetHanging(bool hanging)
+		{
+			Hanging = hanging;
+
+			if (Hanging)
+			{
+				SetAnimation("Hang");
+
+				rigidBody2D.gravityScale = 0;
+				rigidBody2D.velocity = Vector2.zero;
+				CurrentDampedVelocity = 0;
+
+				nextClimbUpTime = Time.time + gameSettings.HangTimeBeforeClimb;
+
+				Vector2 ledgePosition = new Vector2(
+					Mathf.Round(TriggerInfo.WallMidBounds.center.x),
+					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
+				);
+
+				SetPosition(ledgePosition + transform.localScale * gameSettings.HangOffset);
+			}
+			else
+			{
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			}
+		}
+
+		private void SetDucking(bool ducking)
+		{
+			Ducking = ducking;
+
+			if (Ducking)
+			{
+				SetAnimation("Duck");
+
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			}
+		}
+
+		private void SetClimbing(bool climbing)
+		{
+			Climbing = climbing;
+
+			if (Climbing)
+			{
+				SetAnimation("Climb");
+
+				rigidBody2D.gravityScale = 0;
+			}
+			else
+			{
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			}
+		}
+
 		private void SetWallSlide(bool wallSliding)
 		{
 			WallSliding = wallSliding;
 
 			if (WallSliding)
 			{
-				wallSlideTimer = gameSettings.WallSlideHoldTime;
+				wallSlideFallOffTime = Time.time + gameSettings.WallSlideHoldTime;
 
 				rigidBody2D.velocity = Vector2.zero;
 				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;

@@ -29,7 +29,7 @@ namespace C0
 		public float WallSlideHoldTime = 0.3f;
 
 		[Space]
-		public float HangTime = 0.2f;
+		public float HangTimeBeforeClimb = 0.2f;
 		public Vector2 HangOffset = new Vector2(-0.185f, -1.37f);
 
 		[Space]
@@ -38,5 +38,8 @@ namespace C0
 		[Space]
 		public Vector2 CameraTargetSize = new Vector3(0.5f, 1.6f);
 		public Vector2 FocusTargetSize = new Vector3(3, 5);
+
+		[Space]
+		public Vector2 WallTriggerSize = new Vector2(0.1f, 0.2f);
 	}
 }
