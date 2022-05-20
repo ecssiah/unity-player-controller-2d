@@ -103,7 +103,7 @@ namespace C0
 				{
 					if (InputInfo.Direction.x == -Facing)
 					{
-						SetWallSlide(false);
+						SetWallSliding(false);
 
 						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -186,10 +186,10 @@ namespace C0
 			{
 				UpdateTriggers();
 
-				UpdateDuck();
-				UpdateHang();
-				UpdateClimb();
-				UpdateWallSlide();
+				UpdateDucking();
+				UpdateHanging();
+				UpdateClimbing();
+				UpdateWallSliding();
 
 				UpdateAnimation();
 				UpdateOrientation();
@@ -266,7 +266,7 @@ namespace C0
 			);
 		}
 
-		private void UpdateDuck()
+		private void UpdateDucking()
 		{
 			if (Ducking)
 			{
@@ -284,7 +284,7 @@ namespace C0
 			}
 		}
 
-		private void UpdateHang()
+		private void UpdateHanging()
 		{
 			if (Ducking)
 			{
@@ -298,7 +298,7 @@ namespace C0
 			}
 		}
 
-		private void UpdateClimb()
+		private void UpdateClimbing()
 		{
 			if (!Climbing)
 			{
@@ -315,7 +315,7 @@ namespace C0
 			}
 		}
 
-		private void UpdateWallSlide()
+		private void UpdateWallSliding()
 		{
 			if (Ducking || Hanging || Climbing)
 			{
@@ -326,7 +326,7 @@ namespace C0
 			{
 				if (TriggerInfo.Ground || !TriggerInfo.Wall)
 				{
-					SetWallSlide(false);
+					SetWallSliding(false);
 				}
 
 				if (InputInfo.Direction.x == Facing)
@@ -335,14 +335,14 @@ namespace C0
 				}
 				else if (InputInfo.Direction.x != Facing && Time.time >= wallSlideFallOffTime)
 				{
-					SetWallSlide(false);
+					SetWallSliding(false);
 				}
 			}
 			else
 			{
 				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
 				{
-					SetWallSlide(true);
+					SetWallSliding(true);
 				}
 			}
 		}
@@ -403,7 +403,7 @@ namespace C0
 			}
 		}
 
-		private void SetWallSlide(bool wallSliding)
+		private void SetWallSliding(bool wallSliding)
 		{
 			WallSliding = wallSliding;
 

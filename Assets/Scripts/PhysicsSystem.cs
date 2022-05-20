@@ -39,19 +39,19 @@ namespace C0
 
 			if (player.Ducking)
 			{
-				UpdateDuckMovement();
+				UpdateDuckingMovement();
 			}
 			else if (player.Climbing)
 			{
-				UpdateClimbMovement();
+				UpdateClimbingMovement();
 			}
 			else
 			{
-				UpdateRunMovement();
+				UpdateRunningMovement();
 			}
 		}
 
-		private void UpdateDuckMovement()
+		private void UpdateDuckingMovement()
 		{
 			Vector2 newVelocity = Vector2.zero;
 
@@ -62,21 +62,17 @@ namespace C0
 				gameSettings.GroundSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
-			{
-				newVelocity.x = 0;
-				player.CurrentDampedVelocity = 0;
-			}
+			EnforceMinMoveSpeed(ref newVelocity.x);
 
 			player.RigidBody2D.velocity = newVelocity;
 		}
 
-		private void UpdateClimbMovement()
+		private void UpdateClimbingMovement()
 		{
 			player.RigidBody2D.velocity = player.InputInfo.Direction * gameSettings.ClimbSpeed;
 		}
 
-		private void UpdateRunMovement()
+		private void UpdateRunningMovement()
 		{
 			Vector2 newVelocity = player.RigidBody2D.velocity;
 
@@ -87,18 +83,34 @@ namespace C0
 				player.TriggerInfo.Ground ? gameSettings.GroundSpeedSmoothTime : gameSettings.AirSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocity.x) < gameSettings.MinMoveSpeed)
-			{
-				newVelocity.x = 0;
-			}
-
-			if (newVelocity.y < gameSettings.TerminalVelocity)
-			{
-				newVelocity.y = gameSettings.TerminalVelocity;
-			}
-
+			EnforceMinMoveSpeed(ref newVelocity.x);
+			EnforceTerminalVelocity(ref newVelocity.y);
+			
 			player.RigidBody2D.velocity = newVelocity;
 
+			UpdateGravityScale();
+			CheckIfPlayerOutOfBounds();
+		}
+
+		private void EnforceMinMoveSpeed(ref float speed)
+		{
+			if (Mathf.Abs(speed) < gameSettings.MinMoveSpeed)
+			{
+				speed = 0;
+				player.CurrentDampedVelocity = 0;
+			}
+		}
+
+		private void EnforceTerminalVelocity(ref float speed)
+		{
+			if (speed < gameSettings.TerminalVelocity)
+			{
+				speed = gameSettings.TerminalVelocity;
+			}
+		}
+
+		private void UpdateGravityScale()
+		{
 			if (player.TriggerInfo.Ground)
 			{
 				player.RigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
@@ -107,7 +119,10 @@ namespace C0
 			{
 				player.RigidBody2D.gravityScale = gameSettings.FallingGravityScale;
 			}
+		}
 
+		private void CheckIfPlayerOutOfBounds()
+		{
 			if (player.Position.y < -20)
 			{
 				player.SetPosition(gameSettings.StartPosition);
