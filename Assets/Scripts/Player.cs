@@ -83,7 +83,7 @@ namespace C0
 			{
 				SetHanging(false);
 			}
-			else if (TriggerInfo.Ledge && InputInfo.Direction.y != 0)
+			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
 			{
 				SetClimbing(true);
 			}
@@ -201,7 +201,7 @@ namespace C0
 			TriggerInfo.Reset();
 
 			UpdateGroundTrigger();
-			UpdateLedgeTrigger();
+			UpdateClimbTrigger();
 			UpdateWallTriggers();
 		}
 
@@ -218,7 +218,7 @@ namespace C0
 			);
 		}
 
-		private void UpdateLedgeTrigger()
+		private void UpdateClimbTrigger()
 		{
 			TriggerInfo.ClimbBounds = new Bounds(
 				transform.position + 0.6f * Vector3.up,
@@ -305,7 +305,7 @@ namespace C0
 				return;
 			}
 
-			if (!TriggerInfo.Ledge)
+			if (!TriggerInfo.Climb)
 			{
 				SetClimbing(false);
 			}
