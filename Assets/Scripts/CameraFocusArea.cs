@@ -7,7 +7,7 @@ namespace C0
 		private readonly GameSettings gameSettings;
 
 		private Transform TargetTransform { get; set; }
-		
+
 		public Vector2 Velocity;
 
 		private Rect targetRect;

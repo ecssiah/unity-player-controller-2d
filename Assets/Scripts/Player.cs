@@ -104,7 +104,7 @@ namespace C0
 					if (InputInfo.Direction.x == -Facing)
 					{
 						SetWallSlide(false);
-					
+
 						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
 						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 					}
@@ -169,10 +169,10 @@ namespace C0
 			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 
 			CurrentDampedVelocity = 0;
-			
+
 			cameraTarget.transform.localPosition = Vector2.zero;
 			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
-			
+
 			ClimbingLedge = false;
 		}
 
