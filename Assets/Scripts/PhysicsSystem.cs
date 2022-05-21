@@ -85,7 +85,7 @@ namespace C0
 
 			EnforceMinMoveSpeed(ref newVelocity.x);
 			EnforceTerminalVelocity(ref newVelocity.y);
-			
+
 			player.RigidBody2D.velocity = newVelocity;
 
 			UpdateGravityScale();

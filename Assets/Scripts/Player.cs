@@ -84,7 +84,7 @@ namespace C0
 				SetHanging(false);
 			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
-			{	
+			{
 				SetClimbing(true);
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
