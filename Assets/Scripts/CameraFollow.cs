@@ -19,9 +19,9 @@ namespace C0
 
 			targetObject = GameObject.Find("Player/Target");
 
-			smoothDampTime = 0.05f;
-
 			focusArea = new FocusArea(targetObject.transform);
+
+			smoothDampTime = 0.05f;
 		}
 
 		void LateUpdate()

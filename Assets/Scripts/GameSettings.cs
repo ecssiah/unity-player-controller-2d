@@ -5,7 +5,7 @@ namespace C0
 	[CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings")]
 	public class GameSettings : ScriptableObject
 	{
-		public Vector2 StartPosition = new Vector2(-41, 2);
+		public Vector2 StartPosition = new Vector2(-41, 1.5f);
 
 		[Space]
 		public float DefaultGravityScale = 6.0f;
@@ -16,13 +16,13 @@ namespace C0
 		[Space]
 		public float RunSpeed = 10f;
 		public float MinMoveSpeed = 0.01f;
-		public float MinRunSpeed = 1.2f;
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
+		public float MinRunSpeed = 1.2f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 		[Space]
-		public float GroundSpeedSmoothTime = 0.11f;
+		public float GroundSpeedSmoothTime = 0.08f;
 		public float AirSpeedSmoothTime = 0.27f;
 
 		[Space]

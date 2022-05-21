@@ -27,9 +27,10 @@ MonoBehaviour:
   AirSpeedSmoothTime: 0.27
   JumpVelocity: 22
   WallJumpVelocity: {x: 1200, y: 18}
-  WallSlideHoldTime: 0.3
-  HangTime: 0.2
+  WallSlideHoldTime: 0.6
+  HangTimeBeforeClimb: 0.2
   HangOffset: {x: -0.185, y: -1.37}
   ClimbLedgeOffset: {x: 0.62, y: 1.37}
   CameraTargetSize: {x: 0.5, y: 1.6}
   FocusTargetSize: {x: 3, y: 5}
+  WallTriggerSize: {x: 0.1, y: 0.2}

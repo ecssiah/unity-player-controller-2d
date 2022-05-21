@@ -6,9 +6,7 @@ namespace C0
 	{
 		private readonly GameSettings gameSettings;
 
-		private Transform TargetTransform { get; set; }
-
-		public Vector2 Velocity;
+		private Transform targetTransform;
 
 		private Rect targetRect;
 		public Vector3 TargetCenter => targetRect.center;
@@ -20,7 +18,7 @@ namespace C0
 
 		public FocusArea(Transform targetTransform)
 		{
-			TargetTransform = targetTransform;
+			this.targetTransform = targetTransform;
 
 			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
 
@@ -41,38 +39,36 @@ namespace C0
 				),
 				size = gameSettings.FocusTargetSize
 			};
-
-			Velocity = Vector2.zero;
 		}
 
 		public void UpdatePosition()
 		{
-			Velocity = Vector2.zero;
+			Vector2 velocity = Vector2.zero;
 
 			targetRect.center = new Vector2(
-				TargetTransform.position.x,
-				TargetTransform.position.y + targetRect.size.y / 2
+				targetTransform.position.x,
+				targetTransform.position.y + targetRect.size.y / 2
 			);
 
 			if (targetRect.xMin < focusRect.xMin)
 			{
-				Velocity.x = targetRect.xMin - focusRect.xMin;
+				velocity.x = targetRect.xMin - focusRect.xMin;
 			}
 			else if (targetRect.xMax > focusRect.xMax)
 			{
-				Velocity.x = targetRect.xMax - focusRect.xMax;
+				velocity.x = targetRect.xMax - focusRect.xMax;
 			}
 
 			if (targetRect.yMin < focusRect.yMin)
 			{
-				Velocity.y = targetRect.yMin - focusRect.yMin;
+				velocity.y = targetRect.yMin - focusRect.yMin;
 			}
 			else if (targetRect.yMax > focusRect.yMax)
 			{
-				Velocity.y = targetRect.yMax - focusRect.yMax;
+				velocity.y = targetRect.yMax - focusRect.yMax;
 			}
 
-			focusRect.center += Velocity;
+			focusRect.center += velocity;
 		}
 	}
 }
