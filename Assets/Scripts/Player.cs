@@ -32,7 +32,7 @@ namespace C0
 		private LayerMask climbableLayerMask;
 
 		private float nextClimbUpTime;
-		private float wallSlideFallOffTime;
+		private float wallSlideTimer;
 
 		void Awake()
 		{
@@ -331,11 +331,16 @@ namespace C0
 
 				if (InputInfo.Direction.x == Facing)
 				{
-					wallSlideFallOffTime = Time.time + gameSettings.WallSlideHoldTime;
+					wallSlideTimer = gameSettings.WallSlideHoldTime;
 				}
-				else if (InputInfo.Direction.x != Facing && Time.time >= wallSlideFallOffTime)
+				else
 				{
-					SetWallSliding(false);
+					wallSlideTimer -= Time.deltaTime;
+
+					if (wallSlideTimer <= 0)
+					{
+						SetWallSliding(false);
+					}
 				}
 			}
 			else
@@ -409,7 +414,7 @@ namespace C0
 
 			if (WallSliding)
 			{
-				wallSlideFallOffTime = Time.time + gameSettings.WallSlideHoldTime;
+				wallSlideTimer = Time.time + gameSettings.WallSlideHoldTime;
 
 				rigidBody2D.velocity = Vector2.zero;
 				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
