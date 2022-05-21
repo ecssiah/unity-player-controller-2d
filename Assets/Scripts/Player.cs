@@ -352,6 +352,18 @@ namespace C0
 			}
 		}
 
+		private void SetDucking(bool ducking)
+		{
+			Ducking = ducking;
+
+			if (Ducking)
+			{
+				SetAnimation("Duck");
+
+				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
+			}
+		}
+
 		private void SetHanging(bool hanging)
 		{
 			Hanging = hanging;
@@ -375,18 +387,6 @@ namespace C0
 			}
 			else
 			{
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			}
-		}
-
-		private void SetDucking(bool ducking)
-		{
-			Ducking = ducking;
-
-			if (Ducking)
-			{
-				SetAnimation("Duck");
-
 				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
 			}
 		}
