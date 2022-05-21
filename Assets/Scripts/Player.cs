@@ -84,7 +84,7 @@ namespace C0
 				SetHanging(false);
 			}
 			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
-			{
+			{	
 				SetClimbing(true);
 			}
 			else if (Climbing && InputInfo.Direction.y == 0)
@@ -309,7 +309,7 @@ namespace C0
 			{
 				SetClimbing(false);
 			}
-			else if (TriggerInfo.Ground && rigidBody2D.velocity.y < 0)
+			else if (TriggerInfo.Ground && Mathf.Approximately(rigidBody2D.velocity.y, -gameSettings.ClimbSpeed.y))
 			{
 				SetClimbing(false);
 			}
