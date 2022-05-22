@@ -11,8 +11,6 @@ namespace C0
 
 		public override void Init()
 		{
-			player.CurrentState = this;
-
 			player.SetAnimation("Climb");
 			player.SetVelocity(Vector2.zero);
 			player.SetGravityScale(0);

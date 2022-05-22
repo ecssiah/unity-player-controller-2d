@@ -12,7 +12,7 @@ namespace C0
 
 		public float VelocityXDamped;
 
-		public PlayerState CurrentState;
+		public PlayerState CurrentState { get; private set; }
 
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
@@ -62,7 +62,9 @@ namespace C0
 
 		public void SetState(PlayerStateType stateType)
 		{
-			playerStates[stateType].Init();
+			CurrentState = playerStates[stateType];
+
+			CurrentState.Init();
 		}
 
 		public void SetPosition(float x, float y)
@@ -95,7 +97,7 @@ namespace C0
 			rigidBody2D.gravityScale = gravityScale;
 		}
 
-		public void StartClimbLedgeCoroutine()
+		public void RunClimbLedgeAction()
 		{
 			StartCoroutine(ClimbLedgeCoroutine());
 		}

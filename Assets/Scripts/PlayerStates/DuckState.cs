@@ -11,8 +11,6 @@ namespace C0
 
 		public override void Init()
 		{
-			player.CurrentState = this;
-
 			player.SetAnimation("Duck");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}

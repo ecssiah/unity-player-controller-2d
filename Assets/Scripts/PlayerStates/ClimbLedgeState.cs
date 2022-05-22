@@ -9,11 +9,9 @@ namespace C0
 
 		public override void Init()
 		{
-			player.CurrentState = this;
-
 			player.SetAnimation("ClimbLedge");
 
-			player.StartClimbLedgeCoroutine();
+			player.RunClimbLedgeAction();
 		}
 
 		public override void Update()

@@ -11,8 +11,7 @@ namespace C0
 
 		public override void Init()
 		{
-			player.CurrentState = this;
-
+			player.SetAnimation("Idle");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
 

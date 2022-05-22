@@ -13,8 +13,6 @@ namespace C0
 
 		public override void Init()
 		{
-			player.CurrentState = this;
-			
 			nextClimbLedgeTime = Time.time + settings.HangTimeBeforeClimb;
 
 			Vector2 ledgePosition = new Vector2(
