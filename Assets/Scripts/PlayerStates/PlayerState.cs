@@ -17,8 +17,6 @@ namespace C0
 
 		public virtual void Update() { }
 
-		public virtual void FixedUpdate() { }
-
 		public virtual void SetHorizontalInput(float inputValue) 
 		{
 			player.InputInfo.Direction.x = inputValue;

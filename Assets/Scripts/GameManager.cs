@@ -29,7 +29,6 @@ namespace C0
 		void Update()
 		{
 			inputSystem.UpdateManaged();
-			player.UpdateManaged();
 		}
 
 		void FixedUpdate()

@@ -14,29 +14,28 @@ namespace C0
 			player.SetAnimation("Duck");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
-
+		
 		public override void Update()
 		{
 			player.UpdateTriggers();
-			
+
 			if (!player.TriggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-		}
-		
-		public override void FixedUpdate()
-		{
-			Vector2 newVelocity = Vector2.zero;
+			else
+			{
+				Vector2 newVelocity = Vector2.zero;
 
-			newVelocity.x = Mathf.SmoothDamp(
-				player.Velocity.x,
-				0,
-				ref player.VelocityXDamped,
-				settings.GroundSpeedSmoothTime
-			);
+				newVelocity.x = Mathf.SmoothDamp(
+					player.Velocity.x,
+					0,
+					ref player.VelocityXDamped,
+					settings.GroundSpeedSmoothTime
+				);
 
-			player.SetVelocity(newVelocity);
+				player.SetVelocity(newVelocity);
+			}
 		}
 
 		public override void SetVerticalInput(float inputValue)

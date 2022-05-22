@@ -60,14 +60,9 @@ namespace C0
 			SetPosition(settings.StartPosition);
 		}
 
-		public void UpdateManaged()
-		{
-			CurrentState.Update();
-		}
-
 		public void FixedUpdateManaged()
 		{
-			CurrentState.FixedUpdate();
+			CurrentState.Update();
 		}
 
 		public void SetState(PlayerStateType stateType)

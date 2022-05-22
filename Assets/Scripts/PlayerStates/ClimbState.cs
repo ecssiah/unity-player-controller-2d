@@ -27,20 +27,17 @@ namespace C0
 			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && player.TriggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
-			} 
+			}
 			else if (player.InputInfo.Direction.y > 0 && player.TriggerInfo.Ledge)
 			{
 				player.SetState(PlayerStateType.Hang);
 			}
 			else
 			{
+				player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
+				
 				player.UpdateOrientation();
 			}
-		}
-
-		public override void FixedUpdate()
-		{
-			player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)

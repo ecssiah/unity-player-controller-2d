@@ -14,7 +14,7 @@ namespace C0
 			player.SetAnimation("Idle");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
-
+		
 		public override void Update()
 		{
 			player.UpdateTriggers();
@@ -37,38 +37,36 @@ namespace C0
 			}
 			else
 			{
+				if (player.TriggerInfo.Ground)
+				{
+					player.SetGravityScale(settings.DefaultGravityScale);
+				}
+				else if (player.Velocity.y < -settings.MinFallSpeed)
+				{
+					player.SetGravityScale(settings.FallingGravityScale);
+				}
+
+				if (player.Position.y < -20)
+				{
+					player.SetPosition(settings.StartPosition);
+					player.SetVelocity(Vector2.zero);
+				}
+
+				Vector2 newVelocity = player.Velocity;
+
+				newVelocity.x = Mathf.SmoothDamp(
+					player.Velocity.x,
+					player.InputInfo.Direction.x * settings.RunSpeed,
+					ref player.VelocityXDamped,
+					player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
+				);
+
+				player.SetVelocity(newVelocity);
+
 				player.UpdateAnimation();
 				player.UpdateOrientation();
 			}
-		}
-
-		public override void FixedUpdate()
-		{
-			Vector2 newVelocity = player.Velocity;
-
-			newVelocity.x = Mathf.SmoothDamp(
-				player.Velocity.x,
-				player.InputInfo.Direction.x * settings.RunSpeed,
-				ref player.VelocityXDamped,
-				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
-			);
-
-			player.SetVelocity(newVelocity);
-
-			if (player.TriggerInfo.Ground)
-			{
-				player.SetGravityScale(settings.DefaultGravityScale);
-			}
-			else if (player.Velocity.y < -settings.MinFallSpeed)
-			{
-				player.SetGravityScale(settings.FallingGravityScale);
-			}
-
-			if (player.Position.y < -20)
-			{
-				player.SetPosition(settings.StartPosition);
-				player.SetVelocity(Vector2.zero);
-			}
+			
 		}
 
 		public override void SetJumpInput(float inputValue)
