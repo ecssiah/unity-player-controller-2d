@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace C0
@@ -36,14 +34,14 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
 				0,
-				ref player.CurrentDampedVelocity,
+				ref player.VelocityXDamped,
 				settings.GroundSpeedSmoothTime
 			);
 
 			if (Mathf.Abs(newVelocity.x) < settings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
-				player.CurrentDampedVelocity = 0;
+				player.VelocityXDamped = 0;
 			}
 
 			player.SetVelocity(newVelocity);

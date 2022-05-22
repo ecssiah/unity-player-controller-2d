@@ -10,9 +10,10 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity => rigidBody2D.velocity;
 
-		public float CurrentDampedVelocity;
+		public float VelocityXDamped;
 
 		public PlayerState CurrentState;
+
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
 		public InputInfo InputInfo;
@@ -55,8 +56,7 @@ namespace C0
 				[PlayerStateType.WallSlide] = new WallSlideState(this, settings),
 			};
 
-			playerStates[PlayerStateType.Move].Init();
-
+			SetState(PlayerStateType.Move);
 			SetPosition(settings.StartPosition);
 		}
 
@@ -79,7 +79,7 @@ namespace C0
 		{
 			if (x == 0)
 			{
-				CurrentDampedVelocity = 0;
+				VelocityXDamped = 0;
 			}
 
 			rigidBody2D.velocity = new Vector2(x, y);
@@ -119,7 +119,7 @@ namespace C0
 
 			bodyCollider.enabled = true;
 			rigidBody2D.velocity = Vector2.zero;
-			CurrentDampedVelocity = 0;
+			VelocityXDamped = 0;
 
 			cameraTarget.transform.localPosition = Vector2.zero;
 			transform.Translate(transform.localScale * settings.ClimbLedgeOffset);

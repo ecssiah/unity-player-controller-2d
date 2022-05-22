@@ -50,14 +50,14 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
 				player.InputInfo.Direction.x * settings.RunSpeed,
-				ref player.CurrentDampedVelocity,
+				ref player.VelocityXDamped,
 				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 
 			if (Mathf.Abs(newVelocity.x) < settings.MinMoveSpeed)
 			{
 				newVelocity.x = 0;
-				player.CurrentDampedVelocity = 0;
+				player.VelocityXDamped = 0;
 			}
 
 			if (newVelocity.x < settings.TerminalVelocity)
