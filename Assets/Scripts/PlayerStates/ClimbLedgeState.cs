@@ -13,10 +13,5 @@ namespace C0
 
 			player.RunClimbLedgeAction();
 		}
-
-		public override void Update()
-		{
-
-		}
 	}
 }

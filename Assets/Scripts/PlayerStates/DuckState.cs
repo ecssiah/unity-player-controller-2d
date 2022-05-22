@@ -36,12 +36,6 @@ namespace C0
 				settings.GroundSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocity.x) < settings.MinMoveSpeed)
-			{
-				newVelocity.x = 0;
-				player.VelocityXDamped = 0;
-			}
-
 			player.SetVelocity(newVelocity);
 		}
 

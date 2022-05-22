@@ -13,9 +13,9 @@ namespace C0
 			this.settings = settings;
 		}
 
-		public abstract void Init();
+		public virtual void Init() { }
 
-		public abstract void Update();
+		public virtual void Update() { }
 
 		public virtual void FixedUpdate() { }
 

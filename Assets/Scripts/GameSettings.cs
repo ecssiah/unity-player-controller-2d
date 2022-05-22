@@ -11,13 +11,13 @@ namespace C0
 		public float DefaultGravityScale = 6.0f;
 		public float FallingGravityScale = 8.6f;
 		public float WallSlideGravityScale = 0.4f;
-		public float TerminalVelocity = -30f;
 
 		[Space]
 		public float RunSpeed = 10f;
 		public float MinMoveSpeed = 0.01f;
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
+		public float MaxFallSpeed = -30f;
 		public float MinRunSpeed = 1.2f;
 		public float MinWallSlideSpeed = 0.5f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);

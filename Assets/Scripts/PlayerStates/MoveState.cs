@@ -53,17 +53,6 @@ namespace C0
 				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 
-			if (Mathf.Abs(newVelocity.x) < settings.MinMoveSpeed)
-			{
-				newVelocity.x = 0;
-				player.VelocityXDamped = 0;
-			}
-
-			if (newVelocity.x < settings.TerminalVelocity)
-			{
-				newVelocity.x = settings.TerminalVelocity;
-			}
-
 			player.SetVelocity(newVelocity);
 
 			if (player.TriggerInfo.Ground)

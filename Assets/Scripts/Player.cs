@@ -83,6 +83,16 @@ namespace C0
 			{
 				VelocityXDamped = 0;
 			}
+			else if (Mathf.Abs(x) < settings.MinMoveSpeed)
+			{
+				x = 0;
+				VelocityXDamped = 0;
+			}
+
+			if (y < settings.MaxFallSpeed)
+			{
+				y = settings.MaxFallSpeed;
+			}
 
 			rigidBody2D.velocity = new Vector2(x, y);
 		}
@@ -104,11 +114,9 @@ namespace C0
 
 		private IEnumerator ClimbLedgeCoroutine()
 		{
-			bodyCollider.enabled = false;
-
 			yield return null;
 
-			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
 			{
 				cameraTarget.transform.localPosition = Vector2.Lerp(
 					Vector2.zero,
@@ -119,13 +127,11 @@ namespace C0
 				yield return null;
 			}
 
-			bodyCollider.enabled = true;
-			rigidBody2D.velocity = Vector2.zero;
-			VelocityXDamped = 0;
-
-			cameraTarget.transform.localPosition = Vector2.zero;
 			transform.Translate(transform.localScale * settings.ClimbLedgeOffset);
-
+			
+			cameraTarget.transform.localPosition = Vector2.zero;
+			
+			SetVelocity(Vector2.zero);
 			SetState(PlayerStateType.Move);
 		}
 
