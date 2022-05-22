@@ -6,9 +6,9 @@ namespace C0
 {
 	public class Player : MonoBehaviour
 	{
-		public Vector2 Position => transform.position;
 		public float Facing => transform.localScale.x;
-		public Rigidbody2D RigidBody2D => rigidBody2D;
+		public Vector2 Position => transform.position;
+		public Vector2 Velocity => rigidBody2D.velocity;
 
 		public float CurrentDampedVelocity;
 
@@ -73,6 +73,26 @@ namespace C0
 		public void SetPosition(Vector2 position)
 		{
 			SetPosition(position.x, position.y);
+		}
+
+		public void SetVelocity(float x, float y)
+		{
+			if (x == 0)
+			{
+				CurrentDampedVelocity = 0;
+			}
+
+			rigidBody2D.velocity = new Vector2(x, y);
+		}
+
+		public void SetVelocity(Vector2 velocity)
+		{
+			SetVelocity(velocity.x, velocity.y);
+		}
+
+		public void SetGravityScale(float gravityScale)
+		{
+			rigidBody2D.gravityScale = gravityScale;
 		}
 
 		public void StartClimbLedgeCoroutine()

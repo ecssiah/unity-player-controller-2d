@@ -16,9 +16,8 @@ namespace C0
 			player.CurrentState = this;
 
 			player.SetAnimation("Climb");
-
-			player.RigidBody2D.gravityScale = 0;
-			player.CurrentDampedVelocity = 0;
+			player.SetVelocity(Vector2.zero);
+			player.SetGravityScale(0);
 		}
 
 		public override void Update()
@@ -29,7 +28,7 @@ namespace C0
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (Mathf.Approximately(player.RigidBody2D.velocity.y, -settings.ClimbSpeed.y) && player.TriggerInfo.Ground)
+			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && player.TriggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
 			} 
@@ -45,7 +44,7 @@ namespace C0
 
 		public override void FixedUpdate()
 		{
-			player.RigidBody2D.velocity = player.InputInfo.Direction * settings.ClimbSpeed;
+			player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)
@@ -69,8 +68,7 @@ namespace C0
 			if (inputValue == 1)
 			{
 				player.SetState(PlayerStateType.Move);
-
-				player.RigidBody2D.velocity = new Vector2(player.RigidBody2D.velocity.x, settings.JumpVelocity);
+				player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
 			}
 		}
 	}

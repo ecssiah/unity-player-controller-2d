@@ -13,7 +13,7 @@ namespace C0
 		{
 			player.CurrentState = this;
 
-			player.RigidBody2D.gravityScale = settings.DefaultGravityScale;
+			player.SetGravityScale(settings.DefaultGravityScale);
 		}
 
 		public override void Update()
@@ -45,10 +45,10 @@ namespace C0
 
 		public override void FixedUpdate()
 		{
-			Vector2 newVelocity = player.RigidBody2D.velocity;
+			Vector2 newVelocity = player.Velocity;
 
 			newVelocity.x = Mathf.SmoothDamp(
-				newVelocity.x,
+				player.Velocity.x,
 				player.InputInfo.Direction.x * settings.RunSpeed,
 				ref player.CurrentDampedVelocity,
 				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
@@ -65,21 +65,21 @@ namespace C0
 				newVelocity.x = settings.TerminalVelocity;
 			}
 
-			player.RigidBody2D.velocity = newVelocity;
+			player.SetVelocity(newVelocity);
 
 			if (player.TriggerInfo.Ground)
 			{
-				player.RigidBody2D.gravityScale = settings.DefaultGravityScale;
+				player.SetGravityScale(settings.DefaultGravityScale);
 			}
-			else if (player.RigidBody2D.velocity.y < -settings.MinFallSpeed)
+			else if (player.Velocity.y < -settings.MinFallSpeed)
 			{
-				player.RigidBody2D.gravityScale = settings.FallingGravityScale;
+				player.SetGravityScale(settings.FallingGravityScale);
 			}
 
 			if (player.Position.y < -20)
 			{
 				player.SetPosition(settings.StartPosition);
-				player.RigidBody2D.velocity = Vector2.zero;
+				player.SetVelocity(Vector2.zero);
 			}
 		}
 
@@ -91,14 +91,14 @@ namespace C0
 			{
 				if (player.TriggerInfo.Ground)
 				{
-					player.RigidBody2D.velocity = new Vector2(player.RigidBody2D.velocity.x, settings.JumpVelocity);
+					player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
 				}
 			}
 			else if (inputValue == 0)
 			{
-				if (player.RigidBody2D.velocity.y > 0)
+				if (player.Velocity.y > 0)
 				{
-					player.RigidBody2D.gravityScale = settings.FallingGravityScale;
+					player.SetGravityScale(settings.FallingGravityScale);
 				}
 			}
 		}

@@ -16,13 +16,7 @@ namespace C0
 		public override void Init()
 		{
 			player.CurrentState = this;
-
-			player.SetAnimation("Hang");
-
-			player.RigidBody2D.gravityScale = 0;
-			player.RigidBody2D.velocity = Vector2.zero;
-			player.CurrentDampedVelocity = 0;
-
+			
 			nextClimbLedgeTime = Time.time + settings.HangTimeBeforeClimb;
 
 			Vector2 ledgePosition = new Vector2(
@@ -30,6 +24,9 @@ namespace C0
 				Mathf.Round(player.TriggerInfo.WallMidBounds.center.y)
 			);
 
+			player.SetAnimation("Hang");
+			player.SetGravityScale(0);
+			player.SetVelocity(Vector2.zero);
 			player.SetPosition(ledgePosition + player.transform.localScale * settings.HangOffset);
 		}
 

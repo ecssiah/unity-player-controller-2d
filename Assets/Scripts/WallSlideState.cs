@@ -18,9 +18,8 @@ namespace C0
 			player.CurrentState = this;
 
 			player.SetAnimation("Slide");
-
-			player.RigidBody2D.velocity = Vector2.zero;
-			player.RigidBody2D.gravityScale = settings.WallSlideGravityScale;
+			player.SetVelocity(Vector2.zero);
+			player.SetGravityScale(settings.WallSlideGravityScale);
 		}
 
 		public override void Update()
@@ -55,8 +54,7 @@ namespace C0
 				if (player.InputInfo.Direction.x == -player.Facing)
 				{
 					player.SetState(PlayerStateType.Move);
-
-					player.RigidBody2D.velocity = player.transform.localScale * settings.WallJumpVelocity;
+					player.SetVelocity(player.transform.localScale * settings.WallJumpVelocity);
 				}
 			}
 		}

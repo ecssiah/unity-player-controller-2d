@@ -16,8 +16,7 @@ namespace C0
 			player.CurrentState = this;
 
 			player.SetAnimation("Duck");
-
-			player.RigidBody2D.gravityScale = settings.DefaultGravityScale;
+			player.SetGravityScale(settings.DefaultGravityScale);
 		}
 
 		public override void Update()
@@ -35,7 +34,7 @@ namespace C0
 			Vector2 newVelocity = Vector2.zero;
 
 			newVelocity.x = Mathf.SmoothDamp(
-				player.RigidBody2D.velocity.x,
+				player.Velocity.x,
 				0,
 				ref player.CurrentDampedVelocity,
 				settings.GroundSpeedSmoothTime
@@ -47,7 +46,7 @@ namespace C0
 				player.CurrentDampedVelocity = 0;
 			}
 
-			player.RigidBody2D.velocity = newVelocity;
+			player.SetVelocity(newVelocity);
 		}
 
 		public override void SetVerticalInput(float inputValue)
