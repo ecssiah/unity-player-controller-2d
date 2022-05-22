@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace C0
@@ -11,16 +12,13 @@ namespace C0
 
 		public float CurrentDampedVelocity;
 
-		public bool Ducking;
-		public bool Hanging;
-		public bool Climbing;
-		public bool WallSliding;
-		public bool ClimbingLedge;
+		public PlayerState CurrentState;
+		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
 		public InputInfo InputInfo;
 		public TriggerInfo TriggerInfo;
 
-		private GameSettings gameSettings;
+		private GameSettings settings;
 
 		private Animator animator;
 		private Collider2D bodyCollider;
@@ -31,18 +29,9 @@ namespace C0
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
 
-		private float nextClimbUpTime;
-		private float wallSlideTimer;
-
 		void Awake()
 		{
-			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
-
-			Ducking = false;
-			Hanging = false;
-			Climbing = false;
-			WallSliding = false;
-			ClimbingLedge = false;
+			settings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			animator = GetComponent<Animator>();
 			bodyCollider = GetComponent<Collider2D>();
@@ -52,8 +41,28 @@ namespace C0
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
 			climbableLayerMask = LayerMask.GetMask("Climbable");
+		}
 
-			SetPosition(gameSettings.StartPosition);
+		void Start()
+		{
+			playerStates = new Dictionary<PlayerStateType, PlayerState>
+			{
+				[PlayerStateType.Move] = new MoveState(this, settings),
+				[PlayerStateType.Duck] = new DuckState(this, settings),
+				[PlayerStateType.Hang] = new HangState(this, settings),
+				[PlayerStateType.Climb] = new ClimbState(this, settings),
+				[PlayerStateType.ClimbLedge] = new ClimbLedgeState(this, settings),
+				[PlayerStateType.WallSlide] = new WallSlideState(this, settings),
+			};
+
+			playerStates[PlayerStateType.Move].Init();
+
+			SetPosition(settings.StartPosition);
+		}
+
+		public void SetState(PlayerStateType stateType)
+		{
+			playerStates[stateType].Init();
 		}
 
 		public void SetPosition(float x, float y)
@@ -66,137 +75,39 @@ namespace C0
 			SetPosition(position.x, position.y);
 		}
 
-		public void SetHorizontalInput(float inputValue)
+		public void StartClimbLedgeCoroutine()
 		{
-			InputInfo.Direction.x = inputValue;
+			StartCoroutine(ClimbLedgeCoroutine());
 		}
 
-		public void SetVerticalInput(float inputValue)
+		private IEnumerator ClimbLedgeCoroutine()
 		{
-			InputInfo.Direction.y = inputValue;
-
-			if (Ducking && InputInfo.Direction.y == 0)
-			{
-				SetDucking(false);
-			}
-			else if (Hanging && InputInfo.Direction.y < 0)
-			{
-				SetHanging(false);
-			}
-			else if (TriggerInfo.Climb && InputInfo.Direction.y != 0)
-			{
-				SetClimbing(true);
-			}
-			else if (Climbing && InputInfo.Direction.y == 0)
-			{
-				animator.speed = 0;
-			}
-		}
-
-		public void SetJumpInput(float jumpInput)
-		{
-			InputInfo.Jump = jumpInput;
-
-			if (InputInfo.Jump == 1)
-			{
-				if (WallSliding)
-				{
-					if (InputInfo.Direction.x == -Facing)
-					{
-						SetWallSliding(false);
-
-						rigidBody2D.velocity = transform.localScale * gameSettings.WallJumpVelocity;
-						rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-					}
-				}
-				else if (Climbing)
-				{
-					SetClimbing(false);
-
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
-					rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-				}
-				else if (TriggerInfo.Ground)
-				{
-					rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, gameSettings.JumpVelocity);
-				}
-			}
-			else if (InputInfo.Jump == 0)
-			{
-				if (!Climbing && rigidBody2D.velocity.y > 0)
-				{
-					rigidBody2D.gravityScale = gameSettings.FallingGravityScale;
-				}
-			}
-		}
-
-		public void ClimbLedgeCheck()
-		{
-			if (InputInfo.Direction.y > 0 && Time.time >= nextClimbUpTime)
-			{
-				nextClimbUpTime = Time.time + gameSettings.HangTimeBeforeClimb;
-
-				StartCoroutine(RunClimbLedgeAction());
-			}
-		}
-
-		private IEnumerator RunClimbLedgeAction()
-		{
-			ClimbingLedge = true;
-
 			bodyCollider.enabled = false;
-
-			SetAnimation("ClimbLedge");
 
 			yield return null;
 
-			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1)
+			while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
 			{
 				cameraTarget.transform.localPosition = Vector2.Lerp(
 					Vector2.zero,
-					gameSettings.ClimbLedgeOffset,
+					settings.ClimbLedgeOffset,
 					animator.GetCurrentAnimatorStateInfo(0).normalizedTime
 				);
 
 				yield return null;
 			}
 
-			SetHanging(false);
-			SetAnimation("Idle");
-
 			bodyCollider.enabled = true;
 			rigidBody2D.velocity = Vector2.zero;
-			rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-
 			CurrentDampedVelocity = 0;
 
 			cameraTarget.transform.localPosition = Vector2.zero;
-			transform.Translate(transform.localScale * gameSettings.ClimbLedgeOffset);
+			transform.Translate(transform.localScale * settings.ClimbLedgeOffset);
 
-			ClimbingLedge = false;
+			SetState(PlayerStateType.Move);
 		}
 
-		public void UpdateState()
-		{
-			if (Hanging)
-			{
-				ClimbLedgeCheck();
-			}
-			else
-			{
-				UpdateTriggers();
-
-				UpdateDucking();
-				UpdateHanging();
-				UpdateClimbing();
-				UpdateWallSliding();
-
-				UpdateAnimation();
-				UpdateOrientation();
-			}
-		}
-
-		private void UpdateTriggers()
+		public void UpdateTriggers()
 		{
 			TriggerInfo.Reset();
 
@@ -237,7 +148,7 @@ namespace C0
 
 			TriggerInfo.WallTopBounds = new Bounds(
 				transform.position + new Vector3(horizontalOffset, 1.1f * bodyCollider.bounds.size.y),
-				gameSettings.WallTriggerSize
+				settings.WallTriggerSize
 			);
 
 			TriggerInfo.WallTop = Physics2D.OverlapBox
@@ -247,7 +158,7 @@ namespace C0
 
 			TriggerInfo.WallMidBounds = new Bounds(
 				transform.position + new Vector3(horizontalOffset, 0.8f * bodyCollider.bounds.size.y),
-				gameSettings.WallTriggerSize
+				settings.WallTriggerSize
 			);
 
 			TriggerInfo.WallMid = Physics2D.OverlapBox
@@ -257,7 +168,7 @@ namespace C0
 
 			TriggerInfo.WallLowBounds = new Bounds(
 				transform.position + new Vector3(horizontalOffset, 0.1f * bodyCollider.bounds.size.y),
-				gameSettings.WallTriggerSize
+				settings.WallTriggerSize
 			);
 
 			TriggerInfo.WallLow = Physics2D.OverlapBox
@@ -266,199 +177,45 @@ namespace C0
 			);
 		}
 
-		private void UpdateDucking()
+		public void SetAnimation(string stateName)
 		{
-			if (Ducking)
-			{
-				if (!TriggerInfo.Ground)
-				{
-					SetDucking(false);
-				}
-			}
-			else
-			{
-				if (TriggerInfo.Ground && InputInfo.Direction.y < 0)
-				{
-					SetDucking(true);
-				}
-			}
-		}
+			SetAnimationSpeed(1);
 
-		private void UpdateHanging()
-		{
-			if (Ducking)
-			{
-				return;
-			}
-
-			if (TriggerInfo.Ledge && InputInfo.Direction.y > 0)
-			{
-				SetClimbing(false);
-				SetHanging(true);
-			}
-		}
-
-		private void UpdateClimbing()
-		{
-			if (!Climbing)
-			{
-				return;
-			}
-
-			if (!TriggerInfo.Climb)
-			{
-				SetClimbing(false);
-			}
-			else if (TriggerInfo.Ground && Mathf.Approximately(rigidBody2D.velocity.y, -gameSettings.ClimbSpeed.y))
-			{
-				SetClimbing(false);
-			}
-		}
-
-		private void UpdateWallSliding()
-		{
-			if (Ducking || Hanging || Climbing)
-			{
-				return;
-			}
-
-			if (WallSliding)
-			{
-				if (TriggerInfo.Ground || !TriggerInfo.Wall)
-				{
-					SetWallSliding(false);
-				}
-
-				if (InputInfo.Direction.x == Facing)
-				{
-					wallSlideTimer = gameSettings.WallSlideHoldTime;
-				}
-				else
-				{
-					wallSlideTimer -= Time.deltaTime;
-
-					if (wallSlideTimer <= 0)
-					{
-						SetWallSliding(false);
-					}
-				}
-			}
-			else
-			{
-				if (!TriggerInfo.Ground && TriggerInfo.Wall && InputInfo.Direction.x == Facing)
-				{
-					SetWallSliding(true);
-				}
-			}
-		}
-
-		private void SetDucking(bool ducking)
-		{
-			Ducking = ducking;
-
-			if (Ducking)
-			{
-				SetAnimation("Duck");
-
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			}
-		}
-
-		private void SetHanging(bool hanging)
-		{
-			Hanging = hanging;
-
-			if (Hanging)
-			{
-				SetAnimation("Hang");
-
-				rigidBody2D.gravityScale = 0;
-				rigidBody2D.velocity = Vector2.zero;
-				CurrentDampedVelocity = 0;
-
-				nextClimbUpTime = Time.time + gameSettings.HangTimeBeforeClimb;
-
-				Vector2 ledgePosition = new Vector2(
-					Mathf.Round(TriggerInfo.WallMidBounds.center.x),
-					Mathf.Round(TriggerInfo.WallMidBounds.center.y)
-				);
-
-				SetPosition(ledgePosition + transform.localScale * gameSettings.HangOffset);
-			}
-			else
-			{
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			}
-		}
-
-		private void SetClimbing(bool climbing)
-		{
-			Climbing = climbing;
-
-			if (Climbing)
-			{
-				SetAnimation("Climb");
-
-				rigidBody2D.gravityScale = 0;
-				CurrentDampedVelocity = 0;
-			}
-			else
-			{
-				rigidBody2D.gravityScale = gameSettings.DefaultGravityScale;
-			}
-		}
-
-		private void SetWallSliding(bool wallSliding)
-		{
-			WallSliding = wallSliding;
-
-			if (WallSliding)
-			{
-				wallSlideTimer = Time.time + gameSettings.WallSlideHoldTime;
-
-				rigidBody2D.velocity = Vector2.zero;
-				rigidBody2D.gravityScale = gameSettings.WallSlideGravityScale;
-
-				SetAnimation("Slide");
-			}
-		}
-
-		private void SetAnimation(string stateName)
-		{
-			animator.speed = 1;
 			animator.Play($"Base Layer.Player-{stateName}");
 		}
 
-		private void UpdateAnimation()
+		public void SetAnimationSpeed(float speed)
 		{
-			if (!Ducking && !Hanging && !Climbing && !WallSliding)
+			animator.speed = speed;
+		}
+
+		public void UpdateAnimation()
+		{
+			if (rigidBody2D.velocity.y > settings.MinJumpSpeed)
 			{
-				if (rigidBody2D.velocity.y > gameSettings.MinJumpSpeed)
-				{
-					SetAnimation("Jump");
-				}
-				else if (rigidBody2D.velocity.y < -gameSettings.MinFallSpeed)
-				{
-					SetAnimation("Fall");
-				}
-				else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > gameSettings.MinRunSpeed)
-				{
-					SetAnimation("Run");
-				}
-				else
-				{
-					SetAnimation("Idle");
-				}
+				SetAnimation("Jump");
+			}
+			else if (rigidBody2D.velocity.y < -settings.MinFallSpeed)
+			{
+				SetAnimation("Fall");
+			}
+			else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > settings.MinRunSpeed)
+			{
+				SetAnimation("Run");
+			}
+			else
+			{
+				SetAnimation("Idle");
 			}
 		}
 
-		private void UpdateOrientation()
+		public void UpdateOrientation()
 		{
-			if (Facing != 1 && rigidBody2D.velocity.x > gameSettings.MinRunSpeed)
+			if (Facing != 1 && rigidBody2D.velocity.x > settings.MinRunSpeed)
 			{
 				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 			}
-			else if (Facing != -1 && rigidBody2D.velocity.x < -gameSettings.MinRunSpeed)
+			else if (Facing != -1 && rigidBody2D.velocity.x < -settings.MinRunSpeed)
 			{
 				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 			}

@@ -19,6 +19,7 @@ namespace C0
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
 		public float MinRunSpeed = 1.2f;
+		public float MinWallSlideSpeed = 0.5f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 
 		[Space]

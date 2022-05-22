@@ -30,11 +30,6 @@ namespace C0
 
 		public void UpdateSystem()
 		{
-			if (player.ClimbingLedge)
-			{
-				return;
-			}
-
 			PollMoveInput();
 			PollJumpInput();
 		}
@@ -45,28 +40,28 @@ namespace C0
 
 			if (currentMoveInput.x > 0 && previousMoveInput.x <= 0)
 			{
-				player.SetHorizontalInput(1);
+				player.CurrentState.SetHorizontalInput(1);
 			}
 			else if (currentMoveInput.x < 0 && previousMoveInput.x >= 0)
 			{
-				player.SetHorizontalInput(-1);
+				player.CurrentState.SetHorizontalInput(-1);
 			}
 			else if (currentMoveInput.x == 0 && previousMoveInput.x != 0)
 			{
-				player.SetHorizontalInput(0);
+				player.CurrentState.SetHorizontalInput(0);
 			}
 
 			if (currentMoveInput.y > 0 && previousMoveInput.y <= 0)
 			{
-				player.SetVerticalInput(1);
+				player.CurrentState.SetVerticalInput(1);
 			}
 			else if (currentMoveInput.y < 0 && previousMoveInput.y >= 0)
 			{
-				player.SetVerticalInput(-1);
+				player.CurrentState.SetVerticalInput(-1);
 			}
 			else if (currentMoveInput.y == 0 && previousMoveInput.y != 0)
 			{
-				player.SetVerticalInput(0);
+				player.CurrentState.SetVerticalInput(0);
 			}
 
 			previousMoveInput = currentMoveInput;
@@ -78,7 +73,7 @@ namespace C0
 
 			if (currentJumpInput != previousJumpInput)
 			{
-				player.SetJumpInput(currentJumpInput);
+				player.CurrentState.SetJumpInput(currentJumpInput);
 			}
 
 			previousJumpInput = currentJumpInput;

@@ -4,7 +4,7 @@ namespace C0
 {
 	public class FocusArea
 	{
-		private readonly GameSettings gameSettings;
+		private readonly GameSettings settings;
 
 		private Transform targetTransform;
 
@@ -20,24 +20,24 @@ namespace C0
 		{
 			this.targetTransform = targetTransform;
 
-			gameSettings = Resources.Load<GameSettings>("Settings/GameSettings");
+			settings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			targetRect = new Rect
 			{
 				center = new Vector2(
 					targetTransform.position.x,
-					targetTransform.position.y + gameSettings.CameraTargetSize.y / 2
+					targetTransform.position.y + settings.CameraTargetSize.y / 2
 				),
-				size = gameSettings.CameraTargetSize
+				size = settings.CameraTargetSize
 			};
 
 			focusRect = new Rect
 			{
 				center = new Vector2(
-					targetTransform.position.x - gameSettings.FocusTargetSize.x / 2,
+					targetTransform.position.x - settings.FocusTargetSize.x / 2,
 					targetTransform.position.y
 				),
-				size = gameSettings.FocusTargetSize
+				size = settings.FocusTargetSize
 			};
 		}
 
