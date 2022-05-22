@@ -8,7 +8,7 @@ namespace C0
 	{
 		public float Facing => transform.localScale.x;
 		public Vector2 Position => transform.position;
-		public Vector2 Velocity => rigidBody2D.velocity;
+		public Vector2 Velocity { get => rigidBody2D.velocity; }
 
 		public float VelocityXDamped;
 

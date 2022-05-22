@@ -31,7 +31,7 @@ namespace C0
 			{
 				player.SetState(PlayerStateType.Climb);
 			}
-			else if (!player.TriggerInfo.Ground && player.TriggerInfo.Wall && player.InputInfo.Direction.x == player.Facing)
+			else if (player.InputInfo.Direction.x == player.Facing && player.TriggerInfo.CanWallSlide)
 			{
 				player.SetState(PlayerStateType.WallSlide);
 			}

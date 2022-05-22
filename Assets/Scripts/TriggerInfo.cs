@@ -19,6 +19,7 @@ namespace C0
 
 		public bool Ledge => !WallTop && WallMid;
 		public bool Wall => WallTop && WallMid && WallLow;
+		public bool CanWallSlide => !Ground && Wall;
 
 		public void Reset()
 		{
