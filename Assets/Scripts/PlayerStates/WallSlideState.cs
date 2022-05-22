@@ -22,7 +22,7 @@ namespace C0
 		{
 			player.UpdateTriggers();
 
-			if (!player.TriggerInfo.CanWallSlide)
+			if (!player.TriggerInfo.WallSlide)
 			{
 				player.SetState(PlayerStateType.Move);
 			}

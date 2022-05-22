@@ -30,7 +30,7 @@ namespace C0
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
 
-		void Awake()
+		public void AwakeManaged()
 		{
 			settings = Resources.Load<GameSettings>("Settings/GameSettings");
 
@@ -44,7 +44,7 @@ namespace C0
 			climbableLayerMask = LayerMask.GetMask("Climbable");
 		}
 
-		void Start()
+		public void StartManaged()
 		{
 			playerStates = new Dictionary<PlayerStateType, PlayerState>
 			{
@@ -58,6 +58,16 @@ namespace C0
 
 			SetState(PlayerStateType.Move);
 			SetPosition(settings.StartPosition);
+		}
+
+		public void UpdateManaged()
+		{
+			CurrentState.Update();
+		}
+
+		public void FixedUpdateManaged()
+		{
+			CurrentState.FixedUpdate();
 		}
 
 		public void SetState(PlayerStateType stateType)
@@ -249,7 +259,7 @@ namespace C0
 			}
 		}
 
-		private void OnDrawGizmos()
+		void OnDrawGizmos()
 		{
 			Gizmos.color = new Color(1, 0, 1, 0.4f);
 

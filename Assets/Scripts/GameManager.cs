@@ -5,26 +5,41 @@ namespace C0
 	public class GameManager : MonoBehaviour
 	{
 		private InputSystem inputSystem;
-		private PhysicsSystem physicsSystem;
+		private CameraSystem cameraSystem;
+		
+		private Player player;
 
 		void Awake()
 		{
 			inputSystem = GetComponent<InputSystem>();
-			physicsSystem = GetComponent<PhysicsSystem>();
+			inputSystem.AwakeManaged();
 
-			inputSystem.AwakeSystem();
-			physicsSystem.AwakeSystem();
+			cameraSystem = GetComponent<CameraSystem>();
+			cameraSystem.AwakeManaged();
+
+			player = GameObject.Find("Player").GetComponent<Player>();
+			player.AwakeManaged();
+		}
+
+		void Start()
+		{
+			player.StartManaged();
 		}
 
 		void Update()
 		{
-			inputSystem.UpdateSystem();
-			physicsSystem.UpdateSystem();
+			inputSystem.UpdateManaged();
+			player.UpdateManaged();
 		}
 
 		void FixedUpdate()
 		{
-			physicsSystem.FixedUpdateSystem();
+			player.FixedUpdateManaged();
+		}
+
+		void LateUpdate()
+		{
+			cameraSystem.LateUpdateManaged();
 		}
 	}
 }

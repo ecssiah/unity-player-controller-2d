@@ -15,7 +15,7 @@ namespace C0
 		private Vector2 previousMoveInput;
 		private float previousJumpInput;
 
-		public void AwakeSystem()
+		public void AwakeManaged()
 		{
 			player = GameObject.Find("Player").GetComponent<Player>();
 
@@ -28,7 +28,7 @@ namespace C0
 			previousJumpInput = 0;
 		}
 
-		public void UpdateSystem()
+		public void UpdateManaged()
 		{
 			PollMoveInput();
 			PollJumpInput();
