@@ -11,14 +11,14 @@ namespace C0
 		public Vector2 Velocity => rigidBody2D.velocity;
 		public Bounds Bounds => bodyCollider.bounds;
 
-		public InputInfo InputInfo;
-		public TriggerInfo TriggerInfo;
-
 		public PlayerState CurrentState { get; private set; }
 
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
 		private GameSettings settings;
+
+		private InputInfo inputInfo;
+		private TriggerInfo triggerInfo;
 
 		private Animator animator;
 		private Collider2D bodyCollider;
@@ -29,6 +29,9 @@ namespace C0
 		public void AwakeManaged()
 		{
 			settings = Resources.Load<GameSettings>("Settings/GameSettings");
+
+			inputInfo = GetComponent<InputInfo>();
+			triggerInfo = GetComponent<TriggerInfo>();
 
 			animator = GetComponent<Animator>();
 			bodyCollider = GetComponent<Collider2D>();
@@ -56,9 +59,6 @@ namespace C0
 		public void UpdateManaged()
 		{
 			CurrentState.UpdateManaged();
-
-			InputInfo = PlayerState.InputInfo;
-			TriggerInfo = PlayerState.TriggerInfo;
 		}
 
 		public void FixedUpdateManaged()
@@ -181,6 +181,21 @@ namespace C0
 			else if (Facing != -1 && rigidBody2D.velocity.x < -settings.MinRunSpeed)
 			{
 				SetFacing(-1);
+			}
+		}
+
+		void OnDrawGizmos()
+		{
+			if (Application.isPlaying)
+			{
+				Gizmos.color = new Color(1, 0, 1, 0.4f);
+
+				Gizmos.DrawWireCube(triggerInfo.GroundBounds.center, triggerInfo.GroundBounds.size);
+				Gizmos.DrawWireCube(triggerInfo.ClimbBounds.center, triggerInfo.ClimbBounds.size);
+
+				Gizmos.DrawWireCube(triggerInfo.WallTopBounds.center, triggerInfo.WallTopBounds.size);
+				Gizmos.DrawWireCube(triggerInfo.WallMidBounds.center, triggerInfo.WallMidBounds.size);
+				Gizmos.DrawWireCube(triggerInfo.WallLowBounds.center, triggerInfo.WallLowBounds.size);
 			}
 		}
 	}

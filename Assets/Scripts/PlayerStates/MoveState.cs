@@ -14,19 +14,19 @@ namespace C0
 		{
 			UpdateTriggers();
 
-			if (InputInfo.Direction.y < 0 && TriggerInfo.Ground)
+			if (inputInfo.Direction.y < 0 && triggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Duck);
 			}
-			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
+			else if (inputInfo.Direction.y > 0 && triggerInfo.Ledge)
 			{
 				player.SetState(PlayerStateType.Hang);
 			}
-			else if (InputInfo.Direction.y != 0 && TriggerInfo.Climb)
+			else if (inputInfo.Direction.y != 0 && triggerInfo.Climb)
 			{
 				player.SetState(PlayerStateType.Climb);
 			}
-			else if (InputInfo.Direction.x == player.Facing && TriggerInfo.WallSlide)
+			else if (inputInfo.Direction.x == player.Facing && triggerInfo.WallSlide)
 			{
 				player.SetState(PlayerStateType.WallSlide);
 			}
@@ -38,7 +38,7 @@ namespace C0
 			}
 			else
 			{
-				if (TriggerInfo.Ground)
+				if (triggerInfo.Ground)
 				{
 					player.SetGravityScale(settings.DefaultGravityScale);
 				}
@@ -58,9 +58,9 @@ namespace C0
 
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
-				InputInfo.Direction.x * settings.RunSpeed,
+				inputInfo.Direction.x * settings.RunSpeed,
 				ref VelocityXDamped,
-				TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
+				triggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 
 			player.SetVelocity(newVelocity);
@@ -72,7 +72,7 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (TriggerInfo.Ground)
+				if (triggerInfo.Ground)
 				{
 					player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
 				}

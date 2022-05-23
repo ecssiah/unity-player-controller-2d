@@ -15,15 +15,15 @@ namespace C0
 		{
 			UpdateTriggers();
 
-			if (!TriggerInfo.Climb)
+			if (!triggerInfo.Climb)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && TriggerInfo.Ground)
+			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && triggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
+			else if (inputInfo.Direction.y > 0 && triggerInfo.Ledge)
 			{
 				player.SetState(PlayerStateType.Hang);
 			}
@@ -35,14 +35,14 @@ namespace C0
 
 		public override void FixedUpdateManaged()
 		{
-			player.SetVelocity(InputInfo.Direction * settings.ClimbSpeed);
+			player.SetVelocity(inputInfo.Direction * settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y == 0)
+			if (inputInfo.Direction.y == 0)
 			{
 				player.SetAnimationSpeed(0);
 			}

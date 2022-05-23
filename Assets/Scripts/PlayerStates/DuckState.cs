@@ -14,7 +14,7 @@ namespace C0
 		{
 			UpdateTriggers();
 
-			if (!TriggerInfo.Ground)
+			if (!triggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
@@ -38,7 +38,7 @@ namespace C0
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y == 0)
+			if (inputInfo.Direction.y == 0)
 			{
 				player.SetState(PlayerStateType.Move);
 			}

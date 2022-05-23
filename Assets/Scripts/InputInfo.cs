@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace C0
 {
-	[System.Serializable]
-	public struct InputInfo
+	public class InputInfo : MonoBehaviour
 	{
 		public Vector2 Direction;
 		public float Jump;

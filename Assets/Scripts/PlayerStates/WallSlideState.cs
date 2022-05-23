@@ -17,11 +17,11 @@ namespace C0
 		{
 			UpdateTriggers();
 
-			if (!TriggerInfo.WallSlide)
+			if (!triggerInfo.WallSlide)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (InputInfo.Direction.x == player.Facing)
+			else if (inputInfo.Direction.x == player.Facing)
 			{
 				wallSlideTimer = settings.WallSlideHoldTime;
 			}
@@ -42,7 +42,7 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (InputInfo.Direction.x == -player.Facing)
+				if (inputInfo.Direction.x == -player.Facing)
 				{
 					player.SetState(PlayerStateType.Move);
 					player.SetVelocity(Vector2.Scale(player.transform.localScale, settings.WallJumpVelocity));

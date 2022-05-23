@@ -11,8 +11,8 @@ namespace C0
 			nextClimbLedgeTime = Time.time + settings.HangTimeBeforeClimb;
 
 			Vector2 ledgePosition = new Vector2(
-				Mathf.Round(TriggerInfo.WallMidBounds.center.x),
-				Mathf.Round(TriggerInfo.WallMidBounds.center.y)
+				Mathf.Round(triggerInfo.WallMidBounds.center.x),
+				Mathf.Round(triggerInfo.WallMidBounds.center.y)
 			);
 
 			player.SetAnimation("Hang");
@@ -23,7 +23,7 @@ namespace C0
 
 		public override void UpdateManaged()
 		{
-			if (InputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
+			if (inputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
 			{
 				player.SetState(PlayerStateType.ClimbLedge);
 			}
@@ -33,7 +33,7 @@ namespace C0
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y < 0)
+			if (inputInfo.Direction.y < 0)
 			{
 				player.SetState(PlayerStateType.Move);
 			}

@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1462099927545901331}
   - component: {fileID: 9041757014320063149}
   - component: {fileID: 2640678332789003859}
+  - component: {fileID: 387507359085326048}
+  - component: {fileID: 1400436690792920908}
   - component: {fileID: 1610686785997142707}
   - component: {fileID: 6270259509621315947}
   m_Layer: 0
@@ -121,23 +123,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8262b4e1fb1ef5141907599d293b86d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Velocity: {x: 0, y: 0}
-  CameraTarget: {x: 0, y: 0}
-  Facing: 0
-  Ducking: 0
-  Hanging: 0
-  Climbing: 0
-  ClimbingLedge: 0
-  WallSliding: 0
-  InputInfo:
-    Direction: {x: 0, y: 0}
-    Jump: 0
-  TriggerInfo:
-    Ground: {fileID: 0}
-    Climb: {fileID: 0}
-    WallTop: {fileID: 0}
-    WallMid: {fileID: 0}
-    WallLow: {fileID: 0}
+  InputInfo: {fileID: 387507359085326048}
+  TriggerInfo: {fileID: 1400436690792920908}
+--- !u!114 &387507359085326048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462099927545901324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f2d196a9bf4ad14589672f2a8789702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Direction: {x: 0, y: 0}
+  Jump: 0
+--- !u!114 &1400436690792920908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462099927545901324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db8bbc31d4c1524f9fc874409b101f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ground: {fileID: 0}
+  Climb: {fileID: 0}
+  WallTop: {fileID: 0}
+  WallMid: {fileID: 0}
+  WallLow: {fileID: 0}
+  GroundBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  ClimbBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  WallTopBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  WallMidBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  WallLowBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  TopOffset: {x: 0, y: 0, z: 0}
+  MidOffset: {x: 0, y: 0, z: 0}
+  LowOffset: {x: 0, y: 0, z: 0}
 --- !u!50 &1610686785997142707
 Rigidbody2D:
   serializedVersion: 4
