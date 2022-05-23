@@ -6,6 +6,8 @@ namespace C0
 	{
 		private float nextClimbLedgeTime;
 
+		public HangState(GameSettings settings, Player player) : base(settings, player) { }
+
 		public override void Init()
 		{
 			nextClimbLedgeTime = Time.time + settings.HangTimeBeforeClimb;

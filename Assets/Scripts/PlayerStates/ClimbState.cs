@@ -4,6 +4,8 @@ namespace C0
 {
 	public class ClimbState : PlayerState
 	{
+		public ClimbState(GameSettings settings, Player player) : base(settings, player) { }
+
 		public override void Init()
 		{
 			player.SetAnimation("Climb");

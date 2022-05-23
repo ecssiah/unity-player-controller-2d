@@ -6,6 +6,8 @@ namespace C0
 	{
 		private float wallSlideTimer;
 
+		public WallSlideState(GameSettings settings, Player player) : base(settings, player) { }
+
 		public override void Init()
 		{
 			player.SetAnimation("Slide");

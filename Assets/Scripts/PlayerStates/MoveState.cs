@@ -4,6 +4,8 @@ namespace C0
 {
 	public class MoveState : PlayerState
 	{
+		public MoveState(GameSettings settings, Player player) : base(settings, player) { }
+
 		public override void Init()
 		{
 			player.SetAnimation("Idle");

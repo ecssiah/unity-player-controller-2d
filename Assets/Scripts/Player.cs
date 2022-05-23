@@ -7,9 +7,10 @@ namespace C0
 	public class Player : MonoBehaviour
 	{
 		public float Facing => transform.localScale.x;
-		public Vector2 Position => transform.position;
+		public Vector3 Position => transform.position;
 		public Vector2 Velocity => rigidBody2D.velocity;
 		public Bounds Bounds => bodyCollider.bounds;
+		public Vector3 Scale => transform.localScale;
 
 		public PlayerState CurrentState { get; private set; }
 
@@ -17,7 +18,6 @@ namespace C0
 
 		private GameSettings settings;
 
-		private InputInfo inputInfo;
 		private TriggerInfo triggerInfo;
 
 		private Animator animator;
@@ -30,7 +30,6 @@ namespace C0
 		{
 			settings = Resources.Load<GameSettings>("Settings/GameSettings");
 
-			inputInfo = GetComponent<InputInfo>();
 			triggerInfo = GetComponent<TriggerInfo>();
 
 			animator = GetComponent<Animator>();
@@ -44,12 +43,12 @@ namespace C0
 		{
 			playerStates = new Dictionary<PlayerStateType, PlayerState>
 			{
-				[PlayerStateType.Move] = gameObject.AddComponent<MoveState>(),
-				[PlayerStateType.Duck] = gameObject.AddComponent<DuckState>(),
-				[PlayerStateType.Hang] = gameObject.AddComponent<HangState>(),
-				[PlayerStateType.Climb] = gameObject.AddComponent<ClimbState>(),
-				[PlayerStateType.ClimbLedge] = gameObject.AddComponent<ClimbLedgeState>(),
-				[PlayerStateType.WallSlide] = gameObject.AddComponent<WallSlideState>(),
+				[PlayerStateType.Move] = new MoveState(settings, this),
+				[PlayerStateType.Duck] = new DuckState(settings, this),
+				[PlayerStateType.Hang] = new HangState(settings, this),
+				[PlayerStateType.Climb] = new ClimbState(settings, this),
+				[PlayerStateType.ClimbLedge] = new ClimbLedgeState(settings, this),
+				[PlayerStateType.WallSlide] = new WallSlideState(settings, this),
 			};
 
 			SetState(PlayerStateType.Move);
@@ -135,7 +134,7 @@ namespace C0
 
 			cameraTarget.transform.localPosition = Vector2.zero;
 
-			SetPosition(Position + Vector2.Scale(transform.localScale, settings.ClimbLedgeOffset));
+			SetPosition(Position + Vector3.Scale(transform.localScale, settings.ClimbLedgeOffset));
 			SetVelocity(Vector2.zero);
 			SetState(PlayerStateType.Move);
 		}

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace C0
 {
-	public abstract class PlayerState : MonoBehaviour
+	public abstract class PlayerState
 	{
 		protected GameSettings settings;
 		
@@ -16,11 +16,10 @@ namespace C0
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
 
-		void Awake()
+		public PlayerState(GameSettings settings, Player player)
 		{
-			settings = Resources.Load<GameSettings>("Settings/GameSettings");
-
-			player = GameObject.Find("Player").GetComponent<Player>();
+			this.settings = settings;
+			this.player = player;
 
 			inputInfo = player.GetComponent<InputInfo>();
 			triggerInfo = player.GetComponent<TriggerInfo>();

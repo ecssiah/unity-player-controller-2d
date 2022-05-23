@@ -4,6 +4,8 @@ namespace C0
 {
     public class DuckState : PlayerState
     {
+		public DuckState(GameSettings settings, Player player) : base(settings, player) { }
+
 		public override void Init()
 		{
 			player.SetAnimation("Duck");

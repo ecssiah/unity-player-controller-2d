@@ -18,8 +18,7 @@ namespace C0
 		{
 			get
 			{
-				Vector3 playerPosition = player.Position;
-				groundBounds.center = playerPosition + 0.025f * Vector3.down;
+				groundBounds.center = player.Position + 0.025f * Vector3.down;
 
 				return groundBounds;
 			}
@@ -30,8 +29,7 @@ namespace C0
 		{
 			get
 			{
-				Vector3 playerPosition = player.Position;
-				climbBounds.center = playerPosition + 0.6f * Vector3.up;
+				climbBounds.center = player.Position + 0.6f * Vector3.up;
 
 				return climbBounds;
 			}
@@ -42,10 +40,7 @@ namespace C0
 		{
 			get
 			{
-				Vector3 localScale = new Vector3(player.Facing, 1, 1);
-				Vector3 playerPosition = player.Position;
-
-				wallTopBounds.center = playerPosition + Vector3.Scale(localScale, TopOffset);
+				wallTopBounds.center = player.Position + Vector3.Scale(player.Scale, TopOffset);
 
 				return wallTopBounds;
 			}
@@ -56,10 +51,7 @@ namespace C0
 		{
 			get
 			{
-				Vector3 localScale = new Vector3(player.Facing, 1, 1);
-				Vector3 playerPosition = player.Position;
-
-				wallMidBounds.center = playerPosition + Vector3.Scale(localScale, MidOffset);
+				wallMidBounds.center = player.Position + Vector3.Scale(player.Scale, MidOffset);
 
 				return wallMidBounds;
 			}
@@ -70,10 +62,7 @@ namespace C0
 		{
 			get
 			{
-				Vector3 localScale = new Vector3(player.Facing, 1, 1);
-				Vector3 playerPosition = player.Position;
-
-				wallLowBounds.center = playerPosition + Vector3.Scale(localScale, LowOffset);
+				wallLowBounds.center = player.Position + Vector3.Scale(player.Scale, LowOffset);
 
 				return wallLowBounds;
 			}
