@@ -10,9 +10,8 @@ namespace C0
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity => rigidBody2D.velocity;
 
-		public float VelocityXDamped;
-
 		public PlayerState CurrentState { get; private set; }
+		public PlayerStateType PlayerState;
 
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
@@ -63,6 +62,8 @@ namespace C0
 		public void UpdateManaged()
 		{
 			CurrentState.Update();
+
+			PlayerState = CurrentState.Type;
 		}
 
 		public void FixedUpdateManaged()
@@ -96,12 +97,12 @@ namespace C0
 		{
 			if (x == 0)
 			{
-				VelocityXDamped = 0;
+				CurrentState.ResetDamping();
 			}
 			else if (Mathf.Abs(x) < settings.MinMoveSpeed)
 			{
 				x = 0;
-				VelocityXDamped = 0;
+				CurrentState.ResetDamping();
 			}
 
 			rigidBody2D.velocity = new Vector2(x, Mathf.Max(y, settings.MaxFallSpeed));
@@ -246,7 +247,7 @@ namespace C0
 			}
 		}
 
-		public void UpdateOrientation()
+		public void UpdateFacing()
 		{
 			if (Facing != 1 && rigidBody2D.velocity.x > settings.MinRunSpeed)
 			{

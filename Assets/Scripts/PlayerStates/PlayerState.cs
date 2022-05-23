@@ -1,9 +1,13 @@
+using UnityEngine;
+
 namespace C0
 {
 	public abstract class PlayerState
 	{
 		protected Player player;
 		protected GameSettings settings;
+
+		protected Vector2 VelocityDamped;
 
 		public PlayerStateType Type { get; protected set; }
 
@@ -32,6 +36,11 @@ namespace C0
 		public virtual void SetJumpInput(float inputValue) 
 		{ 
 			player.InputInfo.Jump = inputValue;
+		}
+
+		public void ResetDamping()
+		{
+			VelocityDamped = Vector2.zero;
 		}
 	}
 }

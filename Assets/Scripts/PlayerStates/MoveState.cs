@@ -53,7 +53,7 @@ namespace C0
 				}
 
 				player.UpdateAnimation();
-				player.UpdateOrientation();
+				player.UpdateFacing();
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
 				player.InputInfo.Direction.x * settings.RunSpeed,
-				ref player.VelocityXDamped,
+				ref VelocityDamped.x,
 				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 

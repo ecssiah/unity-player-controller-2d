@@ -34,7 +34,7 @@ namespace C0
 			}
 			else
 			{
-				player.UpdateOrientation();
+				player.UpdateFacing();
 			}
 		}
 
