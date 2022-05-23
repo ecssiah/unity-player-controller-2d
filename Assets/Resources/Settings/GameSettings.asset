@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328179d6355077a4d827906acfb43b6e, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  StartPosition: {x: -27, y: -11}
+  StartPosition: {x: -32, y: -11}
   LevelBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 40, y: 20, z: 0}
   DefaultGravityScale: 6
-  FallingGravityScale: 8.6
+  FallingGravityScale: 8.5
   WallSlideGravityScale: 0.4
   RunSpeed: 10
   MinMoveSpeed: 0.01

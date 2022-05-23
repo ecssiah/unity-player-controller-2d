@@ -77,6 +77,11 @@ namespace C0
 			CurrentState.Init();
 		}
 
+		public void SetFacing(float facing)
+		{
+			transform.localScale = new Vector3(facing, transform.localScale.y, transform.localScale.z);
+		}
+
 		public void SetPosition(float x, float y)
 		{
 			transform.position = new Vector2(x, y);
@@ -99,12 +104,7 @@ namespace C0
 				VelocityXDamped = 0;
 			}
 
-			if (y < settings.MaxFallSpeed)
-			{
-				y = settings.MaxFallSpeed;
-			}
-
-			rigidBody2D.velocity = new Vector2(x, y);
+			rigidBody2D.velocity = new Vector2(x, Mathf.Max(y, settings.MaxFallSpeed));
 		}
 
 		public void SetVelocity(Vector2 velocity)
@@ -250,11 +250,11 @@ namespace C0
 		{
 			if (Facing != 1 && rigidBody2D.velocity.x > settings.MinRunSpeed)
 			{
-				transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+				SetFacing(1);
 			}
 			else if (Facing != -1 && rigidBody2D.velocity.x < -settings.MinRunSpeed)
 			{
-				transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+				SetFacing(-1);
 			}
 		}
 

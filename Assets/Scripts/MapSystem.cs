@@ -15,7 +15,7 @@ namespace C0
 			settings = Resources.Load<GameSettings>("Settings/GameSettings");
 
 			overlayTilemap = GameObject.Find("Overlay").GetComponent<Tilemap>();
-			boundaryTile = Resources.Load<Tile>("Tiles/pink_diamond");
+			boundaryTile = Resources.Load<Tile>("Tiles/dot_pink");
 		}
 
 		public void StartManaged()

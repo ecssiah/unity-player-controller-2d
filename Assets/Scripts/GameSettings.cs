@@ -5,12 +5,12 @@ namespace C0
 	[CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings")]
 	public class GameSettings : ScriptableObject
 	{
-		public Vector2 StartPosition = new Vector2(-25, -11f);
-		public Bounds LevelBounds = new Bounds(Vector3.zero, new Vector3(160, 80, 0));
+		public Vector2 StartPosition = new Vector2(-32, -11f);
+		public Bounds LevelBounds = new Bounds(Vector3.zero, new Vector3(80, 40, 0));
 
 		[Space]
 		public float DefaultGravityScale = 6.0f;
-		public float FallingGravityScale = 8.6f;
+		public float FallingGravityScale = 8.5f;
 		public float WallSlideGravityScale = 0.4f;
 
 		[Space]

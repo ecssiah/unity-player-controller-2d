@@ -37,6 +37,7 @@ namespace C0
 			}
 			else if (!settings.LevelBounds.Contains(player.Position))
 			{
+				player.SetFacing(1);
 				player.SetPosition(settings.StartPosition);
 				player.SetVelocity(Vector2.zero);
 			}
