@@ -97,12 +97,12 @@ namespace C0
 		{
 			if (x == 0)
 			{
-				CurrentState.ResetDamping();
+				CurrentState.ResetVelocityXDamping();
 			}
 			else if (Mathf.Abs(x) < settings.MinMoveSpeed)
 			{
 				x = 0;
-				CurrentState.ResetDamping();
+				CurrentState.ResetVelocityXDamping();
 			}
 
 			rigidBody2D.velocity = new Vector2(x, Mathf.Max(y, settings.MaxFallSpeed));

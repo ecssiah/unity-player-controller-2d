@@ -64,7 +64,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
 				player.InputInfo.Direction.x * settings.RunSpeed,
-				ref VelocityDamped.x,
+				ref VelocityXDamped,
 				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 

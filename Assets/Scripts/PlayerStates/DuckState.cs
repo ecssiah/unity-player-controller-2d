@@ -32,7 +32,7 @@ namespace C0
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
 				0,
-				ref VelocityDamped.x,
+				ref VelocityXDamped,
 				settings.GroundSpeedSmoothTime
 			);
 

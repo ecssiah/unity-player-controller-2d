@@ -5,7 +5,7 @@ namespace C0
 	[CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings")]
 	public class GameSettings : ScriptableObject
 	{
-		public Vector2 StartPosition = new Vector2(-32, -11f);
+		public Vector2 StartPosition = new Vector2(-32, -12.5f);
 		public Bounds LevelBounds = new Bounds(Vector3.zero, new Vector3(80, 40, 0));
 
 		[Space]

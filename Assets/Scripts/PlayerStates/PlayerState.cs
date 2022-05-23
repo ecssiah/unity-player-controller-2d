@@ -7,7 +7,7 @@ namespace C0
 		protected Player player;
 		protected GameSettings settings;
 
-		protected Vector2 VelocityDamped;
+		protected float VelocityXDamped;
 
 		public PlayerStateType Type { get; protected set; }
 
@@ -38,9 +38,9 @@ namespace C0
 			player.InputInfo.Jump = inputValue;
 		}
 
-		public void ResetDamping()
+		public void ResetVelocityXDamping()
 		{
-			VelocityDamped = Vector2.zero;
+			VelocityXDamped = 0;
 		}
 	}
 }
