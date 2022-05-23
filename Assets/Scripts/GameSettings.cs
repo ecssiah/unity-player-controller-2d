@@ -33,8 +33,8 @@ namespace C0
 		public Vector2 WallJumpVelocity = new Vector2(1200f, 18f);
 
 		[Space]
-		public Vector2 HangOffset = new Vector2(-0.185f, -1.37f);
-		public Vector2 ClimbLedgeOffset = new Vector2(0.62f, 1.37f);
+		public Vector2 HangOffset = new Vector2(-0.25f, -1.38f);
+		public Vector2 ClimbLedgeOffset = new Vector2(0.63f, 1.38f);
 
 		[Space]
 		public Vector2 CameraTargetSize = new Vector3(0.5f, 1.6f);
