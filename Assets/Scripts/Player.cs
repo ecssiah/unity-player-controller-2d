@@ -8,7 +8,7 @@ namespace C0
 	{
 		public float Facing => transform.localScale.x;
 		public Vector2 Position => transform.position;
-		public Vector2 Velocity { get => rigidBody2D.velocity; }
+		public Vector2 Velocity => rigidBody2D.velocity;
 
 		public float VelocityXDamped;
 
@@ -60,9 +60,14 @@ namespace C0
 			SetPosition(settings.StartPosition);
 		}
 
-		public void FixedUpdateManaged()
+		public void UpdateManaged()
 		{
 			CurrentState.Update();
+		}
+
+		public void FixedUpdateManaged()
+		{
+			CurrentState.FixedUpdate();
 		}
 
 		public void SetState(PlayerStateType stateType)
@@ -132,10 +137,9 @@ namespace C0
 				yield return null;
 			}
 
-			transform.Translate(transform.localScale * settings.ClimbLedgeOffset);
-			
 			cameraTarget.transform.localPosition = Vector2.zero;
-			
+
+			SetPosition(Position + transform.localScale * settings.ClimbLedgeOffset);
 			SetVelocity(Vector2.zero);
 			SetState(PlayerStateType.Move);
 		}
@@ -256,14 +260,17 @@ namespace C0
 
 		void OnDrawGizmos()
 		{
-			Gizmos.color = new Color(1, 0, 1, 0.4f);
+			if (Application.isPlaying)
+			{
+				Gizmos.color = new Color(1, 0, 1, 0.4f);
 
-			Gizmos.DrawWireCube(TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size);
-			Gizmos.DrawWireCube(TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size);
+				Gizmos.DrawWireCube(TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size);
+				Gizmos.DrawWireCube(TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size);
 
-			Gizmos.DrawWireCube(TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size);
-			Gizmos.DrawWireCube(TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size);
-			Gizmos.DrawWireCube(TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size);
+				Gizmos.DrawWireCube(TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size);
+				Gizmos.DrawWireCube(TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size);
+				Gizmos.DrawWireCube(TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size);
+			}
 		}
 	}
 }

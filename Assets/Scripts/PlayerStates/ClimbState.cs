@@ -34,10 +34,13 @@ namespace C0
 			}
 			else
 			{
-				player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
-				
 				player.UpdateOrientation();
 			}
+		}
+
+		public override void FixedUpdate()
+		{
+			player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)

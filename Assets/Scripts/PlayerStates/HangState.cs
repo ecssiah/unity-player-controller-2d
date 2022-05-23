@@ -21,9 +21,9 @@ namespace C0
 			);
 
 			player.SetAnimation("Hang");
-			player.SetGravityScale(0);
-			player.SetVelocity(Vector2.zero);
 			player.SetPosition(ledgePosition + player.transform.localScale * settings.HangOffset);
+			player.SetVelocity(Vector2.zero);
+			player.SetGravityScale(0);
 		}
 
 		public override void Update()
@@ -31,7 +31,7 @@ namespace C0
 			if (player.InputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
 			{
 				player.SetState(PlayerStateType.ClimbLedge);
-			} 
+			}
 		}
 
 		public override void SetVerticalInput(float inputValue)

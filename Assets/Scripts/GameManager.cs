@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace C0
 {
@@ -6,6 +7,7 @@ namespace C0
 	{
 		private InputSystem inputSystem;
 		private CameraSystem cameraSystem;
+		private MapSystem mapSystem;
 		
 		private Player player;
 
@@ -17,18 +19,25 @@ namespace C0
 			cameraSystem = GetComponent<CameraSystem>();
 			cameraSystem.AwakeManaged();
 
+			mapSystem = GetComponent<MapSystem>();
+			mapSystem.AwakeManaged();
+			
 			player = GameObject.Find("Player").GetComponent<Player>();
 			player.AwakeManaged();
 		}
 
 		void Start()
 		{
+			mapSystem.StartManaged();
+
 			player.StartManaged();
 		}
 
 		void Update()
 		{
 			inputSystem.UpdateManaged();
+
+			player.UpdateManaged();
 		}
 
 		void FixedUpdate()

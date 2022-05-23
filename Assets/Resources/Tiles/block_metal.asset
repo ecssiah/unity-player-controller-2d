@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: tilemap-1_1
+  m_Name: block_metal
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 3470226196251021348, guid: 3ff0165059f3da34f9be895697bb687f, type: 3}
+  m_Sprite: {fileID: -8817581439511588646, guid: 3ff0165059f3da34f9be895697bb687f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

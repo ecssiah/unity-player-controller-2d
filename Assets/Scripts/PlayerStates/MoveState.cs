@@ -14,7 +14,7 @@ namespace C0
 			player.SetAnimation("Idle");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
-		
+
 		public override void Update()
 		{
 			player.UpdateTriggers();
@@ -35,6 +35,11 @@ namespace C0
 			{
 				player.SetState(PlayerStateType.WallSlide);
 			}
+			else if (!settings.LevelBounds.Contains(player.Position))
+			{
+				player.SetPosition(settings.StartPosition);
+				player.SetVelocity(Vector2.zero);
+			}
 			else
 			{
 				if (player.TriggerInfo.Ground)
@@ -46,27 +51,23 @@ namespace C0
 					player.SetGravityScale(settings.FallingGravityScale);
 				}
 
-				if (player.Position.y < -20)
-				{
-					player.SetPosition(settings.StartPosition);
-					player.SetVelocity(Vector2.zero);
-				}
-
-				Vector2 newVelocity = player.Velocity;
-
-				newVelocity.x = Mathf.SmoothDamp(
-					player.Velocity.x,
-					player.InputInfo.Direction.x * settings.RunSpeed,
-					ref player.VelocityXDamped,
-					player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
-				);
-
-				player.SetVelocity(newVelocity);
-
 				player.UpdateAnimation();
 				player.UpdateOrientation();
 			}
-			
+		}
+
+		public override void FixedUpdate()
+		{
+			Vector2 newVelocity = player.Velocity;
+
+			newVelocity.x = Mathf.SmoothDamp(
+				player.Velocity.x,
+				player.InputInfo.Direction.x * settings.RunSpeed,
+				ref player.VelocityXDamped,
+				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
+			);
+
+			player.SetVelocity(newVelocity);
 		}
 
 		public override void SetJumpInput(float inputValue)

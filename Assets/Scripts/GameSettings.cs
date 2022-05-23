@@ -5,7 +5,8 @@ namespace C0
 	[CreateAssetMenu(fileName = "GameSettings", menuName = "Game Settings")]
 	public class GameSettings : ScriptableObject
 	{
-		public Vector2 StartPosition = new Vector2(-41, 1f);
+		public Vector2 StartPosition = new Vector2(-25, -11f);
+		public Bounds LevelBounds = new Bounds(Vector3.zero, new Vector3(160, 80, 0));
 
 		[Space]
 		public float DefaultGravityScale = 6.0f;

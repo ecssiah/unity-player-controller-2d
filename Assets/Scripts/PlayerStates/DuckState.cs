@@ -14,7 +14,7 @@ namespace C0
 			player.SetAnimation("Duck");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
-		
+
 		public override void Update()
 		{
 			player.UpdateTriggers();
@@ -23,19 +23,20 @@ namespace C0
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else
-			{
-				Vector2 newVelocity = Vector2.zero;
+		}
 
-				newVelocity.x = Mathf.SmoothDamp(
-					player.Velocity.x,
-					0,
-					ref player.VelocityXDamped,
-					settings.GroundSpeedSmoothTime
-				);
+		public override void FixedUpdate()
+		{
+			Vector2 newVelocity = Vector2.zero;
 
-				player.SetVelocity(newVelocity);
-			}
+			newVelocity.x = Mathf.SmoothDamp(
+				player.Velocity.x,
+				0,
+				ref player.VelocityXDamped,
+				settings.GroundSpeedSmoothTime
+			);
+
+			player.SetVelocity(newVelocity);
 		}
 
 		public override void SetVerticalInput(float inputValue)

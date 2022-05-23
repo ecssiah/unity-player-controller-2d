@@ -38,10 +38,13 @@ namespace C0
 
 		void OnDrawGizmos()
 		{
-			Gizmos.color = new Color(1, 0, 1, 0.1f);
+			if (Application.isPlaying)
+			{
+				Gizmos.color = new Color(1, 0, 1, 0.1f);
 
-			Gizmos.DrawWireCube(focusArea.TargetCenter, focusArea.TargetSize);
-			Gizmos.DrawWireCube(focusArea.FocusCenter, focusArea.FocusSize);
+				Gizmos.DrawWireCube(focusArea.TargetCenter, focusArea.TargetSize);
+				Gizmos.DrawWireCube(focusArea.FocusCenter, focusArea.FocusSize);
+			}
 		}
 	}
 }
