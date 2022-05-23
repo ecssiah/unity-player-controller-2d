@@ -16,7 +16,7 @@ namespace C0
 			);
 
 			player.SetAnimation("Hang");
-			player.SetPosition(ledgePosition + player.transform.localScale * settings.HangOffset);
+			player.SetPosition(ledgePosition + Vector2.Scale(player.transform.localScale, settings.HangOffset));
 			player.SetVelocity(Vector2.zero);
 			player.SetGravityScale(0);
 		}

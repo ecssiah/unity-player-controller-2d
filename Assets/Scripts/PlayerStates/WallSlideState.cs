@@ -45,7 +45,7 @@ namespace C0
 				if (InputInfo.Direction.x == -player.Facing)
 				{
 					player.SetState(PlayerStateType.Move);
-					player.SetVelocity(player.transform.localScale * settings.WallJumpVelocity);
+					player.SetVelocity(Vector2.Scale(player.transform.localScale, settings.WallJumpVelocity));
 				}
 			}
 		}

@@ -135,7 +135,7 @@ namespace C0
 
 			cameraTarget.transform.localPosition = Vector2.zero;
 
-			SetPosition(Position + transform.localScale * settings.ClimbLedgeOffset);
+			SetPosition(Position + Vector2.Scale(transform.localScale, settings.ClimbLedgeOffset));
 			SetVelocity(Vector2.zero);
 			SetState(PlayerStateType.Move);
 		}
