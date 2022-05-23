@@ -4,25 +4,24 @@ namespace C0
 {
 	public abstract class PlayerState
 	{
-		protected GameSettings settings;
-		
-		protected Player player;
+		protected GameSettings Settings;
+		protected Player Player;
 
-		protected float VelocityXDamped;
-
-		protected InputInfo inputInfo;
-		protected TriggerInfo triggerInfo;
+		protected InputInfo InputInfo;
+		protected TriggerInfo TriggerInfo;
 
 		private LayerMask surfaceLayerMask;
 		private LayerMask climbableLayerMask;
 
+		protected float VelocityXDamped;
+
 		public PlayerState(GameSettings settings, Player player)
 		{
-			this.settings = settings;
-			this.player = player;
+			Settings = settings;
+			Player = player;
 
-			inputInfo = player.GetComponent<InputInfo>();
-			triggerInfo = player.GetComponent<TriggerInfo>();
+			InputInfo = player.GetComponent<InputInfo>();
+			TriggerInfo = player.GetComponent<TriggerInfo>();
 
 			surfaceLayerMask = LayerMask.GetMask("Surface");
 			climbableLayerMask = LayerMask.GetMask("Climbable");
@@ -34,63 +33,61 @@ namespace C0
 
 		public virtual void FixedUpdateManaged() { }
 
-		public virtual void SetHorizontalInput(float inputValue) 
+		public virtual void SetHorizontalInput(float inputValue)
 		{
-			inputInfo.Direction.x = inputValue;
+			InputInfo.Direction.x = inputValue;
 		}
 
-		public virtual void SetVerticalInput(float inputValue) 
+		public virtual void SetVerticalInput(float inputValue)
 		{
-			inputInfo.Direction.y = inputValue;
+			InputInfo.Direction.y = inputValue;
 		}
 
-		public virtual void SetJumpInput(float inputValue) 
-		{ 
-			inputInfo.Jump = inputValue;
+		public virtual void SetJumpInput(float inputValue)
+		{
+			InputInfo.Jump = inputValue;
 		}
 
 		public void UpdateTriggers()
 		{
-			triggerInfo.ResetTriggers();
+			TriggerInfo.ResetTriggers();
 
-			Vector3 playerPosition = player.Position;
-
-			UpdateGroundTrigger(playerPosition);
-			UpdateClimbTrigger(playerPosition);
-			UpdateWallTriggers(playerPosition);
+			UpdateGroundTrigger();
+			UpdateClimbTrigger();
+			UpdateWallTriggers();
 		}
 
-		private void UpdateGroundTrigger(Vector3 playerPosition)
+		private void UpdateGroundTrigger()
 		{
-			triggerInfo.Ground = Physics2D.OverlapBox
+			TriggerInfo.Ground = Physics2D.OverlapBox
 			(
-				triggerInfo.GroundBounds.center, triggerInfo.GroundBounds.size, 0f, surfaceLayerMask
-			);
-		}
-
-		private void UpdateClimbTrigger(Vector3 playerPosition)
-		{
-			triggerInfo.Climb = Physics2D.OverlapBox
-			(
-				triggerInfo.ClimbBounds.center, triggerInfo.ClimbBounds.size, 0f, climbableLayerMask
+				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
 			);
 		}
 
-		private void UpdateWallTriggers(Vector3 playerPosition)
+		private void UpdateClimbTrigger()
 		{
-			triggerInfo.WallTop = Physics2D.OverlapBox
+			TriggerInfo.Climb = Physics2D.OverlapBox
 			(
-				triggerInfo.WallTopBounds.center, triggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
+				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
+			);
+		}
+
+		private void UpdateWallTriggers()
+		{
+			TriggerInfo.WallTop = Physics2D.OverlapBox
+			(
+				TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
 			);
 
-			triggerInfo.WallMid = Physics2D.OverlapBox
+			TriggerInfo.WallMid = Physics2D.OverlapBox
 			(
-				triggerInfo.WallMidBounds.center, triggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
+				TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
 			);
 
-			triggerInfo.WallLow = Physics2D.OverlapBox
+			TriggerInfo.WallLow = Physics2D.OverlapBox
 			(
-				triggerInfo.WallLowBounds.center, triggerInfo.WallLowBounds.size, 0f, surfaceLayerMask
+				TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size, 0f, surfaceLayerMask
 			);
 		}
 

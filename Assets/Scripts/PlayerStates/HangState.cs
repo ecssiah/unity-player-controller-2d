@@ -10,24 +10,24 @@ namespace C0
 
 		public override void Init()
 		{
-			nextClimbLedgeTime = Time.time + settings.HangTimeBeforeClimb;
+			nextClimbLedgeTime = Time.time + Settings.HangTimeBeforeClimb;
 
 			Vector2 ledgePosition = new Vector2(
-				Mathf.Round(triggerInfo.WallMidBounds.center.x),
-				Mathf.Round(triggerInfo.WallMidBounds.center.y)
+				Mathf.Round(TriggerInfo.WallMidBounds.center.x),
+				Mathf.Round(TriggerInfo.WallMidBounds.center.y)
 			);
 
-			player.SetAnimation("Hang");
-			player.SetPosition(ledgePosition + Vector2.Scale(player.transform.localScale, settings.HangOffset));
-			player.SetVelocity(Vector2.zero);
-			player.SetGravityScale(0);
+			Player.SetAnimation("Hang");
+			Player.SetPosition(ledgePosition + Vector2.Scale(Player.transform.localScale, Settings.HangOffset));
+			Player.SetVelocity(Vector2.zero);
+			Player.SetGravityScale(0);
 		}
 
 		public override void UpdateManaged()
 		{
-			if (inputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
+			if (InputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
 			{
-				player.SetState(PlayerStateType.ClimbLedge);
+				Player.SetState(PlayerStateType.ClimbLedge);
 			}
 		}
 
@@ -35,9 +35,9 @@ namespace C0
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (inputInfo.Direction.y < 0)
+			if (InputInfo.Direction.y < 0)
 			{
-				player.SetState(PlayerStateType.Move);
+				Player.SetState(PlayerStateType.Move);
 			}
 		}
 	}

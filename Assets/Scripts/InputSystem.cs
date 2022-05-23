@@ -40,28 +40,28 @@ namespace C0
 
 			if (currentMoveInput.x > 0 && previousMoveInput.x <= 0)
 			{
-				player.CurrentState.SetHorizontalInput(1);
+				player.State.SetHorizontalInput(1);
 			}
 			else if (currentMoveInput.x < 0 && previousMoveInput.x >= 0)
 			{
-				player.CurrentState.SetHorizontalInput(-1);
+				player.State.SetHorizontalInput(-1);
 			}
 			else if (currentMoveInput.x == 0 && previousMoveInput.x != 0)
 			{
-				player.CurrentState.SetHorizontalInput(0);
+				player.State.SetHorizontalInput(0);
 			}
 
 			if (currentMoveInput.y > 0 && previousMoveInput.y <= 0)
 			{
-				player.CurrentState.SetVerticalInput(1);
+				player.State.SetVerticalInput(1);
 			}
 			else if (currentMoveInput.y < 0 && previousMoveInput.y >= 0)
 			{
-				player.CurrentState.SetVerticalInput(-1);
+				player.State.SetVerticalInput(-1);
 			}
 			else if (currentMoveInput.y == 0 && previousMoveInput.y != 0)
 			{
-				player.CurrentState.SetVerticalInput(0);
+				player.State.SetVerticalInput(0);
 			}
 
 			previousMoveInput = currentMoveInput;
@@ -73,7 +73,7 @@ namespace C0
 
 			if (currentJumpInput != previousJumpInput)
 			{
-				player.CurrentState.SetJumpInput(currentJumpInput);
+				player.State.SetJumpInput(currentJumpInput);
 			}
 
 			previousJumpInput = currentJumpInput;

@@ -10,22 +10,22 @@ namespace C0
 
 		public override void Init()
 		{
-			player.SetAnimation("Slide");
-			player.SetVelocity(Vector2.zero);
-			player.SetGravityScale(settings.WallSlideGravityScale);
+			Player.SetAnimation("Slide");
+			Player.SetVelocity(Vector2.zero);
+			Player.SetGravityScale(Settings.WallSlideGravityScale);
 		}
 
 		public override void UpdateManaged()
 		{
 			UpdateTriggers();
 
-			if (!triggerInfo.WallSlide)
+			if (!TriggerInfo.WallSlide)
 			{
-				player.SetState(PlayerStateType.Move);
+				Player.SetState(PlayerStateType.Move);
 			}
-			else if (inputInfo.Direction.x == player.Facing)
+			else if (InputInfo.Direction.x == Player.Facing)
 			{
-				wallSlideTimer = settings.WallSlideHoldTime;
+				wallSlideTimer = Settings.WallSlideHoldTime;
 			}
 			else
 			{
@@ -33,7 +33,7 @@ namespace C0
 
 				if (wallSlideTimer <= 0)
 				{
-					player.SetState(PlayerStateType.Move);
+					Player.SetState(PlayerStateType.Move);
 				}
 			}
 		}
@@ -44,10 +44,10 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (inputInfo.Direction.x == -player.Facing)
+				if (InputInfo.Direction.x == -Player.Facing)
 				{
-					player.SetState(PlayerStateType.Move);
-					player.SetVelocity(Vector2.Scale(player.transform.localScale, settings.WallJumpVelocity));
+					Player.SetState(PlayerStateType.Move);
+					Player.SetVelocity(Vector2.Scale(Player.transform.localScale, Settings.WallJumpVelocity));
 				}
 			}
 		}

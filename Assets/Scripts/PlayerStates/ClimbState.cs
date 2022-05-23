@@ -8,49 +8,49 @@ namespace C0
 
 		public override void Init()
 		{
-			player.SetAnimation("Climb");
-			player.SetVelocity(Vector2.zero);
-			player.SetGravityScale(0);
+			Player.SetAnimation("Climb");
+			Player.SetVelocity(Vector2.zero);
+			Player.SetGravityScale(0);
 		}
 
 		public override void UpdateManaged()
 		{
 			UpdateTriggers();
 
-			if (!triggerInfo.Climb)
+			if (!TriggerInfo.Climb)
 			{
-				player.SetState(PlayerStateType.Move);
+				Player.SetState(PlayerStateType.Move);
 			}
-			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && triggerInfo.Ground)
+			else if (Mathf.Approximately(Player.Velocity.y, -Settings.ClimbSpeed.y) && TriggerInfo.Ground)
 			{
-				player.SetState(PlayerStateType.Move);
+				Player.SetState(PlayerStateType.Move);
 			}
-			else if (inputInfo.Direction.y > 0 && triggerInfo.Ledge)
+			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
 			{
-				player.SetState(PlayerStateType.Hang);
+				Player.SetState(PlayerStateType.Hang);
 			}
 			else
 			{
-				player.UpdateFacing();
+				Player.UpdateFacing();
 			}
 		}
 
 		public override void FixedUpdateManaged()
 		{
-			player.SetVelocity(inputInfo.Direction * settings.ClimbSpeed);
+			Player.SetVelocity(InputInfo.Direction * Settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (inputInfo.Direction.y == 0)
+			if (InputInfo.Direction.y == 0)
 			{
-				player.SetAnimationSpeed(0);
+				Player.SetAnimationSpeed(0);
 			}
 			else
 			{
-				player.SetAnimationSpeed(1);
+				Player.SetAnimationSpeed(1);
 			}
 		}
 
@@ -60,8 +60,8 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				player.SetState(PlayerStateType.Move);
-				player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
+				Player.SetState(PlayerStateType.Move);
+				Player.SetVelocity(Player.Velocity.x, Settings.JumpVelocity);
 			}
 		}
 	}

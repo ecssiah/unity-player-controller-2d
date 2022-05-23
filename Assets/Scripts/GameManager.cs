@@ -8,7 +8,7 @@ namespace C0
 		private InputSystem inputSystem;
 		private CameraSystem cameraSystem;
 		private MapSystem mapSystem;
-		
+
 		private Player player;
 
 		void Awake()
@@ -21,7 +21,7 @@ namespace C0
 
 			mapSystem = GetComponent<MapSystem>();
 			mapSystem.AwakeManaged();
-			
+
 			player = GameObject.Find("Player").GetComponent<Player>();
 			player.AwakeManaged();
 		}

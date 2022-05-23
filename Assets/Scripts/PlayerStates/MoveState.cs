@@ -8,64 +8,64 @@ namespace C0
 
 		public override void Init()
 		{
-			player.SetAnimation("Idle");
-			player.SetGravityScale(settings.DefaultGravityScale);
+			Player.SetAnimation("Idle");
+			Player.SetGravityScale(Settings.DefaultGravityScale);
 		}
 
 		public override void UpdateManaged()
 		{
 			UpdateTriggers();
 
-			if (inputInfo.Direction.y < 0 && triggerInfo.Ground)
+			if (InputInfo.Direction.y < 0 && TriggerInfo.Ground)
 			{
-				player.SetState(PlayerStateType.Duck);
+				Player.SetState(PlayerStateType.Duck);
 			}
-			else if (inputInfo.Direction.y > 0 && triggerInfo.Ledge)
+			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
 			{
-				player.SetState(PlayerStateType.Hang);
+				Player.SetState(PlayerStateType.Hang);
 			}
-			else if (inputInfo.Direction.y != 0 && triggerInfo.Climb)
+			else if (InputInfo.Direction.y != 0 && TriggerInfo.Climb)
 			{
-				player.SetState(PlayerStateType.Climb);
+				Player.SetState(PlayerStateType.Climb);
 			}
-			else if (inputInfo.Direction.x == player.Facing && triggerInfo.WallSlide)
+			else if (InputInfo.Direction.x == Player.Facing && TriggerInfo.WallSlide)
 			{
-				player.SetState(PlayerStateType.WallSlide);
+				Player.SetState(PlayerStateType.WallSlide);
 			}
-			else if (!settings.LevelBounds.Contains(player.Position))
+			else if (!Settings.LevelBounds.Contains(Player.Position))
 			{
-				player.SetFacing(1);
-				player.SetPosition(settings.StartPosition);
-				player.SetVelocity(Vector2.zero);
+				Player.SetFacing(1);
+				Player.SetPosition(Settings.StartPosition);
+				Player.SetVelocity(Vector2.zero);
 			}
 			else
 			{
-				if (triggerInfo.Ground)
+				if (TriggerInfo.Ground)
 				{
-					player.SetGravityScale(settings.DefaultGravityScale);
+					Player.SetGravityScale(Settings.DefaultGravityScale);
 				}
-				else if (player.Velocity.y < -settings.MinFallSpeed)
+				else if (Player.Velocity.y < -Settings.MinFallSpeed)
 				{
-					player.SetGravityScale(settings.FallingGravityScale);
+					Player.SetGravityScale(Settings.FallingGravityScale);
 				}
 
-				player.UpdateAnimation();
-				player.UpdateFacing();
+				Player.UpdateAnimation();
+				Player.UpdateFacing();
 			}
 		}
 
 		public override void FixedUpdateManaged()
 		{
-			Vector2 newVelocity = player.Velocity;
+			Vector2 newVelocity = Player.Velocity;
 
 			newVelocity.x = Mathf.SmoothDamp(
-				player.Velocity.x,
-				inputInfo.Direction.x * settings.RunSpeed,
+				Player.Velocity.x,
+				InputInfo.Direction.x * Settings.RunSpeed,
 				ref VelocityXDamped,
-				triggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
+				TriggerInfo.Ground ? Settings.GroundSpeedSmoothTime : Settings.AirSpeedSmoothTime
 			);
 
-			player.SetVelocity(newVelocity);
+			Player.SetVelocity(newVelocity);
 		}
 
 		public override void SetJumpInput(float inputValue)
@@ -74,16 +74,16 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (triggerInfo.Ground)
+				if (TriggerInfo.Ground)
 				{
-					player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
+					Player.SetVelocity(Player.Velocity.x, Settings.JumpVelocity);
 				}
 			}
 			else if (inputValue == 0)
 			{
-				if (player.Velocity.y > 0)
+				if (Player.Velocity.y > 0)
 				{
-					player.SetGravityScale(settings.FallingGravityScale);
+					Player.SetGravityScale(Settings.FallingGravityScale);
 				}
 			}
 		}

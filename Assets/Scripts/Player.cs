@@ -12,7 +12,8 @@ namespace C0
 		public Bounds Bounds => bodyCollider.bounds;
 		public Vector3 Scale => transform.localScale;
 
-		public PlayerState CurrentState { get; private set; }
+		public PlayerState State { get; private set; }
+		public PlayerStateType StateType;
 
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
@@ -57,19 +58,20 @@ namespace C0
 
 		public void UpdateManaged()
 		{
-			CurrentState.UpdateManaged();
+			State.UpdateManaged();
 		}
 
 		public void FixedUpdateManaged()
 		{
-			CurrentState.FixedUpdateManaged();
+			State.FixedUpdateManaged();
 		}
 
 		public void SetState(PlayerStateType stateType)
 		{
-			CurrentState = playerStates[stateType];
+			StateType = stateType;
+			State = playerStates[stateType];
 
-			CurrentState.Init();
+			State.Init();
 		}
 
 		public void SetFacing(float facing)
@@ -91,12 +93,12 @@ namespace C0
 		{
 			if (x == 0)
 			{
-				CurrentState.ResetVelocityXDamping();
+				State.ResetVelocityXDamping();
 			}
 			else if (Mathf.Abs(x) < settings.MinMoveSpeed)
 			{
 				x = 0;
-				CurrentState.ResetVelocityXDamping();
+				State.ResetVelocityXDamping();
 			}
 
 			rigidBody2D.velocity = new Vector2(x, Mathf.Max(y, settings.MaxFallSpeed));

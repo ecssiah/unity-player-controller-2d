@@ -6,9 +6,9 @@ namespace C0
 
 		public override void Init()
 		{
-			player.SetAnimation("ClimbLedge");
+			Player.SetAnimation("ClimbLedge");
 
-			player.RunClimbLedgeAction();
+			Player.RunClimbLedgeAction();
 		}
 	}
 }
