@@ -13,6 +13,13 @@ namespace C0
 		public Collider2D WallMid;
 		public Collider2D WallLow;
 
+		public bool Ledge => !WallTop && WallMid;
+		public bool WallSlide => !Ground && WallTop && WallMid && WallLow;
+
+		public Vector3 TopOffset { get; set; }
+		public Vector3 MidOffset { get; set; }
+		public Vector3 LowOffset { get; set; }
+
 		private Bounds groundBounds;
 		public Bounds GroundBounds
 		{
@@ -68,12 +75,6 @@ namespace C0
 			}
 		}
 
-		public Vector3 TopOffset { get; set; }
-		public Vector3 MidOffset { get; set; }
-		public Vector3 LowOffset { get; set; }
-
-		public bool Ledge => !WallTop && WallMid;
-		public bool WallSlide => !Ground && WallTop && WallMid && WallLow;
 
 		void Awake()
 		{
@@ -83,17 +84,15 @@ namespace C0
 
 		void Start()
 		{
+			TopOffset = new Vector3(player.Bounds.extents.x + 0.05f, 1.1f * player.Bounds.size.y);
+			MidOffset = new Vector3(player.Bounds.extents.x + 0.05f, 0.8f * player.Bounds.size.y);
+			LowOffset = new Vector3(player.Bounds.extents.x + 0.05f, 0.1f * player.Bounds.size.y);
+
 			groundBounds = new Bounds(Vector3.zero, new Vector2(player.Bounds.size.x - 0.02f, 0.05f));
 			climbBounds = new Bounds(Vector3.zero, new Vector2(player.Bounds.size.x - 0.02f, 0.4f));
 			wallTopBounds = new Bounds(Vector3.zero, settings.WallTriggerSize);
 			wallMidBounds = new Bounds(Vector3.zero, settings.WallTriggerSize);
 			wallLowBounds = new Bounds(Vector3.zero, settings.WallTriggerSize);
-
-			float horizontalOffset = player.Bounds.extents.x + 0.05f;
-
-			TopOffset = new Vector3(horizontalOffset, 1.1f * player.Bounds.size.y);
-			MidOffset = new Vector3(horizontalOffset, 0.8f * player.Bounds.size.y);
-			LowOffset = new Vector3(horizontalOffset, 0.1f * player.Bounds.size.y);
 		}
 
 		public void ResetTriggers()

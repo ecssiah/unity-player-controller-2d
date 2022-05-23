@@ -34,6 +34,6 @@ MonoBehaviour:
   WallJumpVelocity: {x: 1200, y: 18}
   HangOffset: {x: -0.185, y: -1.37}
   ClimbLedgeOffset: {x: 0.62, y: 1.37}
-  CameraTargetSize: {x: 0.5, y: 1.6}
+  CameraTargetSize: {x: 0.5, y: 1.4}
   FocusTargetSize: {x: 3, y: 5}
   WallTriggerSize: {x: 0.1, y: 0.2}

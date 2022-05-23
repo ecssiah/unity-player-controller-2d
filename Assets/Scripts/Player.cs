@@ -6,10 +6,10 @@ namespace C0
 {
 	public class Player : MonoBehaviour
 	{
-		public float Facing => transform.localScale.x;
 		public Vector3 Position => transform.position;
 		public Vector2 Velocity => rigidBody2D.velocity;
 		public Bounds Bounds => bodyCollider.bounds;
+		public float Facing => transform.localScale.x;
 		public Vector3 Scale => transform.localScale;
 
 		public PlayerState State { get; private set; }
