@@ -4,34 +4,29 @@ namespace C0
 {
 	public class MoveState : PlayerState
 	{
-		public MoveState(Player player, GameSettings settings) : base(player, settings)
-		{
-			Type = PlayerStateType.Move;
-		}
-
 		public override void Init()
 		{
 			player.SetAnimation("Idle");
 			player.SetGravityScale(settings.DefaultGravityScale);
 		}
 
-		public override void Update()
+		public override void UpdateManaged()
 		{
-			player.UpdateTriggers();
+			UpdateTriggers();
 
-			if (player.InputInfo.Direction.y < 0 && player.TriggerInfo.Ground)
+			if (InputInfo.Direction.y < 0 && TriggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Duck);
 			}
-			else if (player.InputInfo.Direction.y > 0 && player.TriggerInfo.Ledge)
+			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
 			{
 				player.SetState(PlayerStateType.Hang);
 			}
-			else if (player.InputInfo.Direction.y != 0 && player.TriggerInfo.Climb)
+			else if (InputInfo.Direction.y != 0 && TriggerInfo.Climb)
 			{
 				player.SetState(PlayerStateType.Climb);
 			}
-			else if (player.InputInfo.Direction.x == player.Facing && player.TriggerInfo.WallSlide)
+			else if (InputInfo.Direction.x == player.Facing && TriggerInfo.WallSlide)
 			{
 				player.SetState(PlayerStateType.WallSlide);
 			}
@@ -43,7 +38,7 @@ namespace C0
 			}
 			else
 			{
-				if (player.TriggerInfo.Ground)
+				if (TriggerInfo.Ground)
 				{
 					player.SetGravityScale(settings.DefaultGravityScale);
 				}
@@ -57,15 +52,15 @@ namespace C0
 			}
 		}
 
-		public override void FixedUpdate()
+		public override void FixedUpdateManaged()
 		{
 			Vector2 newVelocity = player.Velocity;
 
 			newVelocity.x = Mathf.SmoothDamp(
 				player.Velocity.x,
-				player.InputInfo.Direction.x * settings.RunSpeed,
+				InputInfo.Direction.x * settings.RunSpeed,
 				ref VelocityXDamped,
-				player.TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
+				TriggerInfo.Ground ? settings.GroundSpeedSmoothTime : settings.AirSpeedSmoothTime
 			);
 
 			player.SetVelocity(newVelocity);
@@ -77,7 +72,7 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (player.TriggerInfo.Ground)
+				if (TriggerInfo.Ground)
 				{
 					player.SetVelocity(player.Velocity.x, settings.JumpVelocity);
 				}

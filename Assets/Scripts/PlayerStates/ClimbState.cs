@@ -4,11 +4,6 @@ namespace C0
 {
 	public class ClimbState : PlayerState
 	{
-		public ClimbState(Player player, GameSettings settings) : base(player, settings) 
-		{ 
-			Type = PlayerStateType.Climb;
-		}
-
 		public override void Init()
 		{
 			player.SetAnimation("Climb");
@@ -16,19 +11,19 @@ namespace C0
 			player.SetGravityScale(0);
 		}
 
-		public override void Update()
+		public override void UpdateManaged()
 		{
-			player.UpdateTriggers();
+			UpdateTriggers();
 
-			if (!player.TriggerInfo.Climb)
+			if (!TriggerInfo.Climb)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && player.TriggerInfo.Ground)
+			else if (Mathf.Approximately(player.Velocity.y, -settings.ClimbSpeed.y) && TriggerInfo.Ground)
 			{
 				player.SetState(PlayerStateType.Move);
 			}
-			else if (player.InputInfo.Direction.y > 0 && player.TriggerInfo.Ledge)
+			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
 			{
 				player.SetState(PlayerStateType.Hang);
 			}
@@ -38,16 +33,16 @@ namespace C0
 			}
 		}
 
-		public override void FixedUpdate()
+		public override void FixedUpdateManaged()
 		{
-			player.SetVelocity(player.InputInfo.Direction * settings.ClimbSpeed);
+			player.SetVelocity(InputInfo.Direction * settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (player.InputInfo.Direction.y == 0)
+			if (InputInfo.Direction.y == 0)
 			{
 				player.SetAnimationSpeed(0);
 			}

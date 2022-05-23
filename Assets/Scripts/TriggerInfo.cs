@@ -11,11 +11,23 @@ namespace C0
 		public Collider2D WallMid;
 		public Collider2D WallLow;
 
-		public Bounds GroundBounds { get; set; }
-		public Bounds ClimbBounds { get; set; }
-		public Bounds WallTopBounds { get; set; }
-		public Bounds WallMidBounds { get; set; }
-		public Bounds WallLowBounds { get; set; }
+		[HideInInspector]
+		public Bounds GroundBounds;
+		[HideInInspector]
+		public Bounds ClimbBounds;
+		[HideInInspector]
+		public Bounds WallTopBounds;
+		[HideInInspector]
+		public Bounds WallMidBounds;
+		[HideInInspector]
+		public Bounds WallLowBounds;
+
+		[HideInInspector]
+		public Vector3 TopOffset;
+		[HideInInspector]
+		public Vector3 MidOffset;
+		[HideInInspector]
+		public Vector3 LowOffset;
 
 		public bool Ledge => !WallTop && WallMid;
 		public bool WallSlide => !Ground && WallTop && WallMid && WallLow;

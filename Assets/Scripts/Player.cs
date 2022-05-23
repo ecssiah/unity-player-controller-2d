@@ -9,14 +9,14 @@ namespace C0
 		public float Facing => transform.localScale.x;
 		public Vector2 Position => transform.position;
 		public Vector2 Velocity => rigidBody2D.velocity;
-
-		public PlayerState CurrentState { get; private set; }
-		public PlayerStateType PlayerState;
-
-		private Dictionary<PlayerStateType, PlayerState> playerStates;
+		public Bounds Bounds => bodyCollider.bounds;
 
 		public InputInfo InputInfo;
 		public TriggerInfo TriggerInfo;
+
+		public PlayerState CurrentState { get; private set; }
+
+		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
 		private GameSettings settings;
 
@@ -25,9 +25,6 @@ namespace C0
 		private Rigidbody2D rigidBody2D;
 
 		private GameObject cameraTarget;
-
-		private LayerMask surfaceLayerMask;
-		private LayerMask climbableLayerMask;
 
 		public void AwakeManaged()
 		{
@@ -38,21 +35,18 @@ namespace C0
 			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			cameraTarget = transform.Find("Target").gameObject;
-
-			surfaceLayerMask = LayerMask.GetMask("Surface");
-			climbableLayerMask = LayerMask.GetMask("Climbable");
 		}
 
 		public void StartManaged()
 		{
 			playerStates = new Dictionary<PlayerStateType, PlayerState>
 			{
-				[PlayerStateType.Move] = new MoveState(this, settings),
-				[PlayerStateType.Duck] = new DuckState(this, settings),
-				[PlayerStateType.Hang] = new HangState(this, settings),
-				[PlayerStateType.Climb] = new ClimbState(this, settings),
-				[PlayerStateType.ClimbLedge] = new ClimbLedgeState(this, settings),
-				[PlayerStateType.WallSlide] = new WallSlideState(this, settings),
+				[PlayerStateType.Move] = gameObject.AddComponent<MoveState>(),
+				[PlayerStateType.Duck] = gameObject.AddComponent<DuckState>(),
+				[PlayerStateType.Hang] = gameObject.AddComponent<HangState>(),
+				[PlayerStateType.Climb] = gameObject.AddComponent<ClimbState>(),
+				[PlayerStateType.ClimbLedge] = gameObject.AddComponent<ClimbLedgeState>(),
+				[PlayerStateType.WallSlide] = gameObject.AddComponent<WallSlideState>(),
 			};
 
 			SetState(PlayerStateType.Move);
@@ -61,14 +55,15 @@ namespace C0
 
 		public void UpdateManaged()
 		{
-			CurrentState.Update();
+			CurrentState.UpdateManaged();
 
-			PlayerState = CurrentState.Type;
+			InputInfo = PlayerState.InputInfo;
+			TriggerInfo = PlayerState.TriggerInfo;
 		}
 
 		public void FixedUpdateManaged()
 		{
-			CurrentState.FixedUpdate();
+			CurrentState.FixedUpdateManaged();
 		}
 
 		public void SetState(PlayerStateType stateType)
@@ -145,76 +140,6 @@ namespace C0
 			SetState(PlayerStateType.Move);
 		}
 
-		public void UpdateTriggers()
-		{
-			TriggerInfo.Reset();
-
-			UpdateGroundTrigger();
-			UpdateClimbTrigger();
-			UpdateWallTriggers();
-		}
-
-		private void UpdateGroundTrigger()
-		{
-			TriggerInfo.GroundBounds = new Bounds(
-				transform.position + 0.025f * Vector3.down,
-				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.05f)
-			);
-
-			TriggerInfo.Ground = Physics2D.OverlapBox
-			(
-				TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size, 0f, surfaceLayerMask
-			);
-		}
-
-		private void UpdateClimbTrigger()
-		{
-			TriggerInfo.ClimbBounds = new Bounds(
-				transform.position + 0.6f * Vector3.up,
-				new Vector2(bodyCollider.bounds.size.x - 0.02f, 0.4f)
-			);
-
-			TriggerInfo.Climb = Physics2D.OverlapBox
-			(
-				TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size, 0f, climbableLayerMask
-			);
-		}
-
-		private void UpdateWallTriggers()
-		{
-			float horizontalOffset = Facing * (bodyCollider.bounds.extents.x + 0.05f);
-
-			TriggerInfo.WallTopBounds = new Bounds(
-				transform.position + new Vector3(horizontalOffset, 1.1f * bodyCollider.bounds.size.y),
-				settings.WallTriggerSize
-			);
-
-			TriggerInfo.WallTop = Physics2D.OverlapBox
-			(
-				TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size, 0f, surfaceLayerMask
-			);
-
-			TriggerInfo.WallMidBounds = new Bounds(
-				transform.position + new Vector3(horizontalOffset, 0.8f * bodyCollider.bounds.size.y),
-				settings.WallTriggerSize
-			);
-
-			TriggerInfo.WallMid = Physics2D.OverlapBox
-			(
-				TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size, 0f, surfaceLayerMask
-			);
-
-			TriggerInfo.WallLowBounds = new Bounds(
-				transform.position + new Vector3(horizontalOffset, 0.1f * bodyCollider.bounds.size.y),
-				settings.WallTriggerSize
-			);
-
-			TriggerInfo.WallLow = Physics2D.OverlapBox
-			(
-				TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size, 0f, surfaceLayerMask
-			);
-		}
-
 		public void SetAnimation(string stateName)
 		{
 			SetAnimationSpeed(1);
@@ -237,7 +162,7 @@ namespace C0
 			{
 				SetAnimation("Fall");
 			}
-			else if (InputInfo.Direction.x != 0 && Mathf.Abs(rigidBody2D.velocity.x) > settings.MinRunSpeed)
+			else if (Mathf.Abs(rigidBody2D.velocity.x) > settings.MinRunSpeed)
 			{
 				SetAnimation("Run");
 			}
@@ -256,21 +181,6 @@ namespace C0
 			else if (Facing != -1 && rigidBody2D.velocity.x < -settings.MinRunSpeed)
 			{
 				SetFacing(-1);
-			}
-		}
-
-		void OnDrawGizmos()
-		{
-			if (Application.isPlaying)
-			{
-				Gizmos.color = new Color(1, 0, 1, 0.4f);
-
-				Gizmos.DrawWireCube(TriggerInfo.GroundBounds.center, TriggerInfo.GroundBounds.size);
-				Gizmos.DrawWireCube(TriggerInfo.ClimbBounds.center, TriggerInfo.ClimbBounds.size);
-
-				Gizmos.DrawWireCube(TriggerInfo.WallTopBounds.center, TriggerInfo.WallTopBounds.size);
-				Gizmos.DrawWireCube(TriggerInfo.WallMidBounds.center, TriggerInfo.WallMidBounds.size);
-				Gizmos.DrawWireCube(TriggerInfo.WallLowBounds.center, TriggerInfo.WallLowBounds.size);
 			}
 		}
 	}
