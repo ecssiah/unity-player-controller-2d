@@ -37,6 +37,7 @@ namespace C0
 				Player.SetFacing(1);
 				Player.SetPosition(Settings.StartPosition);
 				Player.SetVelocity(Vector2.zero);
+				Player.SetState(PlayerStateType.Move);
 			}
 			else
 			{
