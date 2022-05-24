@@ -16,6 +16,8 @@ namespace C0
 		public bool Ledge => !WallTop && WallMid;
 		public bool WallSlide => !Ground && WallTop && WallMid && WallLow;
 
+		public Vector3 GroundOffset { get; set; }
+		public Vector3 ClimbOffset { get; set; }
 		public Vector3 TopOffset { get; set; }
 		public Vector3 MidOffset { get; set; }
 		public Vector3 LowOffset { get; set; }
@@ -25,7 +27,7 @@ namespace C0
 		{
 			get
 			{
-				groundBounds.center = player.Position + 0.025f * Vector3.down;
+				groundBounds.center = player.Position + GroundOffset;
 
 				return groundBounds;
 			}
@@ -36,7 +38,7 @@ namespace C0
 		{
 			get
 			{
-				climbBounds.center = player.Position + 0.6f * Vector3.up;
+				climbBounds.center = player.Position + ClimbOffset;
 
 				return climbBounds;
 			}
@@ -75,7 +77,6 @@ namespace C0
 			}
 		}
 
-
 		void Awake()
 		{
 			settings = Resources.Load<GameSettings>("Settings/GameSettings");
@@ -84,6 +85,8 @@ namespace C0
 
 		void Start()
 		{
+			GroundOffset = 0.025f * Vector3.down;
+			ClimbOffset = 0.6f * Vector3.up;
 			TopOffset = new Vector3(player.Bounds.extents.x + 0.05f, 1.1f * player.Bounds.size.y);
 			MidOffset = new Vector3(player.Bounds.extents.x + 0.05f, 0.8f * player.Bounds.size.y);
 			LowOffset = new Vector3(player.Bounds.extents.x + 0.05f, 0.1f * player.Bounds.size.y);

@@ -14,23 +14,21 @@ namespace C0
 		public float WallSlideGravityScale = 0.4f;
 
 		[Space]
-		public float RunSpeed = 10f;
 		public float MinMoveSpeed = 0.01f;
+		public float RunSpeed = 10f;
+		public float MinRunSpeed = 1.2f;
+		public float JumpSpeed = 22f;
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
 		public float MaxFallSpeed = -30f;
-		public float MinRunSpeed = 1.2f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
+		public Vector2 WallJumpSpeed = new Vector2(1200f, 18f);
 
 		[Space]
 		public float GroundSpeedSmoothTime = 0.08f;
 		public float AirSpeedSmoothTime = 0.27f;
 		public float WallSlideHoldTime = 0.3f;
-		public float HangTimeBeforeClimb = 0.2f;
-
-		[Space]
-		public float JumpVelocity = 22f;
-		public Vector2 WallJumpVelocity = new Vector2(1200f, 18f);
+		public float HangBeforeClimbTime = 0.2f;
 
 		[Space]
 		public Vector2 HangOffset = new Vector2(-0.25f, -1.38f);

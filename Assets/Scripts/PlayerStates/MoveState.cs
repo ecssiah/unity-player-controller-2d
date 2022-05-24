@@ -76,7 +76,7 @@ namespace C0
 			{
 				if (TriggerInfo.Ground)
 				{
-					Player.SetVelocity(Player.Velocity.x, Settings.JumpVelocity);
+					Player.SetVelocity(Player.Velocity.x, Settings.JumpSpeed);
 				}
 			}
 			else if (inputValue == 0)

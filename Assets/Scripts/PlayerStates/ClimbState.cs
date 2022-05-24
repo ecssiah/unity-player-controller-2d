@@ -61,7 +61,7 @@ namespace C0
 			if (inputValue == 1)
 			{
 				Player.SetState(PlayerStateType.Move);
-				Player.SetVelocity(Player.Velocity.x, Settings.JumpVelocity);
+				Player.SetVelocity(Player.Velocity.x, Settings.JumpSpeed);
 			}
 		}
 	}

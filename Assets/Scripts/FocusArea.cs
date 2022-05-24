@@ -4,7 +4,7 @@ namespace C0
 {
 	public class FocusArea
 	{
-		private readonly GameSettings settings;
+		private GameSettings settings;
 
 		private Transform targetTransform;
 

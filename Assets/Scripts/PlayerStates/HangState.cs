@@ -10,7 +10,7 @@ namespace C0
 
 		public override void Init()
 		{
-			nextClimbLedgeTime = Time.time + Settings.HangTimeBeforeClimb;
+			nextClimbLedgeTime = Time.time + Settings.HangBeforeClimbTime;
 
 			Vector2 ledgePosition = new Vector2(
 				Mathf.Round(TriggerInfo.WallMidBounds.center.x),
