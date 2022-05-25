@@ -23,7 +23,7 @@ namespace C0
 			{
 				Player.SetState(PlayerStateType.Move);
 			}
-			else if (InputInfo.Direction.x == Player.Facing)
+			else if (InputInfo.Move.x == Player.Facing)
 			{
 				wallSlideTimer = Settings.WallSlideHoldTime;
 			}
@@ -44,7 +44,7 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (InputInfo.Direction.x == -Player.Facing)
+				if (InputInfo.Move.x == -Player.Facing)
 				{
 					Player.SetState(PlayerStateType.Move);
 					Player.SetVelocity(Vector2.Scale(Player.transform.localScale, Settings.WallJumpSpeed));

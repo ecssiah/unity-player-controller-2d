@@ -35,12 +35,12 @@ namespace C0
 
 		public virtual void SetHorizontalInput(float inputValue)
 		{
-			InputInfo.Direction.x = inputValue;
+			InputInfo.Move.x = inputValue;
 		}
 
 		public virtual void SetVerticalInput(float inputValue)
 		{
-			InputInfo.Direction.y = inputValue;
+			InputInfo.Move.y = inputValue;
 		}
 
 		public virtual void SetJumpInput(float inputValue)

@@ -25,7 +25,7 @@ namespace C0
 			{
 				Player.SetState(PlayerStateType.Move);
 			}
-			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
+			else if (InputInfo.Move.y > 0 && TriggerInfo.Ledge)
 			{
 				Player.SetState(PlayerStateType.Hang);
 			}
@@ -37,14 +37,14 @@ namespace C0
 
 		public override void FixedUpdateManaged()
 		{
-			Player.SetVelocity(InputInfo.Direction * Settings.ClimbSpeed);
+			Player.SetVelocity(InputInfo.Move * Settings.ClimbSpeed);
 		}
 
 		public override void SetVerticalInput(float inputValue)
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y == 0)
+			if (InputInfo.Move.y == 0)
 			{
 				Player.SetAnimationSpeed(0);
 			}

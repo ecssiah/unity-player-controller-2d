@@ -25,7 +25,7 @@ namespace C0
 
 		public override void UpdateManaged()
 		{
-			if (InputInfo.Direction.y > 0 && Time.time >= nextClimbLedgeTime)
+			if (InputInfo.Move.y > 0 && Time.time >= nextClimbLedgeTime)
 			{
 				Player.SetState(PlayerStateType.ClimbLedge);
 			}
@@ -35,7 +35,7 @@ namespace C0
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y < 0)
+			if (InputInfo.Move.y < 0)
 			{
 				Player.SetState(PlayerStateType.Move);
 			}

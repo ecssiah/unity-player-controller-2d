@@ -16,19 +16,19 @@ namespace C0
 		{
 			UpdateTriggers();
 
-			if (InputInfo.Direction.y < 0 && TriggerInfo.Ground)
+			if (InputInfo.Move.y < 0 && TriggerInfo.Ground)
 			{
 				Player.SetState(PlayerStateType.Duck);
 			}
-			else if (InputInfo.Direction.y > 0 && TriggerInfo.Ledge)
+			else if (InputInfo.Move.y > 0 && TriggerInfo.Ledge)
 			{
 				Player.SetState(PlayerStateType.Hang);
 			}
-			else if (InputInfo.Direction.y != 0 && TriggerInfo.Climb)
+			else if (InputInfo.Move.y != 0 && TriggerInfo.Climb)
 			{
 				Player.SetState(PlayerStateType.Climb);
 			}
-			else if (InputInfo.Direction.x == Player.Facing && TriggerInfo.WallSlide)
+			else if (InputInfo.Move.x == Player.Facing && TriggerInfo.WallSlide)
 			{
 				Player.SetState(PlayerStateType.WallSlide);
 			}
@@ -61,7 +61,7 @@ namespace C0
 
 			newVelocity.x = Mathf.SmoothDamp(
 				Player.Velocity.x,
-				InputInfo.Direction.x * Settings.RunSpeed,
+				InputInfo.Move.x * Settings.RunSpeed,
 				ref VelocityXDamped,
 				TriggerInfo.Ground ? Settings.GroundSpeedSmoothTime : Settings.AirSpeedSmoothTime
 			);

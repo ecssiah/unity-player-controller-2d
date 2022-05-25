@@ -40,7 +40,7 @@ namespace C0
 		{
 			base.SetVerticalInput(inputValue);
 
-			if (InputInfo.Direction.y == 0)
+			if (InputInfo.Move.y == 0)
 			{
 				Player.SetState(PlayerStateType.Move);
 			}
