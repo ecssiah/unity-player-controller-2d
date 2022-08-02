@@ -96,10 +96,7 @@ namespace C0
 
 			if (inputValue == 1)
 			{
-				if (TriggerInfo.Ground)
-				{
-					Player.SetState(PlayerStateType.Dash);
-				}
+				Player.SetState(PlayerStateType.Dash);
 			}
 		}
 

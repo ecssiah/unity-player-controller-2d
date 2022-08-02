@@ -6,20 +6,30 @@ namespace C0
 {
 	public class DashState : PlayerState
 	{
-		public DashState(GameSettings settings, Player player) : base(settings, player) { }
+		private readonly TrailRenderer trailRenderer;
+
+		public DashState(GameSettings settings, Player player) : base(settings, player) 
+		{
+			trailRenderer = Player.GetComponent<TrailRenderer>();
+		}
 
 		public override void Init()
 		{
+			trailRenderer.emitting = true;
+
 			Player.SetAnimation("Dash");
-			Player.SetVelocity(Player.Facing * Settings.DashSpeed + Player.Velocity.x, Player.Velocity.y);
+			Player.SetGravityScale(0);
+			Player.SetVelocity(Player.Facing * Settings.DashSpeed + Player.Velocity.x, 0);
 		}
 
 		public override void UpdateManaged()
 		{
 			UpdateTriggers();
 
-			if (Mathf.Abs(Player.Velocity.x) < 0.2 * Settings.DashSpeed)
+			if (Mathf.Abs(Player.Velocity.x) < 0.4 * Settings.DashSpeed)
 			{
+				trailRenderer.emitting = false;
+
 				Player.SetState(PlayerStateType.Move);
 			}
 		}
