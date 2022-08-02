@@ -21,6 +21,7 @@ namespace C0
 		public float MinJumpSpeed = 0.01f;
 		public float MinFallSpeed = 0.01f;
 		public float MaxFallSpeed = -30f;
+		public float DashSpeed = 10f;
 		public Vector2 ClimbSpeed = new Vector2(1.8f, 3.2f);
 		public Vector2 WallJumpSpeed = new Vector2(1200f, 18f);
 

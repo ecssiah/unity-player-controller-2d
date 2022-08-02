@@ -50,8 +50,9 @@ namespace C0
 					Player.SetGravityScale(Settings.FallingGravityScale);
 				}
 
-				Player.UpdateAnimation();
 				Player.UpdateFacing();
+
+				UpdateAnimation();
 			}
 		}
 
@@ -86,6 +87,39 @@ namespace C0
 				{
 					Player.SetGravityScale(Settings.FallingGravityScale);
 				}
+			}
+		}
+
+		public override void SetDashInput(float inputValue)
+		{
+			base.SetDashInput(inputValue);
+
+			if (inputValue == 1)
+			{
+				if (TriggerInfo.Ground)
+				{
+					Player.SetState(PlayerStateType.Dash);
+				}
+			}
+		}
+
+		private void UpdateAnimation()
+		{
+			if (Player.Velocity.y > Settings.MinJumpSpeed)
+			{
+				Player.SetAnimation("Jump");
+			}
+			else if (Player.Velocity.y < -Settings.MinFallSpeed)
+			{
+				Player.SetAnimation("Fall");
+			}
+			else if (Mathf.Abs(Player.Velocity.x) > Settings.MinRunSpeed)
+			{
+				Player.SetAnimation("Run");
+			}
+			else
+			{
+				Player.SetAnimation("Idle");
 			}
 		}
 	}

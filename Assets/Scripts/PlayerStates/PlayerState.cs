@@ -48,6 +48,11 @@ namespace C0
 			InputInfo.Jump = inputValue;
 		}
 
+		public virtual void SetDashInput(float inputValue)
+		{
+			InputInfo.Jump = inputValue;
+		}
+
 		public void UpdateTriggers()
 		{
 			TriggerInfo.ResetTriggers();

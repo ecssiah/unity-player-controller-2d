@@ -6,5 +6,6 @@ namespace C0
 	{
 		public Vector2 Move;
 		public float Jump;
+		public float Dash;
 	}
 }

@@ -46,6 +46,7 @@ namespace C0
 			{
 				[PlayerStateType.Move] = new MoveState(settings, this),
 				[PlayerStateType.Duck] = new DuckState(settings, this),
+				[PlayerStateType.Dash] = new DashState(settings, this),
 				[PlayerStateType.Hang] = new HangState(settings, this),
 				[PlayerStateType.Climb] = new ClimbState(settings, this),
 				[PlayerStateType.ClimbLedge] = new ClimbLedgeState(settings, this),
@@ -151,26 +152,6 @@ namespace C0
 		public void SetAnimationSpeed(float speed)
 		{
 			animator.speed = speed;
-		}
-
-		public void UpdateAnimation()
-		{
-			if (rigidBody2D.velocity.y > settings.MinJumpSpeed)
-			{
-				SetAnimation("Jump");
-			}
-			else if (rigidBody2D.velocity.y < -settings.MinFallSpeed)
-			{
-				SetAnimation("Fall");
-			}
-			else if (Mathf.Abs(rigidBody2D.velocity.x) > settings.MinRunSpeed)
-			{
-				SetAnimation("Run");
-			}
-			else
-			{
-				SetAnimation("Idle");
-			}
 		}
 
 		public void UpdateFacing()

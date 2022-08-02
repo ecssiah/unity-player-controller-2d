@@ -4,6 +4,7 @@ namespace C0
 	{
 		Move,
 		Duck,
+		Dash,
 		Hang,
 		Climb,
 		ClimbLedge,

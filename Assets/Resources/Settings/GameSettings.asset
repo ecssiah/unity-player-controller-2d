@@ -19,19 +19,20 @@ MonoBehaviour:
   DefaultGravityScale: 6
   FallingGravityScale: 8.5
   WallSlideGravityScale: 0.4
-  RunSpeed: 10
   MinMoveSpeed: 0.01
+  RunSpeed: 10
+  MinRunSpeed: 1.2
+  JumpSpeed: 22
   MinJumpSpeed: 0.01
   MinFallSpeed: 0.01
   MaxFallSpeed: -30
-  MinRunSpeed: 1.2
+  DashSpeed: 60
   ClimbSpeed: {x: 1.8, y: 3.2}
-  GroundSpeedSmoothTime: 0.08
+  WallJumpSpeed: {x: 1200, y: 18}
+  GroundSpeedSmoothTime: 0.12
   AirSpeedSmoothTime: 0.27
   WallSlideHoldTime: 0.3
-  HangTimeBeforeClimb: 0.2
-  JumpVelocity: 22
-  WallJumpVelocity: {x: 1200, y: 18}
+  HangBeforeClimbTime: 0.2
   HangOffset: {x: -0.25, y: -1.38}
   ClimbLedgeOffset: {x: 0.63, y: 1.38}
   CameraTargetSize: {x: 0.5, y: 1.6}
