@@ -29,10 +29,11 @@ MonoBehaviour:
   DashSpeed: 48
   ClimbSpeed: {x: 1.8, y: 3.2}
   WallJumpSpeed: {x: 1200, y: 18}
-  GroundSpeedSmoothTime: 0.12
-  AirSpeedSmoothTime: 0.12
+  GroundSpeedSmoothTime: 0.1
+  AirSpeedSmoothTime: 0.1
   WallSlideHoldTime: 0.3
-  HangBeforeClimbTime: 0.2
+  ClimbWaitTime: 0.05
+  ClimbLedgeWaitTime: 0.2
   HangOffset: {x: -0.25, y: -1.38}
   ClimbLedgeOffset: {x: 0.63, y: 1.38}
   CameraTargetSize: {x: 0.5, y: 1.6}

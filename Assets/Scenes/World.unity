@@ -530,6 +530,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: -36, y: -9, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 1
+      m_TileSpriteIndex: 2
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 1
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 10, y: -9, z: 0}
     second:
       serializedVersion: 2
@@ -804,17 +814,17 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 31
+  - m_RefCount: 32
     m_Data: {fileID: 11400000, guid: e51d5577c6d90d84fbee695dc26dda29, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 31
+  - m_RefCount: 32
     m_Data: {fileID: 3470226196251021348, guid: 3ff0165059f3da34f9be895697bb687f, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 31
+  - m_RefCount: 32
     m_Data:
       e00: 1
       e01: 0
@@ -835,7 +845,7 @@ Tilemap:
   m_TileColorArray:
   - m_RefCount: 0
     m_Data: {r: 3.483e-41, g: 3.483e-41, b: 3.483e-41, a: 3.483e-41}
-  - m_RefCount: 31
+  - m_RefCount: 32
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -898,7 +908,7 @@ CompositeCollider2D:
       - X: 100000041
         Y: 79999900
     - - X: -349999900
-        Y: -80000041
+        Y: -90000041
       - X: -349999900
         Y: 90000041
       - X: -349999959
@@ -908,11 +918,11 @@ CompositeCollider2D:
       - X: -360000100
         Y: 90000041
       - X: -360000100
-        Y: -80000041
+        Y: -90000041
       - X: -360000041
-        Y: -80000100
+        Y: -90000100
       - X: -349999959
-        Y: -80000100
+        Y: -90000100
     - - X: 110000100
         Y: -130000041
       - X: 110000100
@@ -935,10 +945,10 @@ CompositeCollider2D:
       - {x: 9.999974, y: 15.00001}
       - {x: 8.99999, y: 14.999974}
       - {x: 9.000026, y: 7.9999905}
-    - - {x: -35.000027, y: -8.00001}
+    - - {x: -35.000027, y: -9.00001}
       - {x: -35.000027, y: 9.00001}
       - {x: -36.00001, y: 8.999974}
-      - {x: -35.999973, y: -8.00001}
+      - {x: -35.999973, y: -9.00001}
     - - {x: 10.999974, y: -13.00001}
       - {x: 10.999974, y: -5.99999}
       - {x: 9.99999, y: -6.0000253}
