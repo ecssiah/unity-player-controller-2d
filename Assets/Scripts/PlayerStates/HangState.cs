@@ -4,13 +4,11 @@ namespace C0
 {
 	public class HangState : PlayerState
 	{
-		private float nextClimbLedgeTime;
-
 		public HangState(GameSettings settings, Player player) : base(settings, player) { }
 
 		public override void Init()
 		{
-			nextClimbLedgeTime = Time.time + Settings.HangBeforeClimbTime;
+			Player.CanClimbLedgeAt = Time.time + Settings.ClimbLedgeWaitTime;
 
 			Vector2 ledgePosition = new Vector2(
 				Mathf.Round(TriggerInfo.WallMidBounds.center.x),
@@ -25,7 +23,7 @@ namespace C0
 
 		public override void UpdateManaged()
 		{
-			if (InputInfo.Move.y > 0 && Time.time >= nextClimbLedgeTime)
+			if (Player.CanClimbLedge && InputInfo.Move.y > 0)
 			{
 				Player.SetState(PlayerStateType.ClimbLedge);
 			}

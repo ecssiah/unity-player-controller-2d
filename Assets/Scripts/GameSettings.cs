@@ -29,7 +29,10 @@ namespace C0
 		public float GroundSpeedSmoothTime = 0.08f;
 		public float AirSpeedSmoothTime = 0.27f;
 		public float WallSlideHoldTime = 0.3f;
-		public float HangBeforeClimbTime = 0.2f;
+
+		[Space]
+		public float ClimbWaitTime = 0.05f;
+		public float ClimbLedgeWaitTime = 0.2f;
 
 		[Space]
 		public Vector2 HangOffset = new Vector2(-0.25f, -1.38f);

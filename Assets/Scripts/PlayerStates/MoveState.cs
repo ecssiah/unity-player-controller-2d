@@ -24,7 +24,7 @@ namespace C0
 			{
 				Player.SetState(PlayerStateType.Hang);
 			}
-			else if (InputInfo.Move.y != 0 && TriggerInfo.Climb)
+			else if (Player.CanClimb && InputInfo.Move.y != 0 && TriggerInfo.Climb)
 			{
 				Player.SetState(PlayerStateType.Climb);
 			}

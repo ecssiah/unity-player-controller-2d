@@ -15,6 +15,12 @@ namespace C0
 		public PlayerState State { get; private set; }
 		public PlayerStateType StateType;
 
+		public bool CanClimb => Time.time >= CanClimbAt;
+		public bool CanClimbLedge => Time.time >= CanClimbLedgeAt;
+
+		public float CanClimbAt { private get; set; }
+		public float CanClimbLedgeAt { private get; set; }
+
 		private Dictionary<PlayerStateType, PlayerState> playerStates;
 
 		private GameSettings settings;
@@ -69,6 +75,11 @@ namespace C0
 
 		public void SetState(PlayerStateType stateType)
 		{
+			if (StateType == PlayerStateType.Climb)
+			{
+				CanClimbAt = Time.time + settings.ClimbWaitTime;
+			}
+
 			StateType = stateType;
 			State = playerStates[stateType];
 

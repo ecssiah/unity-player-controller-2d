@@ -26,11 +26,11 @@ MonoBehaviour:
   MinJumpSpeed: 0.01
   MinFallSpeed: 0.01
   MaxFallSpeed: -30
-  DashSpeed: 60
+  DashSpeed: 48
   ClimbSpeed: {x: 1.8, y: 3.2}
   WallJumpSpeed: {x: 1200, y: 18}
   GroundSpeedSmoothTime: 0.12
-  AirSpeedSmoothTime: 0.27
+  AirSpeedSmoothTime: 0.12
   WallSlideHoldTime: 0.3
   HangBeforeClimbTime: 0.2
   HangOffset: {x: -0.25, y: -1.38}

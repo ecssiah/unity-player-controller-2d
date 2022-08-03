@@ -213,7 +213,7 @@ TrailRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462099927545901324}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -246,7 +246,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.12
+  m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -272,13 +272,22 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.1488896
       - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: -0.64793605
-        outSlope: -0.64793605
+        time: 0.52831084
+        value: 0.0748223
+        inSlope: -0.36304155
+        outSlope: -0.36304155
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.11628541
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.25838462
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
